@@ -1,0 +1,12 @@
+@mixin section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  background: $section-background-color;
+  text-align: center;
+  padding: 0;
+}

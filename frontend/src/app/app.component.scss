@@ -1,99 +1,71 @@
-body {
-  font-family: "Century Gothic", 'Lato', sans-serif;
-}
+@import "../common/common";
 
-* {
-  margin: 0px;
-  padding: 0px;
-}
+:host {
 
-a {
-  text-decoration: none;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-.et-hero-tabs, .et-slide {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  position: relative;
-  background: #eee;
-  text-align: center;
-  padding: 0 2em;
-
-  h1 {
-    font-size: 2rem;
-    margin: 0;
-    letter-spacing: 1rem;
+  .section {
+    @include section;
   }
 
-  h3 {
-    font-size: 1rem;
-    letter-spacing: 0.3rem;
-    opacity: 0.6;
-  }
-}
+  .header-section {
+    @include section;
 
-.et-hero-tabs-container {
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 70px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  background: #fff;
-  z-index: 10;
-
-  &--top {
-    position: fixed;
-    top: 0;
-  }
-}
-
-.et-hero-tab {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  color: #000;
-  letter-spacing: 0.1rem;
-  transition: all 0.5s ease;
-  font-size: 0.8rem;
-
-  &:hover {
-    color: white;
-    background: rgba(102, 177, 241, 0.8);
-    transition: all 0.5s ease;
-  }
-}
-
-.et-hero-tab-slider {
-  position: absolute;
-  bottom: 0;
-  width: 0;
-  height: 6px;
-  background: #66B1F1;
-  transition: left 0.3s ease;
-}
-
-@media (min-width: 800px) {
-  .et-hero-tabs,
-  .et-slide {
-    h1 {
-      font-size: 3rem;
+    .title {
+      font-size: $font-size-huge;
+      margin: 0;
+      letter-spacing: $header-section-title-letter-spacing;
     }
 
-    h3 {
-      font-size: 1rem;
+    .subtitle {
+      margin-top: $subtitle-margin-top;
+      font-size: $font-size-big;
+      letter-spacing: $header-section-subtitle-letter-spacing;
+      opacity: $subtitle-opacity;
     }
   }
-  .et-hero-tab {
-    font-size: 1rem;
+
+  .navbar-container {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: $navbar-container-height;
+    box-shadow: $navbar-container-box-shadow;
+    background: $white-color;
+    z-index: $navbar-z-index;
+
+    &.fixed {
+      position: fixed;
+      top: 0;
+      bottom: unset;
+    }
+
+    .navbar-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      color: $black-color;
+      letter-spacing: $navbar-item-letter-spacing;
+      transition: all 0.5s ease;
+      font-size: $font-size-big;
+
+      &:hover {
+        cursor: pointer;
+        color: white;
+        background: $navbar-item-on-hover-background;
+        transition: all 0.5s ease;
+      }
+    }
+
+    .navbar-slider {
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: $navbar-slider-height;
+      background: $aquamarine-color;
+      transition: left 0.3s ease;
+    }
   }
 }
+
