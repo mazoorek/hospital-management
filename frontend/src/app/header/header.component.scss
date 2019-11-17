@@ -1,0 +1,28 @@
+@import "../../common/common";
+
+:host {
+  .header-section {
+    @include section;
+
+    .title {
+      font-size: $font-size-huge;
+      margin: 0;
+      letter-spacing: $header-section-title-letter-spacing;
+    }
+
+    .subtitle {
+      margin-top: $subtitle-margin-top;
+      font-size: $font-size-big;
+      letter-spacing: $header-section-subtitle-letter-spacing;
+      opacity: $subtitle-opacity;
+    }
+
+    navbar {
+      &.fixed {
+        position: fixed;
+        top: 0;
+        bottom: unset;
+      }
+    }
+  }
+}
