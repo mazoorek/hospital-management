@@ -1,6 +1,6 @@
 import {ElementRef} from "@angular/core";
 
-export interface PageSections {
+export interface PageSectionsModel {
   home: ElementRef,
   oddzialy: ElementRef,
   pacjenci: ElementRef,

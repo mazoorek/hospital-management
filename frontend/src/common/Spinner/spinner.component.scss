@@ -1,0 +1,26 @@
+@import "../common";
+
+:host {
+  .loader {
+    border: $spinner-width solid $white-color;
+    border-radius: 50%;
+    width: $spinner-size;
+    height: $spinner-size;
+    animation: spin 2s linear infinite;
+
+    &.aquamarine {
+      border-top: $spinner-width solid $aquamarine-color;
+      border-right: $spinner-width solid $aquamarine-color;
+      border-bottom: $spinner-width solid $aquamarine-color;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}

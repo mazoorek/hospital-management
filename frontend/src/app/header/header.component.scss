@@ -3,7 +3,8 @@
 :host {
   .header-section {
     @include section;
-
+    justify-content: center;
+    padding: 0;
     .title {
       font-size: $font-size-huge;
       margin: 0;
@@ -11,10 +12,10 @@
     }
 
     .subtitle {
-      margin-top: $subtitle-margin-top;
-      font-size: $font-size-big;
+      margin-top: $section-subtitle-margin-top;
+      font-size: $font-size-medium;
       letter-spacing: $header-section-subtitle-letter-spacing;
-      opacity: $subtitle-opacity;
+      opacity: $section-subtitle-opacity;
     }
 
     navbar {
