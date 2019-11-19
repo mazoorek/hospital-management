@@ -1,4 +1,8 @@
-export interface ListColumn {
-  name: string;
-  content: string [];
+export interface Row {
+  row: string [];
+}
+
+export interface ListContent {
+  columns: string [];
+  rows: Row [];
 }
