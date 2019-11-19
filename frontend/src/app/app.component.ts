@@ -7,9 +7,8 @@ const TAB_CONTAINER_HEIGHT: number = 70;
   selector: 'app-root',
   template: `
       <header #header [fixed]="fixed"></header>
-      <div class="section" #Oddzialy>
-          <h1>Oddziały</h1>
-      </div>
+      <hospital-ward #Oddzialy>
+      </hospital-ward>
       <div class="section" #Pacjenci>
           <h1>Pacjenci</h1>
       </div>
@@ -69,7 +68,7 @@ export class AppComponent implements AfterViewInit {
     });
   }
 
-  checkTabContainerPosition() {
+  checkTabContainerPosition(): void {
     let offset =
       this.home.nativeElement.offsetTop + this.home.nativeElement.offsetHeight - TAB_CONTAINER_HEIGHT;
     this.fixed = window.pageYOffset > offset;

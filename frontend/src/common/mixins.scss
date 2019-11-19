@@ -1,12 +1,24 @@
 @mixin section {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100%;
-  position: relative;
   background: $section-background-color;
   text-align: center;
-  padding: 0;
+  padding-top: $section-padding-top;
+
+  .section-header {
+    font-size: $font-size-huge;
+    letter-spacing: $section-header-letter-spacing;
+    padding-bottom: $section-header-padding-bottom;
+  }
 }
+
+@mixin flex {
+  display: flex;
+  flex: 1;
+  min-width: 1px;
+}
+
+

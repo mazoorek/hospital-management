@@ -6,8 +6,11 @@ $navbar-item-letter-spacing: 1px;
 $navbar-slider-height: 6px;
 
 //section
-$subtitle-margin-top: 20px;
-$subtitle-opacity: 0.6;
+$section-padding-top: 220px;
+$section-subtitle-margin-top: 20px;
+$section-subtitle-opacity: 0.6;
+$section-header-letter-spacing: 5px;
+$section-header-padding-bottom: 60px;
 $header-section-title-letter-spacing: 16px;
 $header-section-subtitle-letter-spacing: 3px;
 
@@ -16,4 +19,14 @@ $navbar-z-index: 10;
 
 //font-sizes
 $font-size-huge: 48px;
-$font-size-big: 16px;
+$font-size-very-big: 32px;
+$font-size-big: 20px;
+$font-size-medium: 16px;
+
+//list
+$list-box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
+$list-height: 580px;
+
+//spinner
+$spinner-size: 60px;
+$spinner-width: 8px;
