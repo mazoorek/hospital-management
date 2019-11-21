@@ -9,9 +9,7 @@ const TAB_CONTAINER_HEIGHT: number = 70;
       <header #header [fixed]="fixed"></header>
       <hospital-wards #Oddzialy></hospital-wards>
       <patients #Pacjenci></patients>
-      <div class="section" #Pracownicy>
-          <h1>Pracownicy</h1>
-      </div>
+      <employees #Pracownicy></employees>
       <div class="section" #Lekarze>
           <h1>Lekarze</h1>
       </div>

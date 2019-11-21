@@ -6,9 +6,10 @@ import {NavbarComponent} from "./header/navbar/navbar.component";
 import {HeaderComponent} from "./header/header.component";
 import {HospitalWardsComponent} from "./hospital-wards/hospital-wards.component";
 import {HttpClientModule} from "@angular/common/http";
-import {PatientComponent} from "./patients/patient.component";
+import {PatientsComponent} from "./patients/patients.component";
 import {ListComponent} from "../common/List/list.component";
 import {SpinnerComponent} from "../common/Spinner/spinner.component";
+import {EmployeesComponent} from "./employees/employees.component";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {SpinnerComponent} from "../common/Spinner/spinner.component";
     HospitalWardsComponent,
     ListComponent,
     SpinnerComponent,
-    PatientComponent
+    PatientsComponent,
+    EmployeesComponent
   ],
   imports: [
     BrowserModule,

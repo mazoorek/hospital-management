@@ -6,6 +6,8 @@ export interface NavbarEssential {
   navbarElement: ElementRef
 }
 
+const ADDITIONAL_OFFSET: number = 20; // bez tego czasem slider ląduje na zakładce obok
+
 @Component({
   selector: 'navbar',
   template: `
@@ -115,9 +117,9 @@ export class NavbarComponent {
   findCurrentTabSelector() {
     if (this.navbarEssentials) {
       this.navbarEssentials.forEach(element => {
-          if (element.sectionElement.nativeElement.offsetTop <= window.pageYOffset+20
+          if (element.sectionElement.nativeElement.offsetTop <= window.pageYOffset + ADDITIONAL_OFFSET
             && element.sectionElement.nativeElement.offsetTop
-            + element.sectionElement.nativeElement.offsetHeight >= window.pageYOffset+20) {
+            + element.sectionElement.nativeElement.offsetHeight >= window.pageYOffset + ADDITIONAL_OFFSET) {
             this.currentNavbarItem = element.navbarElement;
             this.setSliderCss();
           }
