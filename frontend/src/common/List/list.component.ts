@@ -7,13 +7,13 @@ const MAX_ROW_WIDTH: number = 115;
   selector: 'list',
   template: `
       <div class="list-header"
-           [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength + '.px': 'unset'}">
+           [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength() + '.px': 'unset'}">
           <div class="list-header-item" *ngFor="let headerColumn of headerColumns">
               {{headerColumn}}
           </div>
       </div>
       <div class="rows"
-           [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength + '.px': 'unset'}">
+           [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength() + '.px': 'unset'}">
           <div class="row" *ngFor="let row of rows">
               <div class="row-item" *ngFor="let rowItem of row.row">
                   {{rowItem}}
