@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 
 @Injectable()
-export class HospitalWardComponentService {
+export class HospitalWardsComponentService {
 
   constructor(private http: HttpClient) {
   }

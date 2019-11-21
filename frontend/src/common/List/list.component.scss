@@ -5,14 +5,16 @@
   overflow-y: auto;
   background-color: $white-color;
   box-shadow: $list-box-shadow;
-  padding: 20px;
+  padding: $list-padding;
+
 
   .list-header {
-    @include flex;
+    display: flex;
 
     .list-header-item {
-      flex-grow: 1;
+      flex: 1 1 0;
       font-size: $font-size-big;
+      text-align: left;
 
       &:not(:last-of-type) {
         padding-right: 15px;
@@ -21,19 +23,20 @@
   }
 
   .rows {
-    @include flex;
-    flex-grow: 1;
-    flex-flow: column;
-
     .row {
-      @include flex;
-      flex-grow: 1;
+      display: flex;
       border-top: 1px solid $grey-color;
 
       .row-item {
-        flex-grow: 1;
+        flex: 1 1 0;
         text-align: left;
-        padding: 15px 15px 15px 0;
+        padding-top: $list-row-item-padding;
+        padding-bottom: $list-row-item-padding;
+        text-overflow: ellipsis;
+
+        &:not(:last-of-type) {
+          padding-right: $list-row-item-padding;
+        }
       }
     }
   }

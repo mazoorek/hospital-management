@@ -7,11 +7,8 @@ const TAB_CONTAINER_HEIGHT: number = 70;
   selector: 'app-root',
   template: `
       <header #header [fixed]="fixed"></header>
-      <hospital-ward #Oddzialy>
-      </hospital-ward>
-      <div class="section" #Pacjenci>
-          <h1>Pacjenci</h1>
-      </div>
+      <hospital-wards #Oddzialy></hospital-wards>
+      <patients #Pacjenci></patients>
       <div class="section" #Pracownicy>
           <h1>Pracownicy</h1>
       </div>

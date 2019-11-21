@@ -4,9 +4,10 @@ import {AppComponent} from './app.component';
 import {FormsModule} from "@angular/forms";
 import {NavbarComponent} from "./header/navbar/navbar.component";
 import {HeaderComponent} from "./header/header.component";
-import {HospitalWardComponent} from "./hospital-ward/hospital-ward.component";
-import {ListComponent} from "../common/List/list.component";
+import {HospitalWardsComponent} from "./hospital-wards/hospital-wards.component";
 import {HttpClientModule} from "@angular/common/http";
+import {PatientComponent} from "./patients/patient.component";
+import {ListComponent} from "../common/List/list.component";
 import {SpinnerComponent} from "../common/Spinner/spinner.component";
 
 @NgModule({
@@ -14,9 +15,10 @@ import {SpinnerComponent} from "../common/Spinner/spinner.component";
     AppComponent,
     NavbarComponent,
     HeaderComponent,
-    HospitalWardComponent,
+    HospitalWardsComponent,
     ListComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    PatientComponent
   ],
   imports: [
     BrowserModule,
