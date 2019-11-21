@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {PatientsService} from "./patients.service";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
-import {Patient} from "./patient.model";
+import {Patient} from "./patients.model";
 
 @Component({
   selector: 'patients',
@@ -10,10 +10,10 @@ import {Patient} from "./patient.model";
       <spinner *ngIf="loading"></spinner>
       <list *ngIf="!loading" [listContent]="listContent"></list>
   `,
-  styleUrls: ['./patient.component.scss'],
+  styleUrls: ['./patients.component.scss'],
   providers: [PatientsService]
 })
-export class PatientComponent {
+export class PatientsComponent {
   patients: Patient [];
   loading: boolean = true;
   listContent: ListContent;
