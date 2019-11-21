@@ -115,9 +115,9 @@ export class NavbarComponent {
   findCurrentTabSelector() {
     if (this.navbarEssentials) {
       this.navbarEssentials.forEach(element => {
-          if (element.sectionElement.nativeElement.offsetTop <= window.pageYOffset
+          if (element.sectionElement.nativeElement.offsetTop <= window.pageYOffset+20
             && element.sectionElement.nativeElement.offsetTop
-            + element.sectionElement.nativeElement.offsetHeight >= window.pageYOffset) {
+            + element.sectionElement.nativeElement.offsetHeight >= window.pageYOffset+20) {
             this.currentNavbarItem = element.navbarElement;
             this.setSliderCss();
           }

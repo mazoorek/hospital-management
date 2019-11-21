@@ -1,39 +1,39 @@
 import {Component} from "@angular/core";
-import {HospitalWardComponentService} from "./hospital-ward.component.service";
+import {HospitalWardsComponentService} from "./hospital-wards.component.service";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
 
 
 @Component({
-  selector: 'hospital-ward',
+  selector: 'hospital-wards',
   template: `
       <h1 class="section-header">ODDZIAŁY</h1>
       <spinner *ngIf="loading"></spinner>
       <list *ngIf="!loading" [listContent]="listContent"></list>
   `,
-  styleUrls: ['./hospital-ward.component.scss'],
-  providers: [HospitalWardComponentService]
+  styleUrls: ['./hospital-wards.component.scss'],
+  providers: [HospitalWardsComponentService]
 })
-export class HospitalWardComponent {
+export class HospitalWardsComponent {
   hospitalWards: string[];
   loading: boolean = true;
   listContent: ListContent;
 
-  constructor(private hospitalWardComponentService: HospitalWardComponentService) {
+  constructor(private hospitalWardComponentService: HospitalWardsComponentService) {
     this.hospitalWardComponentService.getHospitalWards().subscribe(hospitalWards => {
       this.hospitalWards = hospitalWards;
-      this.loadListColumns();
+      this.loadListContent();
       this.loading = false;
     });
   }
 
-  loadListColumns(): void {
+  loadListContent(): void {
     this.listContent = {
       columns: ['oddziały'],
-      rows: this.putIntoRows()
+      rows: this.loadRows()
     };
   }
 
-  putIntoRows(): Row [] {
+  loadRows(): Row [] {
     let rows: Row[] = [];
     for(let hospitalWard of this.hospitalWards) {
       rows.push({row: [hospitalWard]});
