@@ -3,7 +3,7 @@ import {Employee} from "./employee.model";
 import {Observable, of} from "rxjs";
 
 @Injectable()
-export class EmployeeService {
+export class EmployeesService {
   getEmployees(): Observable<Employee []> {
     // return this.http.get<Employee []>('/employees');
     return of([

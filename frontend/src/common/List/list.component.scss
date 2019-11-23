@@ -17,7 +17,7 @@
       text-align: left;
 
       &:not(:last-of-type) {
-        padding-right: 15px;
+        padding-right: $list-row-item-padding;
       }
     }
   }

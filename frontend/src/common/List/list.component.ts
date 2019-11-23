@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {ListContent, Row} from "./ListContent/list-content.model";
 
-const MAX_ROW_WIDTH: number = 115;
+const MAX_ROW_WIDTH: number = 170;
 
 @Component({
   selector: 'list',

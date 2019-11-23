@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {EmployeeService} from "./employee.service";
+import {EmployeesService} from "./employees.service";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
 import {Employee} from "./employee.model";
 
@@ -11,14 +11,14 @@ import {Employee} from "./employee.model";
       <list *ngIf="!loading" [listContent]="listContent"></list>
   `,
   styleUrls: ['./employees.component.scss'],
-  providers: [EmployeeService]
+  providers: [EmployeesService]
 })
 export class EmployeesComponent {
   loading: boolean = true;
   listContent: ListContent;
   employees: Employee [];
 
-  constructor(private employeeService:EmployeeService){
+  constructor(private employeeService:EmployeesService){
     this.employeeService.getEmployees().subscribe(employees => {
       this.employees = employees;
       this.loadListContent();
