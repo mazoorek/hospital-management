@@ -8,15 +8,14 @@ export class HospitalWardsComponentService {
   constructor(private http: HttpClient) {
   }
 
-
   getHospitalWards(): Observable<string []> {
     // return this.http.get<string []>('/hospital-wards');
-   return of([
-     'Oddział Anestezjologii',
-     'Oddział Chirurgii Ogólnej',
-     'Oddział Onkologiczny',
-     'Oddział Kardiologiczny',
-     'Oddział Pediatryczny'
-   ]);
+    return of([
+      'Oddział Anestezjologii',
+      'Oddział Chirurgii Ogólnej',
+      'Oddział Onkologiczny',
+      'Oddział Kardiologiczny',
+      'Oddział Pediatryczny'
+    ]);
   }
 }

@@ -15,9 +15,7 @@ const TAB_CONTAINER_HEIGHT: number = 70;
           <h1>Personel</h1>
       </div>
       <leaves-of-absence #Urlopy></leaves-of-absence>
-      <div class="section" #Pokoje>
-          <h1>Pokoje</h1>
-      </div>
+      <rooms #Pokoje></rooms>
       <div class="section" #Wizyty>
           <h1>Wizyty</h1>
       </div>
