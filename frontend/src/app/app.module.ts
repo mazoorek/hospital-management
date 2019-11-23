@@ -11,6 +11,8 @@ import {ListComponent} from "../common/List/list.component";
 import {SpinnerComponent} from "../common/Spinner/spinner.component";
 import {EmployeesComponent} from "./employees/employees.component";
 import {DoctorsComponent} from "./doctors/doctors.component";
+import {LeavesOfAbsenceComponent} from "./leaves-of-absence/leaves-of-absence.component";
+
 
 
 @NgModule({
@@ -23,7 +25,8 @@ import {DoctorsComponent} from "./doctors/doctors.component";
     SpinnerComponent,
     PatientsComponent,
     EmployeesComponent,
-    DoctorsComponent
+    DoctorsComponent,
+    LeavesOfAbsenceComponent
   ],
   imports: [
     BrowserModule,
