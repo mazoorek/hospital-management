@@ -9,14 +9,20 @@ export class DoctorsService {
     return of([
       {
         id: '1',
+        name: 'Jan',
+        surname: 'Kowalski',
         specialization: 'kardiochirurgia'
       },
       {
         id: '2',
+        name: 'Jan',
+        surname: 'Kowalski',
         specialization: 'kardiochirurgia'
       },
       {
         id: '3',
+        name: 'Jan',
+        surname: 'Kowalski',
         specialization: 'kardiochirurgia'
       },
     ]);
