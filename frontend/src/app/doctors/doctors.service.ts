@@ -8,19 +8,19 @@ export class DoctorsService {
     // return this.http.get<Doctor []>('/doctors');
     return of([
       {
-        id: '1',
+        id: 1,
         name: 'Jan',
         surname: 'Kowalski',
         specialization: 'kardiochirurgia'
       },
       {
-        id: '2',
+        id: 2,
         name: 'Jan',
         surname: 'Kowalski',
         specialization: 'kardiochirurgia'
       },
       {
-        id: '3',
+        id: 3,
         name: 'Jan',
         surname: 'Kowalski',
         specialization: 'kardiochirurgia'

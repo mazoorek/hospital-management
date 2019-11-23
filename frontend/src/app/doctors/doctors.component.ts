@@ -38,7 +38,7 @@ export class DoctorsComponent {
     for (let doctor of this.doctors) {
       rows.push({
         row: [
-          doctor.id,
+          String(doctor.id),
           doctor.name,
           doctor.surname,
           doctor.specialization

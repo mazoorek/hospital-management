@@ -11,8 +11,9 @@ import {ListComponent} from "../common/List/list.component";
 import {SpinnerComponent} from "../common/Spinner/spinner.component";
 import {EmployeesComponent} from "./employees/employees.component";
 import {DoctorsComponent} from "./doctors/doctors.component";
-import {RoomsComponent} from "./rooms/rooms.component";
 import {LeavesOfAbsenceComponent} from "./leaves-of-absence/leaves-of-absence.component";
+import {RoomsComponent} from "./rooms/rooms.component";
+import {AppointmentsComponent} from "./appointments/appointments.component";
 
 
 
@@ -28,7 +29,8 @@ import {LeavesOfAbsenceComponent} from "./leaves-of-absence/leaves-of-absence.co
     EmployeesComponent,
     DoctorsComponent,
     LeavesOfAbsenceComponent,
-    RoomsComponent
+    RoomsComponent,
+    AppointmentsComponent
   ],
   imports: [
     BrowserModule,

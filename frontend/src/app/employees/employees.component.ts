@@ -38,7 +38,7 @@ export class EmployeesComponent {
     for (let employee of this.employees) {
       rows.push({
         row: [
-          employee.id,
+          String(employee.id),
           employee.name,
           employee.surname
         ]

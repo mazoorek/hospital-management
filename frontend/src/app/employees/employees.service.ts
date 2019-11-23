@@ -8,17 +8,17 @@ export class EmployeesService {
     // return this.http.get<Employee []>('/employees');
     return of([
       {
-        id: '1',
+        id: 1,
         name: 'Jan',
         surname: 'Kowalski'
       },
       {
-        id: '2',
+        id: 2,
         name: 'Jan',
         surname: 'Kowalski'
       },
       {
-        id: '3',
+        id: 3,
         name: 'Jan',
         surname: 'Kowalski'
       },

@@ -16,9 +16,7 @@ const TAB_CONTAINER_HEIGHT: number = 70;
       </div>
       <leaves-of-absence #Urlopy></leaves-of-absence>
       <rooms #Pokoje></rooms>
-      <div class="section" #Wizyty>
-          <h1>Wizyty</h1>
-      </div>
+      <appointments #Wizyty></appointments>
   `,
   styleUrls: ['./app.component.scss']
 })
