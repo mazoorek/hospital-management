@@ -9,13 +9,13 @@ export class HospitalWardsComponentService {
   }
 
   getHospitalWards(): Observable<string []> {
-    // return this.http.get<string []>('/hospital-wards');
-    return of([
-      'Oddział Anestezjologii',
-      'Oddział Chirurgii Ogólnej',
-      'Oddział Onkologiczny',
-      'Oddział Kardiologiczny',
-      'Oddział Pediatryczny'
-    ]);
+    return this.http.get<string []>('localhost:8080/api/hospital-wards');
+    // return of([
+    //   'Oddział Anestezjologii',
+    //   'Oddział Chirurgii Ogólnej',
+    //   'Oddział Onkologiczny',
+    //   'Oddział Kardiologiczny',
+    //   'Oddział Pediatryczny'
+    // ]);
   }
 }

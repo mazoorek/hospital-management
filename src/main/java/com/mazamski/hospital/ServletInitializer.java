@@ -1,4 +1,4 @@
-package com.mazamski.demo;
+package com.mazamski.hospital;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
