@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {HospitalWardsComponentService} from "./hospital-wards.component.service";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
+import {HospitalWard} from "./hospital-ward.model";
 
 
 @Component({
@@ -14,7 +15,7 @@ import {ListContent, Row} from "../../common/List/ListContent/list-content.model
   providers: [HospitalWardsComponentService]
 })
 export class HospitalWardsComponent {
-  hospitalWards: string[];
+  hospitalWards: HospitalWard[];
   loading: boolean = true;
   listContent: ListContent;
 
@@ -35,8 +36,12 @@ export class HospitalWardsComponent {
 
   loadRows(): Row [] {
     let rows: Row[] = [];
-    for(let hospitalWard of this.hospitalWards) {
-      rows.push({row: [hospitalWard]});
+    for (let hospitalWard of this.hospitalWards) {
+      rows.push({
+        row: [
+          hospitalWard.name,
+        ]
+      })
     }
     return rows;
   }
