@@ -1,4 +1,4 @@
-package com.mazamski.demo;
+package com.mazamski.hospital;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
