@@ -1,6 +1,6 @@
-package com.mazamski.hospital.ward;
+package com.mazamski.hospital.specialization;
 
-import com.mazamski.hospital.ward.model.HospitalWard;
+import com.mazamski.hospital.specialization.model.Specialization;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/hospital-wards")
+@RequestMapping("/specializations")
 @AllArgsConstructor
 @Transactional
-public class HospitalWardController {
+public class SpecializationController {
 
     @GetMapping()
-    public List<HospitalWard> getHospitalWards() {
-        return hospitalWardMapper.getHospitalWards();
+    public List<Specialization> getSpecializations() {
+        return specializationMapper.getSpecializations();
     }
 
-    private HospitalWardMapper hospitalWardMapper;
+    private SpecializationMapper specializationMapper;
 }
