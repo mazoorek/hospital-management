@@ -1,4 +1,4 @@
-package com.mazamski.hospital.ward.model;
+package com.mazamski.hospital.specialization.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class HospitalWard {
+public class Specialization {
     String name;
 }
