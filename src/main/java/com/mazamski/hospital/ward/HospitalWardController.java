@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/hospital-wards")
+@RequestMapping("/hospital-wards")
 @AllArgsConstructor
 public class HospitalWardController {
 

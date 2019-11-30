@@ -10,7 +10,7 @@ export class HospitalWardsComponentService {
   }
 
   getHospitalWards(): Observable<HospitalWard []> {
-    return this.http.get<HospitalWard []>('http://localhost:8080/api/hospital-wards');
+    return this.http.get<HospitalWard []>('/api/hospital-wards');
     // return of([
     //   'Oddział Anestezjologii',
     //   'Oddział Chirurgii Ogólnej',
