@@ -11,25 +11,25 @@ const ADDITIONAL_OFFSET: number = 20; // bez tego czasem slider ląduje na zakł
 @Component({
   selector: 'navbar',
   template: `
-      <a class="navbar-item" #HomeNavbarItem
-         (click)="navigationItemClicked(homeNavbarItem)">Home</a>
-      <a class="navbar-item" #OddzialyNavbarItem
-         (click)="navigationItemClicked(oddzialyNavbarItem)">Oddziały</a>
-      <a class="navbar-item" #PacjenciNavbarItem
-         (click)="navigationItemClicked(pacjenciNavbarItem)">Pacjenci</a>
-      <a class="navbar-item" #PracownicyNavbarItem
-         (click)="navigationItemClicked(pracownicyNavbarItem)">Pracownicy</a>
-      <a class="navbar-item" #LekarzeNavbarItem
-         (click)="navigationItemClicked(lekarzeNavbarItem)">Lekarze</a>
-      <a class="navbar-item" #PersonelNavbarItem
-         (click)="navigationItemClicked(personelNavbarItem)">Personel</a>
-      <a class="navbar-item" #UrlopyNavbarItem
-         (click)="navigationItemClicked(urlopyNavbarItem)">Urlopy</a>
-      <a class="navbar-item" #PokojeNavbarItem
-         (click)="navigationItemClicked(pokojeNavbarItem)">Pokoje</a>
-      <a class="navbar-item" #WizytyNavbarItem
-         (click)="navigationItemClicked(wizytyNavbarItem)">Wizyty</a>
-      <span class="navbar-slider" [ngStyle]="{'width.px': sliderWidth, 'left.px': sliderLeft}"></span>
+    <a class="navbar-item" #HomeNavbarItem
+       (click)="navigationItemClicked(homeNavbarItem)">Home</a>
+    <a class="navbar-item" #OddzialyNavbarItem
+       (click)="navigationItemClicked(oddzialyNavbarItem)">Oddziały</a>
+    <a class="navbar-item" #PacjenciNavbarItem
+       (click)="navigationItemClicked(pacjenciNavbarItem)">Pacjenci</a>
+    <a class="navbar-item" #PracownicyNavbarItem
+       (click)="navigationItemClicked(pracownicyNavbarItem)">Pracownicy</a>
+    <a class="navbar-item" #LekarzeNavbarItem
+       (click)="navigationItemClicked(lekarzeNavbarItem)">Lekarze</a>
+    <a class="navbar-item" #PersonelNavbarItem
+       (click)="navigationItemClicked(personelNavbarItem)">Personel</a>
+    <a class="navbar-item" #UrlopyNavbarItem
+       (click)="navigationItemClicked(urlopyNavbarItem)">Urlopy</a>
+    <a class="navbar-item" #PokojeNavbarItem
+       (click)="navigationItemClicked(pokojeNavbarItem)">Pokoje</a>
+    <a class="navbar-item" #WizytyNavbarItem
+       (click)="navigationItemClicked(wizytyNavbarItem)">Wizyty</a>
+    <span class="navbar-slider" [ngStyle]="{'width.px': sliderWidth, 'left.px': sliderLeft}"></span>
   `,
   styleUrls: ['./navbar.component.scss']
 })

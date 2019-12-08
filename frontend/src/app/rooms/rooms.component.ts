@@ -6,9 +6,9 @@ import {Room} from "./room.model";
 @Component({
   selector: 'rooms',
   template: `
-      <h1 class="section-header">PACJENCI</h1>
-      <spinner *ngIf="loading"></spinner>
-      <list *ngIf="!loading" [listContent]="listContent"></list>
+    <h1 class="section-header">POKOJE</h1>
+    <spinner *ngIf="loading"></spinner>
+    <list *ngIf="!loading" [listContent]="listContent"></list>
   `,
   styleUrls: ['./rooms.component.scss'],
   providers: [RoomsService]
@@ -18,7 +18,7 @@ export class RoomsComponent {
   loading: boolean = true;
   listContent: ListContent;
 
-  constructor(private roomsService:RoomsService) {
+  constructor(private roomsService: RoomsService) {
     this.roomsService.getRooms().subscribe(rooms => {
       this.rooms = rooms;
       this.loadListContent();
@@ -28,7 +28,7 @@ export class RoomsComponent {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['numer', 'oddziały'],
+      columns: ['id', 'numer', 'oddziały'],
       rows: this.loadRows()
     }
   }
@@ -38,8 +38,9 @@ export class RoomsComponent {
     for (let room of this.rooms) {
       rows.push({
         row: [
+          String(room.id),
           String(room.number),
-          room.hospitalWard
+          room.wardName
         ]
       })
     }

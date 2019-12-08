@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class Room {
     Long id;
     Integer number;
-    String name;
+    String wardName;
 }
 

@@ -1,24 +1,15 @@
 import {Injectable} from "@angular/core";
 import {Observable, of} from "rxjs";
 import {Room} from "./room.model";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable()
 export class RoomsService {
+
+  constructor(private http: HttpClient) {
+  }
+
   getRooms(): Observable<Room []> {
-    // return this.http.get<Room []>('/rooms');
-    return of([
-      {
-        number: 1,
-        hospitalWard: 'Oddział Anestezjologii'
-      },
-      {
-        number: 2,
-        hospitalWard: 'Oddział Anestezjologii'
-      },
-      {
-        number: 3,
-        hospitalWard: 'Oddział Anestezjologii'
-      },
-    ]);
+    return this.http.get<Room []>('/api/rooms');
   }
 }

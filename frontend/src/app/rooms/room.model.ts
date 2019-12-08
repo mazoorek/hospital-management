@@ -1,4 +1,5 @@
 export interface Room {
+  id: number;
   number: number;
-  hospitalWard: string;
+  wardName: string;
 }
