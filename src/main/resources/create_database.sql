@@ -1,3 +1,10 @@
+drop procedure if exists create_database;
+drop procedure if exists drop_old_tables;
+drop procedure if exists  create_new_tables;
+drop procedure if exists fill_tables_with_values;
+drop function if exists count_tables;
+
+
 create procedure create_database()
 begin
     CREATE DATABASE IF NOT EXISTS hospital_management;
@@ -5,7 +12,7 @@ begin
     call drop_old_tables();
     call create_new_tables();
     call fill_tables_with_values();
-end ^;
+end;
 
 create procedure drop_old_tables()
 begin
@@ -23,7 +30,7 @@ begin
     drop table if exists charakter_wizyty;
     drop table if exists wizyta;
     SET FOREIGN_KEY_CHECKS = 1;
-end ^;
+end;
 
 create procedure create_new_tables()
 begin
@@ -220,7 +227,7 @@ begin
         add constraint visit_fk_patient_type_of_operation foreign key (typ_operacji) references typ_operacji (typ) on delete cascade;
     alter table wizyta
         add constraint wizyta_u_1 unique (data_poczatku, pesel_pacjenta);
-end ^;
+end;
 
 create procedure fill_tables_with_values()
 begin
@@ -351,9 +358,17 @@ begin
 
     insert into wizyta(data_poczatku, data_konca, pesel_pacjenta, id_lekarza, pokoj, charakter_wizyty)
     VALUES (current_date, date_add(current_date, interval 1 hour), '64092774485', 3, 4, 'wizyta');
-end ^;
+end;
 
-call create_database() ^;
+create function count_tables()
+    returns integer
+begin
+    return
+        (select count(*)
+         FROM INFORMATION_SCHEMA.TABLES
+         WHERE TABLE_TYPE = 'BASE TABLE'
+           AND TABLE_SCHEMA = 'hospital_management');
+end;
 
 
 
