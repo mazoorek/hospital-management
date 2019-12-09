@@ -1,10 +1,8 @@
 package com.mazamski.hospital.specialization;
 
 import com.mazamski.hospital.specialization.model.Specialization;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import com.mazamski.hospital.ward.model.HospitalWard;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -15,4 +13,10 @@ public interface SpecializationMapper {
             @Result(property = "name", column = "nazwa"),
     })
     List<Specialization> getSpecializations();
+
+    @Insert("insert into specjalizacja(nazwa) values(#{name})")
+    void insertSpecialization(Specialization specialization);
+
+    @Delete("delete from specjalizacja where name = #{name}")
+    void deleteSpecialization(String name);
 }
