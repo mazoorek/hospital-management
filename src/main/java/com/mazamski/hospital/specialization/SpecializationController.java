@@ -23,9 +23,9 @@ public class SpecializationController {
         specializationMapper.insertSpecialization(specialization);
     }
 
-    @PostMapping("/{hospitalWardName}")
-    void deleteSpecialization(@PathVariable String specializationName) {
-        specializationMapper.deleteSpecialization(specializationName);
+    @PostMapping("/{specjalizationId}")
+    void deleteSpecialization(@PathVariable Long specjalizationId) {
+        specializationMapper.deleteSpecialization(specjalizationId);
     }
 
     private SpecializationMapper specializationMapper;

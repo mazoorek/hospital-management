@@ -29,7 +29,7 @@ export class HospitalWardsComponent {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['oddziały'],
+      columns: ['id',' oddziały'],
       rows: this.loadRows()
     };
   }
@@ -39,6 +39,7 @@ export class HospitalWardsComponent {
     for (let hospitalWard of this.hospitalWards) {
       rows.push({
         row: [
+          String(hospitalWard.id),
           hospitalWard.name,
         ]
       })

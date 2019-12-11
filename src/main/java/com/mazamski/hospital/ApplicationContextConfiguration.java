@@ -49,7 +49,6 @@ public class ApplicationContextConfiguration {
         SimpleJdbcCall countNumberOfTablesCall = new SimpleJdbcCall(dataSource())
                 .withFunctionName("count_tables");
         Integer numberOfTablesInDatabase = (Integer) (countNumberOfTablesCall.execute()).get("return");
-        //System.out.println("W bazie znajduje się " + numberOfTablesInDatabase + " tabel");
         log.info("W tabeli znajduje się {} tabel", numberOfTablesInDatabase);
 
     }
