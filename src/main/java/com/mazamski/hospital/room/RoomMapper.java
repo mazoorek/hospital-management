@@ -9,17 +9,22 @@ import java.util.List;
 @Mapper()
 public interface RoomMapper {
 
-    @Select("select id, numer, nazwa_oddzialu from pokoj")
+    @Select("select pokoj_id, numer, nazwa as nazwa_oddzialu " +
+            "from pokoj p join oddzial o " +
+            "on p.oddzial_id = o.oddzial_id")
     @Results({
-            @Result(property = "id", column = "id"),
+            @Result(property = "id", column = "pokoj_id"),
             @Result(property = "number", column = "numer"),
             @Result(property = "wardName", column = "nazwa_oddzialu"),
     })
     List<Room> getRooms();
 
-    @Insert("insert into pokoj(numer,nazwa_oddzialu) values(#{number},#{wardName}")
+    @Insert("insert into pokoj(numer,oddzial_id) " +
+            "values(#{number},select oddzial_id from oddzial " +
+            "where nazwa = #{wardName}")
     void insertRoom(Room room);
 
-    @Delete("delete from pokoj where id = #{id}")
-    void deleteRoom(Long id);
+    @Delete("delete from pokoj " +
+            "where pokoj_id = #{roomId}")
+    void deleteRoom(Long roomId);
 }

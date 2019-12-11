@@ -8,15 +8,16 @@ import java.util.List;
 
 @Mapper
 public interface SpecializationMapper {
-    @Select("select * from specjalizacja")
+    @Select("select specjalizacja_id, name from specjalizacja")
     @Results({
             @Result(property = "name", column = "nazwa"),
+            @Result(property = "id", column = "specjalizacja_id")
     })
     List<Specialization> getSpecializations();
 
     @Insert("insert into specjalizacja(nazwa) values(#{name})")
     void insertSpecialization(Specialization specialization);
 
-    @Delete("delete from specjalizacja where name = #{name}")
-    void deleteSpecialization(String name);
+    @Delete("delete from specjalizacja where specjalizacja_id = #{specializationId}")
+    void deleteSpecialization(Long specializationId);
 }

@@ -1,3 +1,4 @@
 export interface HospitalWard {
-  name: string
+  id: number;
+  name: string;
 }
