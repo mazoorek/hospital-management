@@ -3,7 +3,7 @@ import {Component, HostBinding, Input} from "@angular/core";
 @Component({
   selector: 'action-button',
   template:`
-    <p>{{text}}</p>
+    <p class="text">{{text}}</p>
   `,
   styleUrls: ['action-button.component.scss']
 })
@@ -16,6 +16,9 @@ export class ActionButtonComponent {
 
   @Input()
   @HostBinding('class.transparent') transparent = false;
+
+  @Input()
+  @HostBinding('class.aquamarine') aquamarine = false;
 
   @Input() text = '';
 }
