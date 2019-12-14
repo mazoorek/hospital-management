@@ -7,16 +7,30 @@
   box-shadow: $list-box-shadow;
   padding: $list-padding;
 
+  .filter-input {
+    width: 150px;
+    height: 50px;
+    font-size:24px;
+  }
 
-  .list-header {
+  @mixin primary-row {
     display: flex;
 
-    .list-header-item {
+    .primary-row-item {
       flex: 1 1 0;
       font-size: $font-size-big;
       text-align: left;
       cursor: pointer;
     }
+  }
+
+  .list-header {
+    @include primary-row;
+  }
+
+  .list-filter {
+    @include primary-row;
+    margin-bottom: 20px;
   }
 
   .rows {

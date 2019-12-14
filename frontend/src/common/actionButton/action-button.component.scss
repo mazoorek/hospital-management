@@ -3,10 +3,14 @@
 :host {
   border-radius: 5px;
   padding: 10px;
-  width: 60px;
-  height: 40px;
+  width: 70px;
+  height: 50px;
   margin: auto 0;
   cursor: pointer;
+
+  .text {
+    margin: auto;
+  }
 
   &.green {
     background-color: $green-color;
@@ -14,6 +18,10 @@
 
   &.red {
     background-color: $red-color;
+  }
+
+  &.aquamarine {
+    background-color: $aquamarine-color;
   }
 
   &.transparent {
