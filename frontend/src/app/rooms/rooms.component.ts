@@ -8,7 +8,9 @@ import {Room} from "./room.model";
   template: `
     <h1 class="section-header">POKOJE</h1>
     <spinner *ngIf="loading"></spinner>
-    <list *ngIf="!loading" [listContent]="listContent"></list>
+    <list *ngIf="!loading"
+          (removeRowChange)="deleteRoom($event)"
+          [listContent]="listContent"></list>
   `,
   styleUrls: ['./rooms.component.scss'],
   providers: [RoomsService]
@@ -19,11 +21,7 @@ export class RoomsComponent {
   listContent: ListContent;
 
   constructor(private roomsService: RoomsService) {
-    this.roomsService.getRooms().subscribe(rooms => {
-      this.rooms = rooms;
-      this.loadListContent();
-      this.loading = false;
-    });
+    this.getRooms();
   }
 
   loadListContent(): void {
@@ -45,5 +43,20 @@ export class RoomsComponent {
       })
     }
     return rows;
+  }
+
+  getRooms(): void {
+    this.roomsService.getRooms().subscribe(rooms => {
+      this.rooms = rooms;
+      this.loadListContent();
+      this.loading = false;
+    });
+  }
+
+  deleteRoom(roomId: number): void {
+    this.loading = true;
+    this.roomsService.deleteRoom(roomId).subscribe(()=> {
+      this.getRooms();
+    });
   }
 }
