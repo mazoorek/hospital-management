@@ -15,10 +15,7 @@
       flex: 1 1 0;
       font-size: $font-size-big;
       text-align: left;
-
-      &:not(:last-of-type) {
-        padding-right: $list-row-item-padding;
-      }
+      cursor: pointer;
     }
   }
 

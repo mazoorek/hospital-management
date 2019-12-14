@@ -14,7 +14,7 @@ import {DoctorsComponent} from "./doctors/doctors.component";
 import {LeavesOfAbsenceComponent} from "./leaves-of-absence/leaves-of-absence.component";
 import {RoomsComponent} from "./rooms/rooms.component";
 import {AppointmentsComponent} from "./appointments/appointments.component";
-import {ActionButtonComponent} from "../common/button/action-button.component";
+import {ActionButtonComponent} from "../common/actionButton/action-button.component";
 
 
 
