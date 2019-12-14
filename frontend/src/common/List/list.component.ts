@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {ListContent, Row} from "./ListContent/list-content.model";
 
 const MAX_ROW_WIDTH: number = 170;
@@ -6,25 +6,33 @@ const MAX_ROW_WIDTH: number = 170;
 @Component({
   selector: 'list',
   template: `
-      <div class="list-header"
-           [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength() + '.px': 'unset'}">
-          <div class="list-header-item" *ngFor="let headerColumn of headerColumns">
-              {{headerColumn}}
-          </div>
+    <div class="list-header"
+         [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength() + '.px': 'unset'}">
+      <div class="list-header-item" *ngFor="let headerColumn of headerColumns">
+        {{headerColumn}}
       </div>
-      <div class="rows"
-           [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength() + '.px': 'unset'}">
-          <div class="row" *ngFor="let row of rows">
-              <div class="row-item" *ngFor="let rowItem of row.row">
-                  {{rowItem}}
-              </div>
-          </div>
+      <action-button [hidden]="true"></action-button>
+    </div>
+    <div class="rows"
+         [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength() + '.px': 'unset'}">
+      <div class="row" *ngFor="let row of rows; let i = index">
+        <div class="row-item" *ngFor="let rowItem of row.row">
+          {{rowItem}}
+        </div>
+        <action-button [red]="true"
+                       text="usuń"
+                       (click)="removeRow(i)"
+                       [ngStyle]="{'margin-left.px': 30}"></action-button>
       </div>
+    </div>
   `,
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
   @Input() listContent: ListContent;
+  @Output() removeRowChange: EventEmitter<number> = new EventEmitter<number>();
+
+  readonly BUTTON_SPACE: number = 90;
 
   headerColumns: string [];
   rows: Row [];
@@ -39,6 +47,10 @@ export class ListComponent implements OnInit {
   }
 
   getMaxRowLength(): number {
-    return this.getHeaderColumns().length * MAX_ROW_WIDTH;
+    return this.getHeaderColumns().length * MAX_ROW_WIDTH + this.BUTTON_SPACE;
+  }
+
+  removeRow(rowIndex: number): void {
+    this.removeRowChange.emit(+this.rows[rowIndex].row[0]);
   }
 }

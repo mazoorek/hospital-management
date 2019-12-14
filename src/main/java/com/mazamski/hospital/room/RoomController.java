@@ -23,7 +23,7 @@ public class RoomController {
         roomMapper.insertRoom(room);
     }
 
-    @PostMapping("/{roomId}")
+    @DeleteMapping("/{roomId}")
     void deleteRoom(@PathVariable Long roomId) {
         roomMapper.deleteRoom(roomId);
     }

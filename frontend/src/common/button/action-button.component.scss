@@ -1,0 +1,23 @@
+@import "../common";
+
+:host {
+  border-radius: 5px;
+  padding: 10px;
+  width: 60px;
+  height: 40px;
+  margin: auto 0;
+  cursor: pointer;
+
+  &.green {
+    background-color: $green-color;
+  }
+
+  &.red {
+    background-color: $red-color;
+  }
+
+  &.hidden {
+    opacity: 0;
+    cursor: none;
+  }
+}
