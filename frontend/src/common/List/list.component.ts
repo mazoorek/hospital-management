@@ -8,10 +8,13 @@ const MAX_ROW_WIDTH: number = 170;
   template: `
     <div class="list-header"
          [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength() + '.px': 'unset'}">
-      <div class="list-header-item" *ngFor="let headerColumn of headerColumns">
+      <div class="list-header-item"
+           (click)="sortRows(headerColumn)"
+           *ngFor="let headerColumn of headerColumns">
         {{headerColumn}}
+        <span *ngIf="headerColumn===sortingColumn">&darr;</span>
       </div>
-      <action-button [hidden]="true"></action-button>
+      <action-button [transparent]="true"></action-button>
     </div>
     <div class="rows"
          [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength() + '.px': 'unset'}">
@@ -36,10 +39,12 @@ export class ListComponent implements OnInit {
 
   headerColumns: string [];
   rows: Row [];
+  sortingColumn: string = 'ID';
 
   ngOnInit(): void {
     this.headerColumns = this.getHeaderColumns();
     this.rows = this.listContent.rows;
+    this.sortRows(this.sortingColumn);
   }
 
   getHeaderColumns(): string[] {
@@ -52,5 +57,28 @@ export class ListComponent implements OnInit {
 
   removeRow(rowIndex: number): void {
     this.removeRowChange.emit(+this.rows[rowIndex].row[0]);
+  }
+
+
+  sortRows(sortingColumn: string): void {
+    let indexOfSortingColumn = this.headerColumns
+      .findIndex((element) => element === sortingColumn);
+    this.rows
+      .sort((r1, r2) => {
+        let a: string = r1.row[indexOfSortingColumn];
+        let b: string = r2.row[indexOfSortingColumn];
+        if (isNaN(+a) && isNaN(+b)) {
+          if (a > b || a.length>0 && b.length == 0) {
+            return 1;
+          }
+          if (b > a || b.length>0 && a.length == 0) {
+            return -1;
+          }
+          return 0;
+        } else {
+          return +a - +b;
+        }
+      });
+    this.sortingColumn = sortingColumn;
   }
 }

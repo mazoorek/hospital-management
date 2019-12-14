@@ -55,7 +55,7 @@ export class RoomsComponent {
 
   deleteRoom(roomId: number): void {
     this.loading = true;
-    this.roomsService.deleteRoom(roomId).subscribe(()=> {
+    this.roomsService.deleteRoom(roomId).subscribe(() => {
       this.getRooms();
     });
   }

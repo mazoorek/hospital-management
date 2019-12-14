@@ -14,5 +14,8 @@ export class ActionButtonComponent {
   @Input()
   @HostBinding('class.red') red = false;
 
+  @Input()
+  @HostBinding('class.transparent') transparent = false;
+
   @Input() text = '';
 }
