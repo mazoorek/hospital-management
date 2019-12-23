@@ -13,36 +13,48 @@ const ADDITIONAL_OFFSET: number = 20; // bez tego czasem slider ląduje na zakł
   template: `
     <a class="navbar-item" #HomeNavbarItem
        (click)="navigationItemClicked(homeNavbarItem)">Home</a>
-    <a class="navbar-item" #OddzialyNavbarItem
-       (click)="navigationItemClicked(oddzialyNavbarItem)">Oddziały</a>
-    <a class="navbar-item" #PacjenciNavbarItem
-       (click)="navigationItemClicked(pacjenciNavbarItem)">Pacjenci</a>
-    <a class="navbar-item" #PracownicyNavbarItem
-       (click)="navigationItemClicked(pracownicyNavbarItem)">Pracownicy</a>
-    <a class="navbar-item" #LekarzeNavbarItem
-       (click)="navigationItemClicked(lekarzeNavbarItem)">Lekarze</a>
-    <a class="navbar-item" #PersonelNavbarItem
-       (click)="navigationItemClicked(personelNavbarItem)">Personel</a>
-    <a class="navbar-item" #UrlopyNavbarItem
-       (click)="navigationItemClicked(urlopyNavbarItem)">Urlopy</a>
-    <a class="navbar-item" #PokojeNavbarItem
-       (click)="navigationItemClicked(pokojeNavbarItem)">Pokoje</a>
-    <a class="navbar-item" #WizytyNavbarItem
-       (click)="navigationItemClicked(wizytyNavbarItem)">Wizyty</a>
+    <a class="navbar-item" #WardsNavbarItem
+       (click)="navigationItemClicked(wardsNavbarItem)">Oddziały</a>
+    <a class="navbar-item" #SpecializationsNavbarItem
+       (click)="navigationItemClicked(specializationsNavbarItem)">Specjalizacje</a>
+    <a class="navbar-item" #FunctionsNavbarItem
+       (click)="navigationItemClicked(functionsNavbarItem)">Funkcje</a>
+    <a class="navbar-item" #AppointmentTypesNavbarItem
+       (click)="navigationItemClicked(appointmentTypesNavbarItem)">Charaktery Wizyt</a>
+    <a class="navbar-item" #OperationTypesNavbarItem
+       (click)="navigationItemClicked(operationTypesNavbarItem)">Typy operacji</a>
+    <a class="navbar-item" #PatientsNavbarItem
+       (click)="navigationItemClicked(patientsNavbarItem)">Pacjenci</a>
+    <a class="navbar-item" #EmployeesNavbarItem
+       (click)="navigationItemClicked(employeesNavbarItem)">Pracownicy</a>
+    <a class="navbar-item" #DoctorsNavbarItem
+       (click)="navigationItemClicked(doctorsNavbarItem)">Lekarze</a>
+    <a class="navbar-item" #StaffNavbarItem
+       (click)="navigationItemClicked(staffNavbarItem)">Personel</a>
+    <a class="navbar-item" #LeavesNavbarItem
+       (click)="navigationItemClicked(leavesNavbarItem)">Urlopy</a>
+    <a class="navbar-item" #RoomsNavbarItem
+       (click)="navigationItemClicked(roomsNavbarItem)">Pokoje</a>
+    <a class="navbar-item" #AppointmentsNavbarItem
+       (click)="navigationItemClicked(appointmentsNavbarItem)">Wizyty</a>
     <span class="navbar-slider" [ngStyle]="{'width.px': sliderWidth, 'left.px': sliderLeft}"></span>
   `,
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
   @ViewChild('HomeNavbarItem', {read: ElementRef, static: false}) homeNavbarItem: ElementRef;
-  @ViewChild('OddzialyNavbarItem', {read: ElementRef, static: false}) oddzialyNavbarItem: ElementRef;
-  @ViewChild('PacjenciNavbarItem', {read: ElementRef, static: false}) pacjenciNavbarItem: ElementRef;
-  @ViewChild('PracownicyNavbarItem', {read: ElementRef, static: false}) pracownicyNavbarItem: ElementRef;
-  @ViewChild('LekarzeNavbarItem', {read: ElementRef, static: false}) lekarzeNavbarItem: ElementRef;
-  @ViewChild('PersonelNavbarItem', {read: ElementRef, static: false}) personelNavbarItem: ElementRef;
-  @ViewChild('UrlopyNavbarItem', {read: ElementRef, static: false}) urlopyNavbarItem: ElementRef;
-  @ViewChild('PokojeNavbarItem', {read: ElementRef, static: false}) pokojeNavbarItem: ElementRef;
-  @ViewChild('WizytyNavbarItem', {read: ElementRef, static: false}) wizytyNavbarItem: ElementRef;
+  @ViewChild('WardsNavbarItem', {read: ElementRef, static: false}) wardsNavbarItem: ElementRef;
+  @ViewChild('SpecializationsNavbarItem', {read: ElementRef, static: false}) specializationsNavbarItem: ElementRef;
+  @ViewChild('FunctionsNavbarItem', {read: ElementRef, static: false}) functionsNavbarItem: ElementRef;
+  @ViewChild('AppointmentTypesNavbarItem', {read: ElementRef, static: false}) appointmentTypesNavbarItem: ElementRef;
+  @ViewChild('OperationTypesNavbarItem', {read: ElementRef, static: false}) operationTypesNavbarItem: ElementRef;
+  @ViewChild('PatientsNavbarItem', {read: ElementRef, static: false}) patientsNavbarItem: ElementRef;
+  @ViewChild('EmployeesNavbarItem', {read: ElementRef, static: false}) employeesNavbarItem: ElementRef;
+  @ViewChild('DoctorsNavbarItem', {read: ElementRef, static: false}) doctorsNavbarItem: ElementRef;
+  @ViewChild('StaffNavbarItem', {read: ElementRef, static: false}) staffNavbarItem: ElementRef;
+  @ViewChild('LeavesNavbarItem', {read: ElementRef, static: false}) leavesNavbarItem: ElementRef;
+  @ViewChild('RoomsNavbarItem', {read: ElementRef, static: false}) roomsNavbarItem: ElementRef;
+  @ViewChild('AppointmentsNavbarItem', {read: ElementRef, static: false}) appointmentsNavbarItem: ElementRef;
 
   sliderWidth: number = 0;
   sliderLeft: number = 0;
@@ -68,36 +80,52 @@ export class NavbarComponent {
           navbarElement: this.homeNavbarItem
         },
         {
-          sectionElement: pageSections.oddzialy,
-          navbarElement: this.oddzialyNavbarItem
+          sectionElement: pageSections.wards,
+          navbarElement: this.wardsNavbarItem
         },
         {
-          sectionElement: pageSections.pacjenci,
-          navbarElement: this.pacjenciNavbarItem
+          sectionElement: pageSections.specializations,
+          navbarElement: this.specializationsNavbarItem
         },
         {
-          sectionElement: pageSections.pracownicy,
-          navbarElement: this.pracownicyNavbarItem
+          sectionElement: pageSections.functions,
+          navbarElement: this.functionsNavbarItem
         },
         {
-          sectionElement: pageSections.lekarze,
-          navbarElement: this.lekarzeNavbarItem
+          sectionElement: pageSections.appointmentTypes,
+          navbarElement: this.appointmentTypesNavbarItem
         },
         {
-          sectionElement: pageSections.personel,
-          navbarElement: this.personelNavbarItem
+          sectionElement: pageSections.operationTypes,
+          navbarElement: this.operationTypesNavbarItem
         },
         {
-          sectionElement: pageSections.urlopy,
-          navbarElement: this.urlopyNavbarItem
+          sectionElement: pageSections.patients,
+          navbarElement: this.patientsNavbarItem
         },
         {
-          sectionElement: pageSections.pokoje,
-          navbarElement: this.pokojeNavbarItem
+          sectionElement: pageSections.employees,
+          navbarElement: this.employeesNavbarItem
         },
         {
-          sectionElement: pageSections.wizyty,
-          navbarElement: this.wizytyNavbarItem
+          sectionElement: pageSections.doctors,
+          navbarElement: this.doctorsNavbarItem
+        },
+        {
+          sectionElement: pageSections.staff,
+          navbarElement: this.staffNavbarItem
+        },
+        {
+          sectionElement: pageSections.leavesOfAbsence,
+          navbarElement: this.leavesNavbarItem
+        },
+        {
+          sectionElement: pageSections.rooms,
+          navbarElement: this.roomsNavbarItem
+        },
+        {
+          sectionElement: pageSections.appointments,
+          navbarElement: this.appointmentsNavbarItem
         }
       ];
     });

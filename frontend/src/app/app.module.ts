@@ -15,8 +15,11 @@ import {LeavesOfAbsenceComponent} from "./leaves-of-absence/leaves-of-absence.co
 import {RoomsComponent} from "./rooms/rooms.component";
 import {AppointmentsComponent} from "./appointments/appointments.component";
 import {ActionButtonComponent} from "../common/actionButton/action-button.component";
-
-
+import {OperationTypesComponent} from "./operation-types/operation-types.component";
+import {SpecializationsComponent} from "./specializations/specializations.component";
+import {StaffComponent} from "./staff/staff.component";
+import {FunctionsComponent} from "./functions/functions.component";
+import {AppointmentTypesComponent} from "./visit-type/appointment-types.component";
 
 @NgModule({
   declarations: [
@@ -24,10 +27,15 @@ import {ActionButtonComponent} from "../common/actionButton/action-button.compon
     NavbarComponent,
     HeaderComponent,
     ActionButtonComponent,
+    OperationTypesComponent,
+    SpecializationsComponent,
     HospitalWardsComponent,
+    StaffComponent,
+    AppointmentTypesComponent,
     ListComponent,
     SpinnerComponent,
     PatientsComponent,
+    FunctionsComponent,
     EmployeesComponent,
     DoctorsComponent,
     LeavesOfAbsenceComponent,
