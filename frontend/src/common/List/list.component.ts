@@ -65,18 +65,22 @@ export class ListComponent implements OnInit {
       .findIndex((element) => element === sortingColumn);
     this.rows
       .sort((r1, r2) => {
-        let a: string = r1.row[indexOfSortingColumn];
-        let b: string = r2.row[indexOfSortingColumn];
-        if (isNaN(+a) && isNaN(+b)) {
-          if (a > b || a.length>0 && b.length == 0) {
-            return 1;
-          }
-          if (b > a || b.length>0 && a.length == 0) {
-            return -1;
-          }
-          return 0;
-        } else {
+        let a: string = r1.row[indexOfSortingColumn] ? r1.row[indexOfSortingColumn] : '';
+        let b: string = r2.row[indexOfSortingColumn] ? r2.row[indexOfSortingColumn] : '';
+        if (!isNaN(+a) && !isNaN(+b) && a.length > 0 && b.length > 0) {
           return +a - +b;
+        } else {
+          if (b.length > 0 && a.length == 0) {
+            return 1;
+          } else if(a.length > 0 && b.length == 0) {
+            return -1;
+          } else if (a > b) {
+            return 1;
+          } else if (b > a ) {
+            return -1;
+          } else {
+            return 0;
+          }
         }
       });
     this.sortingColumn = sortingColumn;

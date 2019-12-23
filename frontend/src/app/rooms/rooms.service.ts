@@ -1,8 +1,7 @@
 import {Injectable} from "@angular/core";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {Room} from "./room.model";
 import {HttpClient} from "@angular/common/http";
-import {HospitalWard} from "../hospital-wards/hospital-ward.model";
 
 @Injectable()
 export class RoomsService {
