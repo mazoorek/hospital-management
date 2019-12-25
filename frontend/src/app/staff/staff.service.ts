@@ -16,7 +16,7 @@ export class StaffService {
     return this.http.get<Staff []>(this.OPERATION_TYPES_API_URL);
   }
 
-  deleteStaffMember(staffId: number): Observable<Staff>  {
-    return this.http.delete<Staff>(this.OPERATION_TYPES_API_URL+String(staffId));
+  deleteStaffMember(staffId: number): Observable<Staff> {
+    return this.http.delete<Staff>(this.OPERATION_TYPES_API_URL + `/${staffId}`);
   }
 }

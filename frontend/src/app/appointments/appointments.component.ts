@@ -6,9 +6,9 @@ import {Appointment} from "./appointment.model";
 @Component({
   selector: 'appointments',
   template: `
-      <h1 class="section-header">WIZYTY</h1>
-      <spinner *ngIf="loading"></spinner>
-      <list *ngIf="!loading" [listContent]="listContent"></list>
+    <h1 class="section-header">WIZYTY</h1>
+    <spinner *ngIf="loading"></spinner>
+    <list *ngIf="!loading" [listContent]="listContent"></list>
   `,
   styleUrls: ['./appointments.component.scss'],
   providers: [AppointmentsService]
@@ -28,7 +28,7 @@ export class AppointmentsComponent {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['początek', 'koniec', 'nr pokoju', 'id pacjenta', 'id lekarza', 'charakter', 'typ operacji'],
+      columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter', 'typ operacji'],
       rows: this.loadRows()
     }
   }
@@ -38,12 +38,13 @@ export class AppointmentsComponent {
     for (let appointment of this.appointments) {
       rows.push({
         row: [
+          appointment.id,
           appointment.startDate,
           appointment.endDate,
-          String(appointment.room),
-          String(appointment.patientId),
-          String(appointment.doctorId),
-          appointment.character,
+          appointment.roomId,
+          appointment.pesel,
+          appointment.doctorId,
+          appointment.appointmentType,
           appointment.operationType ? appointment.operationType : '',
         ]
       })

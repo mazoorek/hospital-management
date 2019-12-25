@@ -3,5 +3,5 @@ export interface Staff {
   name: string;
   surname: string;
   employeeId: number;
-  function: string;
+  functionName: string;
 }

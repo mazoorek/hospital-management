@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface SpecializationMapper {
-    @Select("select specjalizacja_id, name from specjalizacja")
+    @Select("select specjalizacja_id, nazwa from specjalizacja")
     @Results({
             @Result(property = "name", column = "nazwa"),
             @Result(property = "id", column = "specjalizacja_id")

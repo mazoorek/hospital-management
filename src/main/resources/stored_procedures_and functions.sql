@@ -61,8 +61,8 @@ begin
     create table pracownik
     (
         pracownik_id integer      not null auto_increment,
-        name         varchar(100) not null,
-        surname      varchar(100) not null,
+        imie         varchar(100) not null,
+        nazwisko      varchar(100) not null,
         typ          varchar(100) not null,
         primary key (pracownik_id)
     ) ENGINE = InnoDB
@@ -70,11 +70,25 @@ begin
       DEFAULT charset = utf8
       COLLATE utf8_unicode_ci;
 
+     create table oddzial
+    (
+        oddzial_id integer      not null auto_increment,
+        nazwa      varchar(100) not null,
+        primary key (oddzial_id)
+    ) ENGINE = InnoDB
+      AUTO_INCREMENT = 1
+      DEFAULT charset = utf8
+      COLLATE utf8_unicode_ci;
+
+    alter table oddzial
+        add constraint oddzial_u_1 unique (nazwa);
+
     create table lekarz
     (
         lekarz_id        integer not null auto_increment,
         pracownik_id     integer not null,
         specjalizacja_id integer not null,
+        oddzial_id       integer not null,
         primary key (lekarz_id)
     ) ENGINE = InnoDB
       AUTO_INCREMENT = 1
@@ -84,7 +98,9 @@ begin
     alter table lekarz
         add constraint lekarz_fk_id foreign key (lekarz_id) references pracownik (pracownik_id) on delete cascade;
     alter table lekarz
-        add constraint lekarz_fk_specjalizacja foreign key (specjalizacja_id) references specjalizacja (specjalizacja_id) on delete cascade;
+        add constraint lekarz_fk_specjalizacja_id foreign key (specjalizacja_id) references specjalizacja (specjalizacja_id) on delete cascade;
+    alter table lekarz
+        add constraint lekarz_fk_oddzial_id foreign key (oddzial_id) references oddzial (oddzial_id) on delete cascade;
     alter table lekarz
         add constraint lekarz_u_1 unique (pracownik_id, specjalizacja_id);
 
@@ -107,21 +123,6 @@ begin
     alter table personel
         add constraint personel_u_1 unique (pracownik_id, funkcja_id);
 
-
-    create table oddzial
-    (
-        oddzial_id integer      not null auto_increment,
-        nazwa      varchar(100) not null,
-        primary key (oddzial_id)
-    ) ENGINE = InnoDB
-      AUTO_INCREMENT = 1
-      DEFAULT charset = utf8
-      COLLATE utf8_unicode_ci;
-
-    alter table oddzial
-        add constraint oddzial_u_1 unique (nazwa);
-
-
     create table pokoj
     (
         pokoj_id   integer not null auto_increment,
@@ -134,9 +135,9 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table pokoj
-        add constraint room_fk_nazwa_oddzialu foreign key (oddzial_id) references oddzial (oddzial_id) on delete cascade;
+        add constraint pokoj_fk_oddzial_id foreign key (oddzial_id) references oddzial (oddzial_id) on delete cascade;
     alter table pokoj
-        add constraint room_u_1 unique (numer, oddzial_id);
+        add constraint pokoj_u_1 unique (numer, oddzial_id);
 
     create table pacjent
     (
@@ -156,10 +157,10 @@ begin
 
     create table urlop
     (
-        urlop_id      integer      not null auto_increment,
-        start_date    varchar(100) not null,
-        end_date      varchar(100) not null,
-        id_pracownika integer      not null,
+        urlop_id            integer      not null auto_increment,
+        data_rozpoczecia    varchar(100) not null,
+        data_zakonczenia    varchar(100) not null,
+        pracownik_id       integer      not null,
         primary key (urlop_id)
     ) ENGINE = InnoDB
       AUTO_INCREMENT = 1
@@ -167,9 +168,9 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table urlop
-        add constraint leave_of_absence_fk_id foreign key (id_pracownika) references pracownik (pracownik_id) on delete cascade;
+        add constraint leave_of_absence_fk_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
     alter table urlop
-        add constraint urlop_u_1 unique (id_pracownika, start_date);
+        add constraint urlop_u_1 unique (pracownik_id, data_rozpoczecia);
 
     create table typ_operacji
     (
@@ -205,7 +206,7 @@ begin
 
     create table wizyta
     (
-        id                  integer      not null auto_increment,
+        wizyta_id                  integer      not null auto_increment,
         data_poczatku       varchar(100) not null,
         data_konca          varchar(100) not null,
         pacjent_id          integer      not null,
@@ -213,22 +214,22 @@ begin
         pokoj_id            integer      not null,
         charakter_wizyty_id integer      not null,
         typ_operacji_id     integer,
-        primary key (id)
+        primary key (wizyta_id)
     ) ENGINE = InnoDB
       AUTO_INCREMENT = 1
       DEFAULT charset = utf8
       COLLATE utf8_unicode_ci;
 
     alter table wizyta
-        add constraint visit_fk_patient_pesel foreign key (pacjent_id) references pacjent (pacjent_id) on delete cascade;
+        add constraint wizyta_fk_patient_pacjent_id foreign key (pacjent_id) references pacjent (pacjent_id) on delete cascade;
     alter table wizyta
-        add constraint visit_fk_patient_doctor_id foreign key (lekarz_id) references lekarz (lekarz_id) on delete cascade;
+        add constraint wizyta_fk_patient_doctor_id foreign key (lekarz_id) references lekarz (lekarz_id) on delete cascade;
     alter table wizyta
-        add constraint visit_fk_patient_room_number foreign key (pokoj_id) references pokoj (pokoj_id) on delete cascade;
+        add constraint wizyta_fk_patient_pokoj_id foreign key (pokoj_id) references pokoj (pokoj_id) on delete cascade;
     alter table wizyta
-        add constraint visit_fk_patient_character_of_visit foreign key (charakter_wizyty_id) references charakter_wizyty (charakter_wizyty_id) on delete cascade;
+        add constraint wizyta_fk_patient_charakter_wizyty_id foreign key (charakter_wizyty_id) references charakter_wizyty (charakter_wizyty_id) on delete cascade;
     alter table wizyta
-        add constraint visit_fk_patient_type_of_operation foreign key (typ_operacji_id) references typ_operacji (typ_operacji_id) on delete cascade;
+        add constraint wizyta_fk_patient_typ_operacji_id foreign key (typ_operacji_id) references typ_operacji (typ_operacji_id) on delete cascade;
     alter table wizyta
         add constraint wizyta_u_1 unique (data_poczatku, pacjent_id);
 end;
@@ -259,32 +260,18 @@ begin
     insert into funkcja(nazwa)
     values ('anestezjolog');
 
-    insert into pracownik(name, surname, typ)
+    insert into pracownik(imie, nazwisko, typ)
     values ('Jan', 'Kowalski', 'lekarz');
-    insert into pracownik(name, surname, typ)
+    insert into pracownik(imie, nazwisko, typ)
     values ('Franciszek', 'Piekarz', 'lekarz');
-    insert into pracownik(name, surname, typ)
+    insert into pracownik(imie, nazwisko, typ)
     values ('Kamila', 'Sikorska', 'lekarz');
-    insert into pracownik(name, surname, typ)
+    insert into pracownik(imie, nazwisko, typ)
     values ('Zbigniew', 'Ratajski', 'personel');
-    insert into pracownik(name, surname, typ)
+    insert into pracownik(imie, nazwisko, typ)
     values ('Julia', 'Skrzypczak', 'personel');
-    insert into pracownik(name, surname, typ)
+    insert into pracownik(imie, nazwisko, typ)
     values ('Zuzanna', 'Skrzypczak', 'personel');
-
-    insert into lekarz(pracownik_id, specjalizacja_id)
-    values (1, 1);
-    insert into lekarz(pracownik_id, specjalizacja_id)
-    values (2, 2);
-    insert into lekarz(pracownik_id, specjalizacja_id)
-    values (3, 3);
-
-    insert into personel(pracownik_id, funkcja_id)
-    values (4, 1);
-    insert into personel(pracownik_id, funkcja_id)
-    values (5, 2);
-    insert into personel(pracownik_id, funkcja_id)
-    values (6, 3);
 
     insert into oddzial(nazwa)
     values ('oddzial chirurgiczny');
@@ -298,6 +285,20 @@ begin
     values ('oddzial rehabilitacji');
     insert into oddzial(nazwa)
     values ('oddzial onkologiczny');
+
+    insert into lekarz(pracownik_id, specjalizacja_id, oddzial_id)
+    values (1, 1, 1);
+    insert into lekarz(pracownik_id, specjalizacja_id, oddzial_id)
+    values (2, 2, 2);
+    insert into lekarz(pracownik_id, specjalizacja_id, oddzial_id)
+    values (3, 3, 3);
+
+    insert into personel(pracownik_id, funkcja_id)
+    values (4, 1);
+    insert into personel(pracownik_id, funkcja_id)
+    values (5, 2);
+    insert into personel(pracownik_id, funkcja_id)
+    values (6, 3);
 
     insert into pokoj(numer, oddzial_id)
     values (1, 1);
@@ -337,7 +338,7 @@ begin
     insert into pacjent(pesel, imie, nazwisko)
     VALUES ('64092774485', 'Konstanty', 'Malinowski');
 
-    insert into urlop(start_date, end_date, id_pracownika)
+    insert into urlop(data_rozpoczecia, data_zakonczenia, pracownik_id)
     VALUES (current_date, date_add(current_date, interval 7 day), 1);
 
     insert into typ_operacji(typ, specjalizacja_id)
