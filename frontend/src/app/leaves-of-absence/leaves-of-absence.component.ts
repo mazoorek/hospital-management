@@ -6,9 +6,9 @@ import {LeaveOfAbsence} from "./leave-of-absence.model";
 @Component({
   selector: 'leaves-of-absence',
   template: `
-      <h1 class="section-header">URLOPY</h1>
-      <spinner *ngIf="loading"></spinner>
-      <list *ngIf="!loading" [listContent]="listContent"></list>
+    <h1 class="section-header">URLOPY</h1>
+    <spinner *ngIf="loading"></spinner>
+    <list *ngIf="!loading" [listContent]="listContent"></list>
   `,
   styleUrls: ['./leaves-of-absence.component.scss'],
   providers: [LeavesOfAbsenceService]
@@ -18,9 +18,13 @@ export class LeavesOfAbsenceComponent {
   listContent: ListContent;
   leavesOfAbsence: LeaveOfAbsence [];
 
-  constructor(private leavesOfAbsenceService:LeavesOfAbsenceService){
-    this.leavesOfAbsenceService.getLeaves().subscribe(leaves => {
-      this.leavesOfAbsence = leaves;
+  constructor(private leavesOfAbsenceService: LeavesOfAbsenceService) {
+    this.leavesOfAbsenceService.getLeavesOfAbsence().subscribe(leaves => {
+      this.leavesOfAbsence = leaves.map(leave => ({
+        ...leave,
+        startDate: new Date(leave.startDate).toLocaleString(),
+        endDate: new Date(leave.endDate).toLocaleString()
+      }));
       this.loadListContent();
       this.loading = false;
     })
@@ -28,7 +32,7 @@ export class LeavesOfAbsenceComponent {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'imię', 'nazwisko', 'początek', 'koniec'],
+      columns: ['id', 'id pracownika', 'imię', 'nazwisko', 'początek', 'koniec'],
       rows: this.loadRows()
     }
   }
@@ -39,6 +43,7 @@ export class LeavesOfAbsenceComponent {
       rows.push({
         row: [
           leaveOfAbsence.id,
+          leaveOfAbsence.employeeId,
           leaveOfAbsence.name,
           leaveOfAbsence.surname,
           leaveOfAbsence.startDate,

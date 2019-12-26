@@ -7,16 +7,16 @@ import {Function} from "./function.model";
 @Injectable()
 export class FunctionsService {
 
-  readonly OPERATION_TYPES_API_URL: string = '/api/function';
+  readonly FUNCTIONS_API_URL: string = '/api/functions';
 
   constructor(private http: HttpClient) {
   }
 
   getFunctions(): Observable<Function []> {
-    return this.http.get<Function []>(this.OPERATION_TYPES_API_URL);
+    return this.http.get<Function []>(this.FUNCTIONS_API_URL);
   }
 
-  deleteFunction(functionId: number): Observable<Function>  {
-    return this.http.delete<Function>(this.OPERATION_TYPES_API_URL+String(functionId));
+  deleteFunction(functionId: number): Observable<Function> {
+    return this.http.delete<Function>(this.FUNCTIONS_API_URL + `/${functionId}`);
   }
 }

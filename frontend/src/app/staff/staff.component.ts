@@ -42,7 +42,7 @@ export class StaffComponent {
           staff.name,
           staff.surname,
           String(staff.employeeId),
-          staff.function
+          staff.functionName
         ]
       })
     }

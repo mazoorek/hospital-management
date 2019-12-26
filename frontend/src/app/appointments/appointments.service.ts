@@ -1,37 +1,21 @@
 import {Injectable} from "@angular/core";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {Appointment} from "./appointment.model";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable()
 export class AppointmentsService {
+
+  readonly APPOINTMENTS_API_URL: string = '/api/appointments';
+
+  constructor(private http: HttpClient) {
+  }
+
   getAppointments(): Observable<Appointment []> {
-    // return this.http.get<Appointment []>('/appointments');
-    return of([
-      {
-        startDate: '01.01.2019-16:00',
-        endDate: '01.01.2019-17:00',
-        room: 1,
-        patientId: 2,
-        doctorId: 3,
-        character: 'usg'
-      },
-      {
-        startDate: '01.01.2019-16:00',
-        endDate: '01.01.2019-17:00',
-        room: 1,
-        patientId: 2,
-        doctorId: 3,
-        character: 'usg'
-      },
-      {
-        startDate: '01.01.2019-16:00',
-        endDate: '01.01.2019-17:00',
-        room: 1,
-        patientId: 2,
-        doctorId: 3,
-        character: 'operacja',
-        operationType: 'operacja kolana'
-      },
-    ]);
+    return this.http.get<Appointment []>(this.APPOINTMENTS_API_URL);
+  }
+
+  deleteAppointment(appointmentId: number): Observable<Appointment> {
+    return this.http.delete<Appointment>(this.APPOINTMENTS_API_URL + `/${appointmentId}`);
   }
 }

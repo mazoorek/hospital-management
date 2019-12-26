@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {AppointmentTypesService} from "./appointment-types.service";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
-import {VisitType} from "./appointment-types.model";
+import {AppointmentType} from "./appointment-types.model";
 
 
 @Component({
@@ -15,13 +15,13 @@ import {VisitType} from "./appointment-types.model";
   providers: [AppointmentTypesService]
 })
 export class AppointmentTypesComponent {
-  operationTypes: VisitType[];
+  appointmentTypes: AppointmentType[];
   loading: boolean = true;
   listContent: ListContent;
 
   constructor(private operationTypesService: AppointmentTypesService) {
-    this.operationTypesService.getVisitTypes().subscribe(operationTypes => {
-      this.operationTypes = operationTypes;
+    this.operationTypesService.getAppointmentTypes().subscribe(operationTypes => {
+      this.appointmentTypes = operationTypes;
       this.loadListContent();
       this.loading = false;
     });
@@ -29,19 +29,19 @@ export class AppointmentTypesComponent {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'typy operacji, id specjalizacji'],
+      columns: ['id', 'charakter wizyty', 'nazwa specjalizacji'],
       rows: this.loadRows()
     };
   }
 
   loadRows(): Row [] {
     let rows: Row[] = [];
-    for (let operationType of this.operationTypes) {
+    for (let appointmentType of this.appointmentTypes) {
       rows.push({
         row: [
-          String(operationType.id),
-          operationType.name,
-          String(operationType.specializationId),
+          String(appointmentType.id),
+          appointmentType.type,
+          String(appointmentType.specializationName),
         ]
       })
     }

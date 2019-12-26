@@ -16,7 +16,7 @@ export class SpecializationsService {
     return this.http.get<Specialization []>(this.SPECIALIZATIONS_API_URL);
   }
 
-  deleteSpecialization(specializationId: number): Observable<Specialization>  {
-    return this.http.delete<Specialization>(this.SPECIALIZATIONS_API_URL+String(specializationId));
+  deleteSpecialization(specializationId: number): Observable<Specialization> {
+    return this.http.delete<Specialization>(this.SPECIALIZATIONS_API_URL + `/${specializationId}`);
   }
 }

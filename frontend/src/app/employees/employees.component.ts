@@ -28,7 +28,7 @@ export class EmployeesComponent {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'imię', 'nazwisko'],
+      columns: ['id', 'imię', 'nazwisko', 'typ stanowiska'],
       rows: this.loadRows()
     }
   }
@@ -40,7 +40,8 @@ export class EmployeesComponent {
         row: [
           String(employee.id),
           employee.name,
-          employee.surname
+          employee.surname,
+          employee.type
         ]
       })
     }

@@ -19,7 +19,7 @@ import {OperationTypesComponent} from "./operation-types/operation-types.compone
 import {SpecializationsComponent} from "./specializations/specializations.component";
 import {StaffComponent} from "./staff/staff.component";
 import {FunctionsComponent} from "./functions/functions.component";
-import {AppointmentTypesComponent} from "./visit-type/appointment-types.component";
+import {AppointmentTypesComponent} from "./appointment-type/appointment-types.component";
 
 @NgModule({
   declarations: [

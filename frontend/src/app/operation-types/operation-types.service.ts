@@ -16,7 +16,7 @@ export class OperationTypesService {
     return this.http.get<OperationType []>(this.OPERATION_TYPES_API_URL);
   }
 
-  deleteOperationType(wardId: number): Observable<OperationType>  {
-    return this.http.delete<OperationType>(this.OPERATION_TYPES_API_URL+String(wardId));
+  deleteOperationType(operationTypeId: number): Observable<OperationType> {
+    return this.http.delete<OperationType>(this.OPERATION_TYPES_API_URL + `/${operationTypeId}`);
   }
 }

@@ -29,7 +29,7 @@ export class OperationTypesComponent {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'typy operacji, id specjalizacji'],
+      columns: ['id', 'typy operacji', 'nazwa specjalizacji'],
       rows: this.loadRows()
     };
   }
@@ -40,8 +40,8 @@ export class OperationTypesComponent {
       rows.push({
         row: [
           String(operationType.id),
-          operationType.name,
-          String(operationType.specializationId),
+          operationType.type,
+          operationType.specializationName,
         ]
       })
     }

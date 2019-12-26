@@ -1,28 +1,21 @@
 import {Injectable} from "@angular/core";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {Patient} from "./patients.model";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable()
 export class PatientsService {
 
+  readonly PATIENTS_API_URL: string = '/api/patients';
+
+  constructor(private http: HttpClient) {
+  }
+
   getPatients(): Observable<Patient []> {
-    // return this.http.get<Patient []>('/patients');
-    return of([
-      {
-        pesel: '65062089389',
-        name: 'Jan',
-        surname: 'Kowalski'
-      },
-      {
-        pesel: '93042412373',
-        name: 'Jan',
-        surname: 'Kowalski'
-      },
-      {
-        pesel: '74092097217',
-        name: 'Jan',
-        surname: 'Kowalski'
-      },
-    ]);
+    return this.http.get<Patient []>(this.PATIENTS_API_URL);
+  }
+
+  deletePatient(patientId: number): Observable<Patient> {
+    return this.http.delete<Patient>(this.PATIENTS_API_URL + `/${patientId}`);
   }
 }

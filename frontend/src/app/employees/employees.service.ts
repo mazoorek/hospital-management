@@ -1,27 +1,21 @@
 import {Injectable} from "@angular/core";
 import {Employee} from "./employee.model";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable()
 export class EmployeesService {
+
+  readonly EMPLOYEES_API_URL: string = '/api/employees';
+
+  constructor(private http: HttpClient) {
+  }
+
   getEmployees(): Observable<Employee []> {
-    // return this.http.get<Employee []>('/employees');
-    return of([
-      {
-        id: 1,
-        name: 'Jan',
-        surname: 'Kowalski'
-      },
-      {
-        id: 2,
-        name: 'Jan',
-        surname: 'Kowalski'
-      },
-      {
-        id: 3,
-        name: 'Jan',
-        surname: 'Kowalski'
-      },
-    ]);
+    return this.http.get<Employee []>(this.EMPLOYEES_API_URL);
+  }
+
+  deleteEmployee(employeeId: number): Observable<Employee> {
+    return this.http.delete<Employee>(this.EMPLOYEES_API_URL + `/${employeeId}`);
   }
 }

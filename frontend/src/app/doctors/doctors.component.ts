@@ -28,7 +28,7 @@ export class DoctorsComponent {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'imię', 'nazwisko', 'specjalizacja'],
+      columns: ['id', 'imię', 'nazwisko', 'id pracownika', 'specjalizacja', 'oddział'],
       rows: this.loadRows()
     }
   }
@@ -41,7 +41,9 @@ export class DoctorsComponent {
           String(doctor.id),
           doctor.name,
           doctor.surname,
-          doctor.specialization
+          String(doctor.employeeId),
+          doctor.specializationName,
+          doctor.wardName
         ]
       })
     }
