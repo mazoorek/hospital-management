@@ -20,6 +20,8 @@ import {SpecializationsComponent} from "./specializations/specializations.compon
 import {StaffComponent} from "./staff/staff.component";
 import {FunctionsComponent} from "./functions/functions.component";
 import {AppointmentTypesComponent} from "./appointment-type/appointment-types.component";
+import {RoomsService} from "./rooms/rooms.service";
+import {HospitalWardsService} from "./hospital-wards/hospital-wards.service";
 
 @NgModule({
   declarations: [
@@ -47,7 +49,11 @@ import {AppointmentTypesComponent} from "./appointment-type/appointment-types.co
     FormsModule,
     HttpClientModule
   ],
-  providers: [{provide: "windowObject", useValue: window}],
+  providers: [
+    {provide: "windowObject", useValue: window},
+    RoomsService,
+    HospitalWardsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -4,7 +4,7 @@ import {Observable} from "rxjs";
 import {HospitalWard} from "./hospital-ward.model";
 
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class HospitalWardsService {
 
   readonly HOSPITAL_WARD_API_URL: string = '/api/hospital-wards';

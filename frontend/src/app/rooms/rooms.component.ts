@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
 import {RoomsService} from "./rooms.service";
 import {Room} from "./room.model";
@@ -12,16 +12,22 @@ import {Room} from "./room.model";
           (removeRowChange)="deleteRoom($event)"
           [listContent]="listContent"></list>
   `,
-  styleUrls: ['./rooms.component.scss'],
-  providers: [RoomsService]
+  styleUrls: ['./rooms.component.scss']
 })
-export class RoomsComponent {
+export class RoomsComponent implements OnInit {
+
   rooms: Room [];
   loading: boolean = true;
   listContent: ListContent;
 
   constructor(private roomsService: RoomsService) {
+  }
+
+  ngOnInit(): void {
     this.getRooms();
+    this.roomsService.loadRoomsSubject.subscribe(() => {
+      this.getRooms();
+    });
   }
 
   loadListContent(): void {
@@ -46,6 +52,7 @@ export class RoomsComponent {
   }
 
   getRooms(): void {
+    this.loading = true;
     this.roomsService.getRooms().subscribe(rooms => {
       this.rooms = rooms;
       this.loadListContent();
