@@ -23,7 +23,7 @@ public class SpecializationController {
         specializationMapper.insertSpecialization(specialization);
     }
 
-    @PostMapping("/{specializationId}")
+    @DeleteMapping("/{specializationId}")
     void deleteSpecialization(@PathVariable Long specializationId) {
         specializationMapper.deleteSpecialization(specializationId);
     }

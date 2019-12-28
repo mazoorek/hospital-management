@@ -25,7 +25,9 @@ public interface StaffMapper {
             "select specjalizacja_id from specjalizacja where specjalizacja_id = #{surname})")
     void insertStaff(StaffMember staffMember);
 
-    @Delete("delete from personel " +
-            "where personel_id = #{staffMemberId}")
+    @Delete("delete pracownik " +
+            "from pracownik join personel " +
+            "on pracownik.pracownik_id = personel.pracownik_id " +
+            "where personel.personel_id = #{staffMemberId}")
     void deleteStaffMember(Long staffMemberId);
 }

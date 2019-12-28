@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
 import {AppointmentsService} from "./appointments.service";
 import {Appointment} from "./appointment.model";
@@ -8,17 +8,29 @@ import {Appointment} from "./appointment.model";
   template: `
     <h1 class="section-header">WIZYTY</h1>
     <spinner *ngIf="loading"></spinner>
-    <list *ngIf="!loading" [listContent]="listContent"></list>
+    <list *ngIf="!loading"
+          (removeRowChange)="deleteAppointment($event)"
+          [listContent]="listContent"></list>
   `,
-  styleUrls: ['./appointments.component.scss'],
-  providers: [AppointmentsService]
+  styleUrls: ['./appointments.component.scss']
 })
-export class AppointmentsComponent {
+export class AppointmentsComponent implements OnInit {
   loading: boolean = true;
   listContent: ListContent;
   appointments: Appointment [];
 
   constructor(private appointmentsService: AppointmentsService) {
+  }
+
+  ngOnInit(): void {
+    this.loadAppointments();
+    this.appointmentsService.loadAppointmentsSubject.subscribe(() => {
+      this.loadAppointments();
+    });
+  }
+
+  private loadAppointments() {
+    this.loading = true;
     this.appointmentsService.getAppointments().subscribe(doctors => {
       this.appointments = doctors;
       this.loadListContent();
@@ -50,5 +62,12 @@ export class AppointmentsComponent {
       })
     }
     return rows;
+  }
+
+  deleteAppointment(appointmentId: number): void {
+    this.loading = true;
+    this.appointmentsService.deleteAppointment(appointmentId).subscribe(() => {
+      this.loadAppointments();
+    });
   }
 }

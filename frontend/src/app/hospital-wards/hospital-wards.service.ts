@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HospitalWard} from "./hospital-ward.model";
 
 
@@ -8,6 +8,9 @@ import {HospitalWard} from "./hospital-ward.model";
 export class HospitalWardsService {
 
   readonly HOSPITAL_WARD_API_URL: string = '/api/hospital-wards';
+
+  loadHospitalWardsSubject: Subject<void> = new Subject<void>();
+
 
   constructor(private http: HttpClient) {
   }
@@ -18,5 +21,9 @@ export class HospitalWardsService {
 
   deleteHospitalWard(wardId: number): Observable<HospitalWard> {
     return this.http.delete<HospitalWard>(this.HOSPITAL_WARD_API_URL + `/${wardId}`);
+  }
+
+  loadHospitalWards(): void {
+    this.loadHospitalWardsSubject.next();
   }
 }

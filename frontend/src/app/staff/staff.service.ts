@@ -1,13 +1,16 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {Staff} from "./staff.model";
 
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class StaffService {
 
   readonly OPERATION_TYPES_API_URL: string = '/api/staff';
+
+  loadStaffSubject: Subject<void> = new Subject<void>();
+
 
   constructor(private http: HttpClient) {
   }
@@ -18,5 +21,9 @@ export class StaffService {
 
   deleteStaffMember(staffId: number): Observable<Staff> {
     return this.http.delete<Staff>(this.OPERATION_TYPES_API_URL + `/${staffId}`);
+  }
+
+  loadStaff(): void {
+    this.loadStaffSubject.next();
   }
 }

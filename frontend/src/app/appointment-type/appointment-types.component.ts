@@ -1,7 +1,8 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {AppointmentTypesService} from "./appointment-types.service";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
 import {AppointmentType} from "./appointment-types.model";
+import {AppointmentsService} from "../appointments/appointments.service";
 
 
 @Component({
@@ -9,18 +10,32 @@ import {AppointmentType} from "./appointment-types.model";
   template: `
     <h1 class="section-header">CHARAKTERY WIZYT</h1>
     <spinner *ngIf="loading"></spinner>
-    <list *ngIf="!loading" [listContent]="listContent"></list>
+    <list *ngIf="!loading"
+          (removeRowChange)="deleteAppointmentType($event)"
+          [listContent]="listContent"></list>
   `,
-  styleUrls: ['./appointment-types.component.scss'],
-  providers: [AppointmentTypesService]
+  styleUrls: ['./appointment-types.component.scss']
 })
-export class AppointmentTypesComponent {
+export class AppointmentTypesComponent implements OnInit {
   appointmentTypes: AppointmentType[];
   loading: boolean = true;
   listContent: ListContent;
 
-  constructor(private operationTypesService: AppointmentTypesService) {
-    this.operationTypesService.getAppointmentTypes().subscribe(operationTypes => {
+  constructor(private appointmentTypesService: AppointmentTypesService,
+              private appointmentsService: AppointmentsService) {
+    this.loadAppointmentTypes();
+  }
+
+  ngOnInit(): void {
+    this.loadAppointmentTypes();
+    this.appointmentTypesService.loadAppointmentTypesSubject.subscribe(() => {
+      this.loadAppointmentTypes();
+    });
+  }
+
+  private loadAppointmentTypes() {
+    this.loading = true;
+    this.appointmentTypesService.getAppointmentTypes().subscribe(operationTypes => {
       this.appointmentTypes = operationTypes;
       this.loadListContent();
       this.loading = false;
@@ -46,5 +61,13 @@ export class AppointmentTypesComponent {
       })
     }
     return rows;
+  }
+
+  deleteAppointmentType(appointmentTypeId: number): void {
+    this.loading = true;
+    this.appointmentTypesService.deleteAppointmentType(appointmentTypeId).subscribe(() => {
+      this.loadAppointmentTypes();
+      this.appointmentsService.loadAppointments();
+    });
   }
 }

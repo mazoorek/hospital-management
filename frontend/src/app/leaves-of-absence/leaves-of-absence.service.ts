@@ -1,12 +1,14 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {LeaveOfAbsence} from "./leave-of-absence.model";
 import {HttpClient} from "@angular/common/http";
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class LeavesOfAbsenceService {
 
   readonly LEAVES_API_URL: string = '/api/leaves-of-absence';
+
+  loadLeavesOfAbsenceSubject: Subject<void> = new Subject<void>();
 
   constructor(private http: HttpClient) {
   }
@@ -17,5 +19,9 @@ export class LeavesOfAbsenceService {
 
   deleteLeaveOfAbsence(leaveId: number): Observable<LeaveOfAbsence> {
     return this.http.delete<LeaveOfAbsence>(this.LEAVES_API_URL + `/${leaveId}`);
+  }
+
+  loadLeavesOfAbsence(): void {
+    this.loadLeavesOfAbsenceSubject.next();
   }
 }

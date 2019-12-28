@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
 import {RoomsService} from "./rooms.service";
 import {Room} from "./room.model";
+import {AppointmentsService} from "../appointments/appointments.service";
 
 @Component({
   selector: 'rooms',
@@ -20,13 +21,14 @@ export class RoomsComponent implements OnInit {
   loading: boolean = true;
   listContent: ListContent;
 
-  constructor(private roomsService: RoomsService) {
+  constructor(private roomsService: RoomsService,
+              private appointmentsService: AppointmentsService) {
   }
 
   ngOnInit(): void {
-    this.getRooms();
+    this.loadRooms();
     this.roomsService.loadRoomsSubject.subscribe(() => {
-      this.getRooms();
+      this.loadRooms();
     });
   }
 
@@ -51,7 +53,7 @@ export class RoomsComponent implements OnInit {
     return rows;
   }
 
-  getRooms(): void {
+  loadRooms(): void {
     this.loading = true;
     this.roomsService.getRooms().subscribe(rooms => {
       this.rooms = rooms;
@@ -63,7 +65,8 @@ export class RoomsComponent implements OnInit {
   deleteRoom(roomId: number): void {
     this.loading = true;
     this.roomsService.deleteRoom(roomId).subscribe(() => {
-      this.getRooms();
+      this.loadRooms();
+      this.appointmentsService.loadAppointments();
     });
   }
 }
