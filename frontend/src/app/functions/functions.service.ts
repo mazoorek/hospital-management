@@ -1,13 +1,15 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {Function} from "./function.model";
 
 
-@Injectable()
+@Injectable({providedIn: "root"})
 export class FunctionsService {
 
   readonly FUNCTIONS_API_URL: string = '/api/functions';
+
+  loadFunctionsSubject: Subject<void> = new Subject<void>();
 
   constructor(private http: HttpClient) {
   }
@@ -18,5 +20,9 @@ export class FunctionsService {
 
   deleteFunction(functionId: number): Observable<Function> {
     return this.http.delete<Function>(this.FUNCTIONS_API_URL + `/${functionId}`);
+  }
+
+  loadFunctions(): void {
+    this.loadFunctionsSubject.next();
   }
 }

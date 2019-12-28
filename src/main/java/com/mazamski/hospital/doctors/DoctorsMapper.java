@@ -27,7 +27,9 @@ public interface DoctorsMapper {
             "select specjalizacja_id from specjalizacja where specjalizacja_id = #{surname})")
     void insertDoctor(Doctor doctor);
 
-    @Delete("delete from lekarz " +
-            "where lekarz_id = #{doctorId}")
+    @Delete("delete pracownik " +
+            "from pracownik join lekarz " +
+            "on pracownik.pracownik_id = lekarz.pracownik_id " +
+            "where lekarz.lekarz_id = #{doctorId}")
     void deleteDoctor(Long doctorId);
 }

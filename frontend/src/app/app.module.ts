@@ -20,6 +20,18 @@ import {SpecializationsComponent} from "./specializations/specializations.compon
 import {StaffComponent} from "./staff/staff.component";
 import {FunctionsComponent} from "./functions/functions.component";
 import {AppointmentTypesComponent} from "./appointment-type/appointment-types.component";
+import {RoomsService} from "./rooms/rooms.service";
+import {HospitalWardsService} from "./hospital-wards/hospital-wards.service";
+import {DoctorsService} from "./doctors/doctors.service";
+import {EmployeesService} from "./employees/employees.service";
+import {FunctionsService} from "./functions/functions.service";
+import {LeavesOfAbsenceService} from "./leaves-of-absence/leaves-of-absence.service";
+import {OperationTypesService} from "./operation-types/operation-types.service";
+import {PatientsService} from "./patients/patients.service";
+import {SpecializationsService} from "./specializations/specializations.service";
+import {StaffService} from "./staff/staff.service";
+import {AppointmentsService} from "./appointments/appointments.service";
+import {AppointmentTypesService} from "./appointment-type/appointment-types.service";
 
 @NgModule({
   declarations: [
@@ -47,7 +59,21 @@ import {AppointmentTypesComponent} from "./appointment-type/appointment-types.co
     FormsModule,
     HttpClientModule
   ],
-  providers: [{provide: "windowObject", useValue: window}],
+  providers: [
+    {provide: "windowObject", useValue: window},
+    RoomsService,
+    HospitalWardsService,
+    DoctorsService,
+    EmployeesService,
+    FunctionsService,
+    LeavesOfAbsenceService,
+    OperationTypesService,
+    PatientsService,
+    SpecializationsService,
+    StaffService,
+    AppointmentsService,
+    AppointmentTypesService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -24,6 +24,6 @@ public interface OperationTypeMapper {
     void insertOperationType(OperationType operationType);
 
     @Delete("delete from typ_operacji " +
-            "where charakter_wizyty_id = #{operationTypeId}")
+            "where typ_operacji_id = #{operationTypeId}")
     void deleteOperationType(Long operationTypeId);
 }

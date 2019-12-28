@@ -1,7 +1,8 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
 import {RoomsService} from "./rooms.service";
 import {Room} from "./room.model";
+import {AppointmentsService} from "../appointments/appointments.service";
 
 @Component({
   selector: 'rooms',
@@ -12,16 +13,23 @@ import {Room} from "./room.model";
           (removeRowChange)="deleteRoom($event)"
           [listContent]="listContent"></list>
   `,
-  styleUrls: ['./rooms.component.scss'],
-  providers: [RoomsService]
+  styleUrls: ['./rooms.component.scss']
 })
-export class RoomsComponent {
+export class RoomsComponent implements OnInit {
+
   rooms: Room [];
   loading: boolean = true;
   listContent: ListContent;
 
-  constructor(private roomsService: RoomsService) {
-    this.getRooms();
+  constructor(private roomsService: RoomsService,
+              private appointmentsService: AppointmentsService) {
+  }
+
+  ngOnInit(): void {
+    this.loadRooms();
+    this.roomsService.loadRoomsSubject.subscribe(() => {
+      this.loadRooms();
+    });
   }
 
   loadListContent(): void {
@@ -45,7 +53,8 @@ export class RoomsComponent {
     return rows;
   }
 
-  getRooms(): void {
+  loadRooms(): void {
+    this.loading = true;
     this.roomsService.getRooms().subscribe(rooms => {
       this.rooms = rooms;
       this.loadListContent();
@@ -56,7 +65,8 @@ export class RoomsComponent {
   deleteRoom(roomId: number): void {
     this.loading = true;
     this.roomsService.deleteRoom(roomId).subscribe(() => {
-      this.getRooms();
+      this.loadRooms();
+      this.appointmentsService.loadAppointments();
     });
   }
 }

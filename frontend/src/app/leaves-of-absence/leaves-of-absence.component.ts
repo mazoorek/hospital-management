@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ListContent, Row} from "../../common/List/ListContent/list-content.model";
 import {LeavesOfAbsenceService} from "./leaves-of-absence.service";
 import {LeaveOfAbsence} from "./leave-of-absence.model";
@@ -8,17 +8,29 @@ import {LeaveOfAbsence} from "./leave-of-absence.model";
   template: `
     <h1 class="section-header">URLOPY</h1>
     <spinner *ngIf="loading"></spinner>
-    <list *ngIf="!loading" [listContent]="listContent"></list>
+    <list *ngIf="!loading"
+          (removeRowChange)="deleteLeaveOfAbsence($event)"
+          [listContent]="listContent"></list>
   `,
-  styleUrls: ['./leaves-of-absence.component.scss'],
-  providers: [LeavesOfAbsenceService]
+  styleUrls: ['./leaves-of-absence.component.scss']
 })
-export class LeavesOfAbsenceComponent {
+export class LeavesOfAbsenceComponent implements OnInit {
   loading: boolean = true;
   listContent: ListContent;
   leavesOfAbsence: LeaveOfAbsence [];
 
   constructor(private leavesOfAbsenceService: LeavesOfAbsenceService) {
+  }
+
+  ngOnInit(): void {
+    this.loadLeavesOfAbsence();
+    this.leavesOfAbsenceService.loadLeavesOfAbsenceSubject.subscribe(() => {
+      this.loadLeavesOfAbsence();
+    });
+  }
+
+  private loadLeavesOfAbsence() {
+    this.loading = true;
     this.leavesOfAbsenceService.getLeavesOfAbsence().subscribe(leaves => {
       this.leavesOfAbsence = leaves.map(leave => ({
         ...leave,
@@ -52,5 +64,12 @@ export class LeavesOfAbsenceComponent {
       })
     }
     return rows;
+  }
+
+  deleteLeaveOfAbsence(leaveOfAbsence: number): void {
+    this.loading = true;
+    this.leavesOfAbsenceService.deleteLeaveOfAbsence(leaveOfAbsence).subscribe(() => {
+      this.loadLeavesOfAbsence();
+    });
   }
 }
