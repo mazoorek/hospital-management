@@ -25,10 +25,10 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
                      formControlName="name"
                      id="hospitalWardName">
             </div>
-            <div class="validation-error" *ngIf="formHospitalWardName.errors.pattern">
+            <div class="validation-error" *ngIf="formHospitalWardName.errors?.pattern">
               Pole może zawierać małe/duże litery oraz znaki spacji
             </div>
-            <div class="validation-error" *ngIf="formHospitalWardName.errors.required && formHospitalWardName.touched">
+            <div class="validation-error" *ngIf="formHospitalWardName.errors?.required && formHospitalWardName.touched">
               Pole nie może być puste
             </div>
           </form>
@@ -86,6 +86,7 @@ export class HospitalWardsComponent implements OnInit {
     this.hospitalWardsService.getHospitalWards().subscribe(hospitalWards => {
       this.hospitalWards = hospitalWards;
       this.loadListContent();
+      this.showForm = false;
       this.loading = false;
     });
   }
@@ -127,7 +128,7 @@ export class HospitalWardsComponent implements OnInit {
     this.formRowId = id;
     if (this.formRowId >= 0) {
       this.addRowForm.patchValue({
-        'name': this.hospitalWards.filter(ward => +ward.id === +this.formRowId).map(ward => ward.name)
+        'name': this.hospitalWards.filter(ward => ward.id === this.formRowId).map(ward => ward.name)
       })
     } else {
       this.addRowForm.reset();

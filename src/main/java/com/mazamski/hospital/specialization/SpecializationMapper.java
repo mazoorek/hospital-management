@@ -18,6 +18,11 @@ public interface SpecializationMapper {
     @Insert("insert into specjalizacja(nazwa) values(#{name})")
     void insertSpecialization(Specialization specialization);
 
+    @Update("update specjalizacja " +
+            "set nazwa = #{name} " +
+            "where specjalizacja_id = #{id}")
+    void updateSpecialization(Specialization specialization);
+
     @Delete("delete from specjalizacja where specjalizacja_id = #{specializationId}")
     void deleteSpecialization(Long specializationId);
 }

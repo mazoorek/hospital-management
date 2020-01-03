@@ -23,6 +23,14 @@ export class SpecializationsService {
     return this.http.delete<Specialization>(this.SPECIALIZATIONS_API_URL + `/${specializationId}`);
   }
 
+  insertSpecialization(specialization: Specialization): Observable<Specialization> {
+    return this.http.post<Specialization>(this.SPECIALIZATIONS_API_URL, specialization);
+  }
+
+  updateSpecialization(specialization: Specialization): Observable<Specialization> {
+    return this.http.put<Specialization>(this.SPECIALIZATIONS_API_URL, specialization);
+  }
+
   loadSpecializations(): void {
     this.loadSpecializationsSubject.next();
   }
