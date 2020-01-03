@@ -38,7 +38,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
               (click)="onClickAddOrUpdate()"
               [green]="true"
               [disabled] = "addRowForm.invalid"
-              text="Zatwierdź nowy rekord"
+              text="Zatwierdź rekord"
               [width]="200"></action-button>
             <action-button
               class="form-button"

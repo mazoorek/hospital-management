@@ -39,7 +39,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
               (click)="onClickAddOrUpdate()"
               [green]="true"
               [disabled]="addRowForm.invalid"
-              text="Zatwierdź nowy rekord"
+              text="Zatwierdź rekord"
               [width]="200"></action-button>
             <action-button
               class="form-button"
@@ -50,7 +50,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
           </div>
         </div>
       </div>
-      <list *ngIf="!loading"
+      <list class="flex-item list-flex-item"
             (addOrUpdateRowChange)="loadForm($event)"
             (removeRowChange)="deleteSpecializations($event)"
             [listContent]="listContent"></list>

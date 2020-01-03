@@ -23,6 +23,11 @@ public class FunctionController {
         functionMapper.insertFunction(function);
     }
 
+    @PutMapping()
+    void updateFunction(@RequestBody Function function) {
+        functionMapper.updateFunction(function);
+    }
+
     @DeleteMapping("/{functionId}")
     void deleteFunction(@PathVariable Long functionId) {
         functionMapper.deleteFunction(functionId);
