@@ -13,6 +13,31 @@
     letter-spacing: $section-header-letter-spacing;
     padding-bottom: $section-header-padding-bottom;
   }
+
+  .section-body {
+    width: 100vw;
+    display: inline-flex;
+    justify-content: center;
+
+    .form-shown {
+      justify-content: space-around;
+    }
+
+    .flex-item {
+      flex-grow: 1;
+      opacity: 1;
+      transition: all 1s;
+
+      &.collapsed {
+        flex-grow: 0.00001;
+        opacity: 0;
+      }
+
+      &.list-flex-item {
+        flex-grow: 3;
+      }
+    }
+  }
 }
 
 @mixin flex {

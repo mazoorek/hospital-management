@@ -23,6 +23,14 @@ export class HospitalWardsService {
     return this.http.delete<HospitalWard>(this.HOSPITAL_WARD_API_URL + `/${wardId}`);
   }
 
+  insertHospitalWard(hospitalWard: HospitalWard): Observable<HospitalWard> {
+    return this.http.post<HospitalWard>(this.HOSPITAL_WARD_API_URL, hospitalWard);
+  }
+
+  updateHospitalWard(hospitalWard: HospitalWard): Observable<HospitalWard> {
+    return this.http.put<HospitalWard>(this.HOSPITAL_WARD_API_URL, hospitalWard);
+  }
+
   loadHospitalWards(): void {
     this.loadHospitalWardsSubject.next();
   }

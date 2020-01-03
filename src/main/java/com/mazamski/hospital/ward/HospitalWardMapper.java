@@ -18,6 +18,11 @@ public interface HospitalWardMapper {
     @Insert("insert into oddzial(nazwa) values(#{name})")
     void insertHospitalWard(HospitalWard hospitalWard);
 
+    @Update("update oddzial " +
+            "set nazwa = #{name} " +
+            "where oddzial_id = #{id}")
+    void updateHospitalWard(HospitalWard hospitalWard);
+
     @Delete("delete from oddzial where oddzial_id = #{wardId}")
     void deleteHospitalWard(Long wardId);
 }

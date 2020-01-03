@@ -23,6 +23,11 @@ public class HospitalWardController {
         hospitalWardMapper.insertHospitalWard(hospitalWard);
     }
 
+    @PutMapping()
+    void updateHospitalWard(@RequestBody HospitalWard hospitalWard) {
+        hospitalWardMapper.updateHospitalWard(hospitalWard);
+    }
+
     @DeleteMapping("/{id}")
     void deleteHospitalWard(@PathVariable Long id) {
         hospitalWardMapper.deleteHospitalWard(id);

@@ -1,54 +1,76 @@
 @import "../common";
 
 :host {
-  max-height: $list-height;
-  overflow-y: auto;
-  background-color: $white-color;
-  box-shadow: $list-box-shadow;
-  padding: $list-padding;
+  display: flex;
+  justify-content: center;
 
-  .filter-input {
-    width: 150px;
-    height: 50px;
-    font-size:24px;
-  }
-
-  @mixin primary-row {
+  .list-container {
+    background-color: $white-color;
+    box-shadow: $list-box-shadow;
+    padding: $list-padding;
     display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
 
-    .primary-row-item {
-      flex: 1 1 0;
-      font-size: $font-size-big;
-      text-align: left;
-      cursor: pointer;
+    .filter-input {
+      width: 150px;
+      height: 50px;
+      font-size: 24px;
     }
-  }
 
-  .list-header {
-    @include primary-row;
-  }
-
-  .list-filter {
-    @include primary-row;
-    margin-bottom: 20px;
-  }
-
-  .rows {
-    .row {
+    @mixin primary-row {
       display: flex;
-      border-top: 1px solid $grey-color;
 
-      .row-item {
+      .primary-row-item {
         flex: 1 1 0;
+        font-size: $font-size-big;
         text-align: left;
-        padding-top: $list-row-item-padding;
-        padding-bottom: $list-row-item-padding;
-        text-overflow: ellipsis;
+        cursor: pointer;
+      }
+    }
 
-        &:not(:last-of-type) {
-          padding-right: $list-row-item-padding;
+    .list-header {
+      @include primary-row;
+    }
+
+    .list-filter {
+      @include primary-row;
+      margin-bottom: 20px;
+    }
+
+    .rows {
+      max-height: $list-rows-height;
+      overflow-y: auto;
+
+      .row {
+        display: flex;
+        border-top: 1px solid $grey-color;
+
+        .row-item {
+          flex: 1 1 0;
+          text-align: left;
+          padding-top: $list-row-item-padding;
+          padding-bottom: $list-row-item-padding;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+
+          .row-item-content {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+
+          &:not(:last-of-type) {
+            padding-right: $list-row-item-padding;
+          }
         }
       }
+    }
+
+    .add-button {
+      margin-top: 30px;
     }
   }
 }

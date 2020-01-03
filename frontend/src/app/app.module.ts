@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NavbarComponent} from "./header/navbar/navbar.component";
 import {HeaderComponent} from "./header/header.component";
 import {HospitalWardsComponent} from "./hospital-wards/hospital-wards.component";
@@ -32,8 +32,14 @@ import {SpecializationsService} from "./specializations/specializations.service"
 import {StaffService} from "./staff/staff.service";
 import {AppointmentsService} from "./appointments/appointments.service";
 import {AppointmentTypesService} from "./appointment-type/appointment-types.service";
+import {OverlayModule} from "@angular/cdk/overlay";
+import {TooltipComponent} from "../common/tooltip/tooltip.component";
+import {TooltipDirective} from "../common/tooltip/tooltip.directive";
 
 @NgModule({
+  entryComponents: [
+    TooltipComponent
+  ],
   declarations: [
     AppComponent,
     NavbarComponent,
@@ -52,12 +58,16 @@ import {AppointmentTypesService} from "./appointment-type/appointment-types.serv
     DoctorsComponent,
     LeavesOfAbsenceComponent,
     RoomsComponent,
-    AppointmentsComponent
+    AppointmentsComponent,
+    TooltipComponent,
+    TooltipDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    OverlayModule,
+    ReactiveFormsModule
   ],
   providers: [
     {provide: "windowObject", useValue: window},
