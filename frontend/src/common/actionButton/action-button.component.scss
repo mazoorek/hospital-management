@@ -1,31 +1,42 @@
 @import "../common";
 
 :host {
-  border-radius: 5px;
-  padding: 10px;
-  width: 70px;
-  height: 50px;
-  margin: auto 0;
-  cursor: pointer;
 
-  .text {
-    margin: auto;
-  }
+  display: inline-block;
 
-  &.green {
-    background-color: $green-color;
-  }
+  .button-container {
 
-  &.red {
-    background-color: $red-color;
-  }
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
 
-  &.aquamarine {
-    background-color: $aquamarine-color;
-  }
+    .button-content {
+      margin: auto;
+    }
 
-  &.transparent {
-    opacity: 0;
-    cursor: none;
+    &.green {
+      background-color: $green-color;
+    }
+
+    &.red {
+      background-color: $red-color;
+    }
+
+    &.aquamarine {
+      background-color: $aquamarine-color;
+    }
+
+    &.transparent {
+      opacity: 0;
+      cursor: none;
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
   }
 }

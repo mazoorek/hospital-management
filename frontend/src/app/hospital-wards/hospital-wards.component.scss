@@ -2,4 +2,39 @@
 
 :host {
   @include section;
+
+  .form-container {
+    display: inline-flex;
+    flex-flow: column;
+    justify-content: center;
+
+    label {
+      text-transform: uppercase;
+      padding-right: 20px;
+      font-size: 28px;
+    }
+
+    input {
+      height: 50px;
+      font-size: 24px;
+
+      &.ng-invalid.ng-touched {
+        border: 1px solid red;
+      }
+    }
+
+    .validation-error {
+      color: red;
+    }
+
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+
+      .form-button {
+        margin-top: 30px;
+        padding: 10px;
+      }
+    }
+  }
 }
