@@ -47,17 +47,38 @@
 
 @mixin form {
   .form-container {
-    display: inline-flex;
-    flex-flow: column;
-    justify-content: center;
+
+    .form-body {
+      text-align: right;
+      display: flex;
+      flex-flow: column;
+
+      .form-row {
+        display: flex;
+        justify-content: space-between;
+
+        &:not(:first-of-type) {
+          margin-top: 20px;
+        }
+      }
+    }
 
     label {
       text-transform: uppercase;
       padding-right: 20px;
       font-size: 28px;
+      width: 300px;
+    }
+
+    select {
+      width: 320px;
+      height: 50px;
+      font-size: 24px;
+      background-color: $white-color;
     }
 
     input {
+      width: 320px;
       height: 50px;
       font-size: 24px;
 

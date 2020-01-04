@@ -4,7 +4,7 @@ import {ListContent, Row} from "../../common/List/ListContent/list-content.model
 import {Specialization} from "./specialization.model";
 import {DoctorsService} from "../doctors/doctors.service";
 import {OperationTypesService} from "../operation-types/operation-types.service";
-import {AppointmentTypesService} from "../appointment-type/appointment-types.service";
+import {AppointmentTypesService} from "../appointment-types/appointment-types.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({

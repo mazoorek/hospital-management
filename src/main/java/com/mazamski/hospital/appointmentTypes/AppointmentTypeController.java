@@ -19,8 +19,13 @@ public class AppointmentTypeController {
     }
 
     @PostMapping()
-    void insertAppointmentType(@RequestBody AppointmentType function) {
-        appointmentTypeMapper.insertAppointmentType(function);
+    void insertAppointmentType(@RequestBody AppointmentType appointmentType) {
+        appointmentTypeMapper.insertAppointmentType(appointmentType);
+    }
+
+    @PutMapping()
+    void updateAppointmentType(@RequestBody AppointmentType appointmentType) {
+        appointmentTypeMapper.updateAppointmentType(appointmentType);
     }
 
     @DeleteMapping("/{appointmentTypeId}")

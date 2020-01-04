@@ -1,6 +1,7 @@
 package com.mazamski.hospital.appointmentTypes;
 
 import com.mazamski.hospital.appointmentTypes.model.AppointmentType;
+import com.mazamski.hospital.function.model.Function;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -18,9 +19,17 @@ public interface AppointmentTypeMapper {
     List<AppointmentType> getAppointmentTypes();
 
     @Insert("insert into charakter_wizyty(charakter, specjalizacja_id) " +
-            "values(#{type}, select specjalizacja_id from specjalizacja " +
-            "where nazwa = #{specializationName} )")
+            "values(#{type}, (select specjalizacja_id from specjalizacja " +
+            "where nazwa = #{specializationName}))")
     void insertAppointmentType(AppointmentType appointmentType);
+
+    @Update("update charakter_wizyty " +
+            "set " +
+            "charakter = #{type}, " +
+            "specjalizacja_id = (select specjalizacja_id from specjalizacja " +
+            "where nazwa = #{specializationName})" +
+            "where charakter_wizyty_id = #{id}")
+    void updateAppointmentType(AppointmentType appointmentType);
 
     @Delete("delete from charakter_wizyty " +
             "where charakter_wizyty_id = #{appointmentTypeId}")
