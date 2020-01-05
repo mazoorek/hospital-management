@@ -15,9 +15,9 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
     <div class="section-body" *ngIf="!loading">
       <div class="flex-item form-flex-item"
            [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
+        <div class="form-body" *ngIf="showForm" class="form-container">
           <form [formGroup]="addRowForm">
-            <div class="input-field">
+            <div class="form-row">
               <label for="hospitalWardName">Nazwa Oddziału</label>
               <input type="text"
                      placeholder="wpisz nazwę oddziału"

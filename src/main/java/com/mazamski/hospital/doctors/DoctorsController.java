@@ -15,17 +15,22 @@ import java.util.List;
 public class DoctorsController {
 
     @GetMapping()
-    List<Doctor> getEmployees() {
+    List<Doctor> getDoctors() {
         return doctorsMapper.getDoctors();
     }
 
     @PostMapping()
-    void insertEmployee(@RequestBody Doctor function) {
-        doctorsMapper.insertDoctor(function);
+    void insertDoctor(@RequestBody Doctor doctor) {
+        doctorsMapper.insertDoctor(doctor);
+    }
+
+    @PutMapping()
+    void updateDoctor(@RequestBody Doctor doctor) {
+        doctorsMapper.updateDoctor(doctor);
     }
 
     @DeleteMapping("/{doctorId}")
-    void deleteEmployee(@PathVariable Long doctorId) {
+    void deleteDoctor(@PathVariable Long doctorId) {
         doctorsMapper.deleteDoctor(doctorId);
     }
 

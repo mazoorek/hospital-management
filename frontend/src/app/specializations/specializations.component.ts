@@ -16,8 +16,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
       <div class="flex-item form-flex-item"
            [ngClass]="{'collapsed': !showForm}">
         <div *ngIf="showForm" class="form-container">
-          <form [formGroup]="addRowForm">
-            <div class="input-field">
+          <form class="form-body" [formGroup]="addRowForm">
+            <div class="form-row">
               <label for="SpecializationName">Nazwa Specializacji</label>
               <input type="text"
                      placeholder="wpisz nazwę specializacji"

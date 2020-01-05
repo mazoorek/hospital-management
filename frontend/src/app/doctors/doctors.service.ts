@@ -17,6 +17,14 @@ export class DoctorsService {
     return this.http.get<Doctor []>(this.DOCTORS_API_URL);
   }
 
+  insertDoctor(doctor: Doctor): Observable<Doctor> {
+    return this.http.post<Doctor>(this.DOCTORS_API_URL, doctor);
+  }
+
+  updateDoctor(doctor: Doctor): Observable<Doctor> {
+    return this.http.put<Doctor>(this.DOCTORS_API_URL, doctor);
+  }
+
   deleteDoctor(doctorId: number): Observable<Doctor> {
     return this.http.delete<Doctor>(this.DOCTORS_API_URL + `/${doctorId}`);
   }

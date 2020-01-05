@@ -22,10 +22,11 @@ public interface DoctorsMapper {
     })
     List<Doctor> getDoctors();
 
-    @Insert("insert into lekarz(typ, oddzial_id, specjalizacja_id) " +
-            "values(#{type}, select oddzial_id from oddzial where nazwa = #{wardName}, " +
-            "select specjalizacja_id from specjalizacja where specjalizacja_id = #{surname})")
+    @Insert("{call insert_doctor(#{name},#{surname},#{specializationName},#{wardName})}")
     void insertDoctor(Doctor doctor);
+
+    @Update("{call update_doctor(#{employeeId},#{name},#{surname},#{specializationName},#{wardName})}")
+    void updateDoctor(Doctor doctor);
 
     @Delete("delete pracownik " +
             "from pracownik join lekarz " +
