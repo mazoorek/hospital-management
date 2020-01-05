@@ -159,7 +159,6 @@ export class AppointmentTypesComponent implements OnInit {
         'appointmentType': this.appointmentTypes.filter(type => type.id === this.formRowId).map(type => type.type)[0],
         'specialization': this.appointmentTypes.filter(type => type.id === this.formRowId).map(type => type.specializationName)[0]
       });
-    //  this.addRowForm.get('specialization').setValue(this.appointmentTypes.filter(type => type.id === this.formRowId).map(type => type.specializationName)[0], {onlySelf: true});
     } else {
       this.addRowForm.reset();
     }
@@ -169,10 +168,11 @@ export class AppointmentTypesComponent implements OnInit {
   onClickAddOrUpdate(): void {
     if (this.addRowForm.valid) {
       this.loading = true;
+      let filterByRegex = new RegExp('^[A-Za-z\\s]+$');
       if (this.formRowId === -1) {
         this.appointmentTypesService.insertAppointmentType({
           type: this.addRowForm.value['appointmentType'],
-          specializationName: this.addRowForm.value['specialization'].split(" ").slice(1).join(" ")
+          specializationName: this.addRowForm.value['specialization'].split(" ").filter(word => word.match(filterByRegex)).join(" ")
         } as AppointmentType).subscribe(() => {
           this.showForm = false;
           this.loadSelfAndDependentTables();
@@ -180,7 +180,7 @@ export class AppointmentTypesComponent implements OnInit {
       } else {
         this.appointmentTypesService.updateAppointmentType({
           type: this.addRowForm.value['appointmentType'],
-          specializationName: this.addRowForm.value['specialization'].split(" ").slice(1).join(" "),
+          specializationName: this.addRowForm.value['specialization'].split(" ").filter(word => word.match(filterByRegex)).join(" "),
           id: this.formRowId
         } as AppointmentType).subscribe(() => {
           this.showForm = false;

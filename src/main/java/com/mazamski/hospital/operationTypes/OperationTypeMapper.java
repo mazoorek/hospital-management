@@ -1,5 +1,6 @@
 package com.mazamski.hospital.operationTypes;
 
+import com.mazamski.hospital.appointmentTypes.model.AppointmentType;
 import com.mazamski.hospital.operationTypes.model.OperationType;
 import org.apache.ibatis.annotations.*;
 
@@ -19,9 +20,17 @@ public interface OperationTypeMapper {
     List<OperationType> getOperationTypes();
 
     @Insert("insert into typ_operacji(typ, specjalizacja_id) " +
-            "values(#{type}, select specjalizacja_id from specjalizacja " +
-            "where nazwa = #{specializationName} )")
+            "values(#{type}, (select specjalizacja_id from specjalizacja " +
+            "where nazwa = #{specializationName}))")
     void insertOperationType(OperationType operationType);
+
+    @Update("update typ_operacji " +
+            "set " +
+            "typ = #{type}, " +
+            "specjalizacja_id = (select specjalizacja_id from specjalizacja " +
+            "where nazwa = #{specializationName})" +
+            "where typ_operacji_id = #{id}")
+    void updateOperationType(OperationType operationType);
 
     @Delete("delete from typ_operacji " +
             "where typ_operacji_id = #{operationTypeId}")
