@@ -6,7 +6,6 @@ import {AppointmentsService} from "../appointments/appointments.service";
 import {EmployeesService} from "../employees/employees.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Specialization} from "../specializations/specialization.model";
-import {AppointmentType} from "../appointment-types/appointment-types.model";
 import {SpecializationsService} from "../specializations/specializations.service";
 import {HospitalWardsService} from "../hospital-wards/hospital-wards.service";
 import {HospitalWard} from "../hospital-wards/hospital-ward.model";

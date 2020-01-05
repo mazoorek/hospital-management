@@ -7,7 +7,7 @@ import {Staff} from "./staff.model";
 @Injectable({providedIn: "root"})
 export class StaffService {
 
-  readonly OPERATION_TYPES_API_URL: string = '/api/staff';
+  readonly STAFF_API_URL: string = '/api/staff';
 
   loadStaffSubject: Subject<void> = new Subject<void>();
 
@@ -16,11 +16,19 @@ export class StaffService {
   }
 
   getStaff(): Observable<Staff []> {
-    return this.http.get<Staff []>(this.OPERATION_TYPES_API_URL);
+    return this.http.get<Staff []>(this.STAFF_API_URL);
+  }
+
+  insertStaff(staff: Staff): Observable<Staff> {
+    return this.http.post<Staff>(this.STAFF_API_URL, staff);
+  }
+
+  updateStaff(staff: Staff): Observable<Staff> {
+    return this.http.put<Staff>(this.STAFF_API_URL, staff);
   }
 
   deleteStaffMember(staffId: number): Observable<Staff> {
-    return this.http.delete<Staff>(this.OPERATION_TYPES_API_URL + `/${staffId}`);
+    return this.http.delete<Staff>(this.STAFF_API_URL + `/${staffId}`);
   }
 
   loadStaff(): void {

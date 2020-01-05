@@ -19,8 +19,13 @@ public class StaffController {
     }
 
     @PostMapping()
-    void insertStaffMember(@RequestBody StaffMember function) {
-        staffMapper.insertStaff(function);
+    void insertStaffMember(@RequestBody StaffMember staffMember) {
+        staffMapper.insertStaff(staffMember);
+    }
+
+    @PutMapping()
+    void updateStaffMember(@RequestBody StaffMember staffMember) {
+        staffMapper.updateStaff(staffMember);
     }
 
     @DeleteMapping("/{staffMemberId}")
