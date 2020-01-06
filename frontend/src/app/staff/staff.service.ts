@@ -11,6 +11,7 @@ export class StaffService {
 
   loadStaffSubject: Subject<void> = new Subject<void>();
 
+  addNewStaffMemberSubject: Subject<void> = new Subject<void>();
 
   constructor(private http: HttpClient) {
   }
@@ -33,5 +34,9 @@ export class StaffService {
 
   loadStaff(): void {
     this.loadStaffSubject.next();
+  }
+
+  addNewStaffMember(): void {
+    this.addNewStaffMemberSubject.next();
   }
 }

@@ -83,7 +83,6 @@ export class ListComponent implements OnInit {
   }
 
   onClickAddOrEditRow(rowIndex?: number): void {
-    console.log(rowIndex);
     (rowIndex ||  rowIndex === 0) ? this.addOrUpdateRowChange.emit(+this.rows[rowIndex].row[0]) : this.addOrUpdateRowChange.emit(-1);
   }
 

@@ -10,6 +10,8 @@ export class DoctorsService {
 
   loadDoctorsSubject: Subject<void> = new Subject<void>();
 
+  addNewDoctorSubject: Subject<void> = new Subject<void>();
+
   constructor(private http: HttpClient) {
   }
 
@@ -31,5 +33,9 @@ export class DoctorsService {
 
   loadDoctors(): void {
     this.loadDoctorsSubject.next();
+  }
+
+  addNewDoctor(): void {
+    this.addNewDoctorSubject.next();
   }
 }

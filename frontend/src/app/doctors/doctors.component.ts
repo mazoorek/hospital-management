@@ -120,6 +120,9 @@ export class DoctorsComponent implements OnInit {
     this.doctorsService.loadDoctorsSubject.subscribe(() => {
       this.loadDoctors();
     });
+    this.doctorsService.addNewDoctorSubject.subscribe(() => {
+      this.loadForm(-1);
+    })
   }
 
   get formDoctorName() {

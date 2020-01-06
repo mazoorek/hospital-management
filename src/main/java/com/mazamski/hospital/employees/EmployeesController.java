@@ -18,9 +18,9 @@ public class EmployeesController {
         return employeesMapper.getEmployees();
     }
 
-    @PostMapping()
-    void insertEmployee(@RequestBody Employee function) {
-        employeesMapper.insertEmployee(function);
+    @PutMapping()
+    void updateEmployee(@RequestBody Employee employee) {
+        employeesMapper.updateEmployee(employee);
     }
 
     @DeleteMapping("/{employeeId}")

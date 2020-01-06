@@ -4,11 +4,8 @@ import {ListContent, Row} from "../../common/List/ListContent/list-content.model
 import {Staff} from "./staff.model";
 import {EmployeesService} from "../employees/employees.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {SpecializationsService} from "../specializations/specializations.service";
-import {HospitalWardsService} from "../hospital-wards/hospital-wards.service";
 import {FunctionsService} from "../functions/functions.service";
 import {Function} from "../functions/function.model";
-import {Doctor} from "../doctors/doctor.model";
 
 @Component({
   selector: 'staff',
@@ -28,10 +25,10 @@ import {Doctor} from "../doctors/doctor.model";
                      formControlName="name"
                      id="name">
             </div>
-            <div class="validation-error" *ngIf="formDoctorName.errors?.pattern">
+            <div class="validation-error" *ngIf="formStaffMemberName.errors?.pattern">
               Pole może zawierać małe/duże litery oraz znaki spacji
             </div>
-            <div class="validation-error" *ngIf="formDoctorName.errors?.required && formDoctorName.touched">
+            <div class="validation-error" *ngIf="formStaffMemberName.errors?.required && formStaffMemberName.touched">
               Pole nie może być puste
             </div>
             <div class="form-row">
@@ -42,10 +39,11 @@ import {Doctor} from "../doctors/doctor.model";
                      formControlName="surname"
                      id="surname">
             </div>
-            <div class="validation-error" *ngIf="formDoctorSurname.errors?.pattern">
+            <div class="validation-error" *ngIf="formStaffMemberSurname.errors?.pattern">
               Pole może zawierać małe/duże litery oraz znaki spacji
             </div>
-            <div class="validation-error" *ngIf="formDoctorSurname.errors?.required && formDoctorSurname.touched">
+            <div class="validation-error"
+                 *ngIf="formStaffMemberSurname.errors?.required && formStaffMemberSurname.touched">
               Pole nie może być puste
             </div>
             <div class="form-row">
@@ -105,13 +103,16 @@ export class StaffComponent implements OnInit {
     this.staffService.loadStaffSubject.subscribe(() => {
       this.loadStaff();
     });
+    this.staffService.addNewStaffMemberSubject.subscribe(() => {
+      this.loadForm(-1);
+    })
   }
 
-  get formDoctorName() {
+  get formStaffMemberName() {
     return this.addRowForm.get('name');
   }
 
-  get formDoctorSurname() {
+  get formStaffMemberSurname() {
     return this.addRowForm.get('surname');
   }
 
