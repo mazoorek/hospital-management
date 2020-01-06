@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {Observable, Subject} from "rxjs";
 import {Room} from "./room.model";
 import {HttpClient} from "@angular/common/http";
+import {AppointmentType} from "../appointment-types/appointment-types.model";
 
 @Injectable({providedIn: "root"})
 export class RoomsService {
@@ -19,6 +20,14 @@ export class RoomsService {
 
   deleteRoom(roomId: number): Observable<Room> {
     return this.http.delete<Room>(this.ROOMS_API_URL + `/${roomId}`);
+  }
+
+  insertRoom(appointmentType: Room): Observable<Room> {
+    return this.http.post<Room>(this.ROOMS_API_URL, appointmentType);
+  }
+
+  updateRoom(appointmentType: Room): Observable<Room> {
+    return this.http.put<Room>(this.ROOMS_API_URL, appointmentType);
   }
 
   loadRooms() {

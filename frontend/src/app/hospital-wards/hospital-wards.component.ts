@@ -15,8 +15,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
     <div class="section-body" *ngIf="!loading">
       <div class="flex-item form-flex-item"
            [ngClass]="{'collapsed': !showForm}">
-        <div class="form-body" *ngIf="showForm" class="form-container">
-          <form [formGroup]="addRowForm">
+        <div *ngIf="showForm" class="form-container">
+          <form  class="form-body" [formGroup]="addRowForm">
             <div class="form-row">
               <label for="hospitalWardName">Nazwa Oddziału</label>
               <input type="text"
@@ -99,7 +99,7 @@ export class HospitalWardsComponent implements OnInit {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'oddziały'],
+      columns: ['id', 'oddział'],
       rows: this.loadRows()
     };
   }

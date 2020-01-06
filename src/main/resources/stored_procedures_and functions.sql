@@ -100,7 +100,7 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table lekarz
-        add constraint lekarz_fk_id foreign key (lekarz_id) references pracownik (pracownik_id) on delete cascade;
+        add constraint lekarz_fk_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
     alter table lekarz
         add constraint lekarz_fk_specjalizacja_id foreign key (specjalizacja_id) references specjalizacja (specjalizacja_id) on delete cascade;
     alter table lekarz
@@ -121,7 +121,7 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table personel
-        add constraint staff_fk_id foreign key (personel_id) references pracownik (pracownik_id) on delete cascade;
+        add constraint staff_fk_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
     alter table personel
         add constraint staff_fk_funkcja foreign key (funkcja_id) references funkcja (funkcja_id) on delete cascade;
     alter table personel

@@ -147,7 +147,7 @@ export class EmployeesComponent implements OnInit {
         Validators.pattern('^[A-Za-z\\s]+$')
       ]),
       'employeeType': new FormControl('', Validators.required)
-    });
+    }, { updateOn: 'blur' });
   }
 
   loadListContent(): void {
