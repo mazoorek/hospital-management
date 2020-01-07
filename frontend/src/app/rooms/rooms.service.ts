@@ -2,7 +2,6 @@ import {Injectable} from "@angular/core";
 import {Observable, Subject} from "rxjs";
 import {Room} from "./room.model";
 import {HttpClient} from "@angular/common/http";
-import {AppointmentType} from "../appointment-types/appointment-types.model";
 
 @Injectable({providedIn: "root"})
 export class RoomsService {
