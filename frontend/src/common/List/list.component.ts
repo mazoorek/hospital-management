@@ -82,8 +82,8 @@ export class ListComponent implements OnInit {
     return index;
   }
 
-  onClickAddOrEditRow(id?: number): void {
-     id ? this.addOrUpdateRowChange.emit(id) : this.addOrUpdateRowChange.emit(-1);
+  onClickAddOrEditRow(rowIndex?: number): void {
+    (rowIndex ||  rowIndex === 0) ? this.addOrUpdateRowChange.emit(+this.rows[rowIndex].row[0]) : this.addOrUpdateRowChange.emit(-1);
   }
 
   getHeaderColumns(): string[] {

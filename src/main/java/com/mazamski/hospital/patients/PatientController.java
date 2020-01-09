@@ -19,8 +19,13 @@ public class PatientController {
     }
 
     @PostMapping()
-    void insertPatient(@RequestBody Patient function) {
-        patientMapper.insertPatient(function);
+    void insertPatient(@RequestBody Patient patient) {
+        patientMapper.insertPatient(patient);
+    }
+
+    @PutMapping()
+    void updatePatient(@RequestBody Patient patient) {
+        patientMapper.updatePatient(patient);
     }
 
     @DeleteMapping("/{patientId}")

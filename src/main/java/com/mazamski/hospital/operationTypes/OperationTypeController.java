@@ -14,17 +14,22 @@ import java.util.List;
 public class OperationTypeController {
 
     @GetMapping()
-    List<OperationType> getAppointmentTypes() {
+    List<OperationType> getOperationTypes() {
         return operationTypeMapper.getOperationTypes();
     }
 
     @PostMapping()
-    void insertAppointmentType(@RequestBody OperationType function) {
-        operationTypeMapper.insertOperationType(function);
+    void insertOperationType(@RequestBody OperationType operationType) {
+        operationTypeMapper.insertOperationType(operationType);
+    }
+
+    @PutMapping()
+    void updateOperationType(@RequestBody OperationType operationType) {
+        operationTypeMapper.updateOperationType(operationType);
     }
 
     @DeleteMapping("/{operationTypeId}")
-    void deleteAppointmentType(@PathVariable Long operationTypeId) {
+    void deleteOperationType(@PathVariable Long operationTypeId) {
         operationTypeMapper.deleteOperationType(operationTypeId);
     }
 

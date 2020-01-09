@@ -20,9 +20,17 @@ public interface LeavesOfAbsenceMapper {
     })
     List<LeaveOfAbsence> getLeavesOfAbsence();
 
-    @Insert("insert into urlop(pracownik_id, data_rozpoczecia, data_rozpoczecia) " +
-            "values(employeeId, startDate, endDate)")
+    @Insert("insert into urlop(pracownik_id, data_rozpoczecia, data_zakonczenia) " +
+            "values(#{employeeId}, #{startDate}, #{endDate})")
     void insertLeaveOfAbsence(LeaveOfAbsence leaveOfAbsence);
+
+    @Update("update urlop " +
+            "set " +
+            "pracownik_id = #{employeeId}, " +
+            "data_rozpoczecia = #{startDate}, " +
+            "data_zakonczenia = #{endDate} " +
+            "where urlop_id = #{id}")
+    void updateLeaveOfAbsence(LeaveOfAbsence leaveOfAbsence);
 
     @Delete("delete from urlop " +
             "where urlop_id = #{leaveOfAbsenceId}")

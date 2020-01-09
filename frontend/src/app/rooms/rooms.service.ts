@@ -21,6 +21,14 @@ export class RoomsService {
     return this.http.delete<Room>(this.ROOMS_API_URL + `/${roomId}`);
   }
 
+  insertRoom(appointmentType: Room): Observable<Room> {
+    return this.http.post<Room>(this.ROOMS_API_URL, appointmentType);
+  }
+
+  updateRoom(appointmentType: Room): Observable<Room> {
+    return this.http.put<Room>(this.ROOMS_API_URL, appointmentType);
+  }
+
   loadRooms() {
     this.loadRoomsSubject.next();
   }

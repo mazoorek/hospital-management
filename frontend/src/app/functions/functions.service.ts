@@ -22,6 +22,14 @@ export class FunctionsService {
     return this.http.delete<Function>(this.FUNCTIONS_API_URL + `/${functionId}`);
   }
 
+  insertFunction(func: Function): Observable<Function> {
+    return this.http.post<Function>(this.FUNCTIONS_API_URL, func);
+  }
+
+  updateFunction(func: Function): Observable<Function> {
+    return this.http.put<Function>(this.FUNCTIONS_API_URL, func);
+  }
+
   loadFunctions(): void {
     this.loadFunctionsSubject.next();
   }

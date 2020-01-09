@@ -16,8 +16,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
       <div class="flex-item form-flex-item"
            [ngClass]="{'collapsed': !showForm}">
         <div *ngIf="showForm" class="form-container">
-          <form [formGroup]="addRowForm">
-            <div class="input-field">
+          <form  class="form-body" [formGroup]="addRowForm">
+            <div class="form-row">
               <label for="hospitalWardName">Nazwa Oddziału</label>
               <input type="text"
                      placeholder="wpisz nazwę oddziału"
@@ -25,10 +25,10 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
                      formControlName="name"
                      id="hospitalWardName">
             </div>
-            <div class="validation-error" *ngIf="formHospitalWardName.errors.pattern">
+            <div class="validation-error" *ngIf="formHospitalWardName.errors?.pattern">
               Pole może zawierać małe/duże litery oraz znaki spacji
             </div>
-            <div class="validation-error" *ngIf="formHospitalWardName.errors.required && formHospitalWardName.touched">
+            <div class="validation-error" *ngIf="formHospitalWardName.errors?.required && formHospitalWardName.touched">
               Pole nie może być puste
             </div>
           </form>
@@ -38,7 +38,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
               (click)="onClickAddOrUpdate()"
               [green]="true"
               [disabled] = "addRowForm.invalid"
-              text="Zatwierdź nowy rekord"
+              text="Zatwierdź rekord"
               [width]="200"></action-button>
             <action-button
               class="form-button"
@@ -86,6 +86,7 @@ export class HospitalWardsComponent implements OnInit {
     this.hospitalWardsService.getHospitalWards().subscribe(hospitalWards => {
       this.hospitalWards = hospitalWards;
       this.loadListContent();
+      this.showForm = false;
       this.loading = false;
     });
   }
@@ -98,7 +99,7 @@ export class HospitalWardsComponent implements OnInit {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'oddziały'],
+      columns: ['id', 'oddział'],
       rows: this.loadRows()
     };
   }
@@ -127,7 +128,7 @@ export class HospitalWardsComponent implements OnInit {
     this.formRowId = id;
     if (this.formRowId >= 0) {
       this.addRowForm.patchValue({
-        'name': this.hospitalWards.filter(ward => +ward.id === +this.formRowId).map(ward => ward.name)
+        'name': this.hospitalWards.filter(ward => ward.id === this.formRowId).map(ward => ward.name)
       })
     } else {
       this.addRowForm.reset();

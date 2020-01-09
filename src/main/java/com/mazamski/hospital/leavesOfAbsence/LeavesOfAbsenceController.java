@@ -19,8 +19,13 @@ public class LeavesOfAbsenceController {
     }
 
     @PostMapping()
-    void insertLeaveOfAbsence(@RequestBody LeaveOfAbsence function) {
-        leavesOfAbsenceMapper.insertLeaveOfAbsence(function);
+    void insertLeaveOfAbsence(@RequestBody LeaveOfAbsence leaveOfAbsence) {
+        leavesOfAbsenceMapper.insertLeaveOfAbsence(leaveOfAbsence);
+    }
+
+    @PutMapping()
+    void updateLeaveOfAbsence(@RequestBody LeaveOfAbsence leaveOfAbsence) {
+        leavesOfAbsenceMapper.updateLeaveOfAbsence(leaveOfAbsence);
     }
 
     @DeleteMapping("/{leaveOfAbsenceId}")

@@ -22,6 +22,14 @@ public interface PatientMapper {
             "values(#{pesel}, #{name}, #{surname})")
     void insertPatient(Patient patient);
 
+    @Update("update pacjent " +
+            "set " +
+            "pesel = #{pesel}, " +
+            "imie = #{name}, " +
+            "nazwisko = #{surname} " +
+            "where pacjent_id = #{id}")
+    void updatePatient(Patient patient);
+
     @Delete("delete from pacjent " +
             "where pacjent_id = #{patientId}")
     void deletePatient(Long patientId);

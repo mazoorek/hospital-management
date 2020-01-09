@@ -20,10 +20,11 @@ public interface StaffMapper {
     })
     List<StaffMember> getStaff();
 
-    @Insert("insert into personel(pracownik_id, specjalizacja_id) " +
-            "values(employeeId, " +
-            "select specjalizacja_id from specjalizacja where specjalizacja_id = #{surname})")
+    @Insert("{call insert_staff_member(#{name},#{surname},#{functionName})}")
     void insertStaff(StaffMember staffMember);
+
+    @Update("{call update_staff_member(#{employeeId},#{name},#{surname},#{functionName})}")
+    void updateStaff(StaffMember staffMember);
 
     @Delete("delete pracownik " +
             "from pracownik join personel " +

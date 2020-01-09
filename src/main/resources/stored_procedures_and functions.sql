@@ -2,6 +2,10 @@ drop procedure if exists create_database;
 drop procedure if exists drop_old_tables;
 drop procedure if exists create_new_tables;
 drop procedure if exists fill_tables_with_values;
+drop procedure if exists insert_doctor;
+drop procedure if exists update_doctor;
+drop procedure if exists insert_staff_member;
+drop procedure if exists update_staff_member;
 drop function if exists count_tables;
 
 
@@ -96,7 +100,7 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table lekarz
-        add constraint lekarz_fk_id foreign key (lekarz_id) references pracownik (pracownik_id) on delete cascade;
+        add constraint lekarz_fk_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
     alter table lekarz
         add constraint lekarz_fk_specjalizacja_id foreign key (specjalizacja_id) references specjalizacja (specjalizacja_id) on delete cascade;
     alter table lekarz
@@ -117,7 +121,7 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table personel
-        add constraint staff_fk_id foreign key (personel_id) references pracownik (pracownik_id) on delete cascade;
+        add constraint staff_fk_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
     alter table personel
         add constraint staff_fk_funkcja foreign key (funkcja_id) references funkcja (funkcja_id) on delete cascade;
     alter table personel
@@ -252,9 +256,9 @@ begin
     values ('urologia');
 
     insert into funkcja(nazwa)
-    values ('pielęgniarka');
+    values ('pielegniarka');
     insert into funkcja(nazwa)
-    values ('sprzątaczka');
+    values ('sprzataczka');
     insert into funkcja(nazwa)
     values ('recepcjonistka');
     insert into funkcja(nazwa)
@@ -332,9 +336,9 @@ begin
     values (3, 5);
 
     insert into pacjent(pesel, imie, nazwisko)
-    VALUES ('57060734835', 'Wojciech', 'Młynarski');
+    VALUES ('57060734835', 'Wojciech', 'Mlynarski');
     insert into pacjent(pesel, imie, nazwisko)
-    VALUES ('92051246964', 'Maciej', 'Musiał');
+    VALUES ('92051246964', 'Maciej', 'Musial');
     insert into pacjent(pesel, imie, nazwisko)
     VALUES ('64092774485', 'Konstanty', 'Malinowski');
 
@@ -362,7 +366,7 @@ begin
     values ('operacja', 1);
 
     insert into wizyta(data_poczatku, data_konca, pacjent_id, lekarz_id, pokoj_id, charakter_wizyty_id)
-    VALUES (current_date, date_add(current_date, interval 1 hour), 1, 3, 4, 1);
+    VALUES (current_date, date_add(current_date, interval 1 hour), 1, 1, 2, 4);
 end;
 
 create function count_tables()
@@ -373,4 +377,60 @@ begin
          FROM INFORMATION_SCHEMA.TABLES
          WHERE TABLE_TYPE = 'BASE TABLE'
            AND TABLE_SCHEMA = 'hospital_management');
+end;
+
+create procedure insert_doctor(name varchar(128), surname varchar(128), specialization varchar(128),
+                               hospital_ward varchar(128))
+begin
+    insert into pracownik(imie, nazwisko, typ) VALUES (name, surname, 'lekarz');
+    insert into lekarz(pracownik_id, specjalizacja_id, oddzial_id)
+    VALUES ((select pracownik_id
+             from pracownik
+             where imie = name
+               and nazwisko = surname
+             order by pracownik_id desc
+             limit 1
+            ), (select specjalizacja_id from specjalizacja where nazwa = specialization),
+            (select oddzial_id from oddzial where nazwa = hospital_ward));
+end;
+
+create procedure update_doctor(employee_id integer, name varchar(128), surname varchar(128), specialization varchar(128),
+                               hospital_ward varchar(128))
+begin
+    update pracownik
+        set
+        imie = name,
+        nazwisko = surname
+    where pracownik_id = employee_id;
+    update lekarz
+    set
+    specjalizacja_id = (select specjalizacja_id from specjalizacja where nazwa = specialization),
+    oddzial_id = (select oddzial_id from oddzial where nazwa = hospital_ward)
+    where pracownik_id = employee_id;
+end;
+
+create procedure insert_staff_member(name varchar(128), surname varchar(128), function varchar(128))
+begin
+    insert into pracownik(imie, nazwisko, typ) VALUES (name, surname, 'personel');
+    insert into personel(pracownik_id, funkcja_id)
+    VALUES ((select pracownik_id
+             from pracownik
+             where imie = name
+               and nazwisko = surname
+             order by pracownik_id desc
+             limit 1
+            ), (select funkcja_id from funkcja where nazwa = function));
+end;
+
+create procedure update_staff_member(employee_id integer, name varchar(128), surname varchar(128), function varchar(128))
+begin
+    update pracownik
+    set
+        imie = name,
+        nazwisko = surname
+    where pracownik_id = employee_id;
+    update personel
+    set
+        funkcja_id = (select funkcja_id from funkcja where nazwa = function)
+    where pracownik_id = employee_id;
 end;

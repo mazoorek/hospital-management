@@ -1,5 +1,5 @@
 export interface LeaveOfAbsence {
-  id: string;
+  id: number;
   employeeId: string;
   name: string;
   surname: string;

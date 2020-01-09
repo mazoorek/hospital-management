@@ -1,6 +1,7 @@
 package com.mazamski.hospital.function;
 
 import com.mazamski.hospital.function.model.Function;
+import com.mazamski.hospital.specialization.model.Specialization;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -17,8 +18,13 @@ public interface FunctionMapper {
     List<Function> getFunctions();
 
     @Insert("insert into funkcja(nazwa) " +
-            "values(#{name}")
+            "values(#{name})")
     void insertFunction(Function function);
+
+    @Update("update funkcja " +
+            "set nazwa = #{name} " +
+            "where funkcja_id = #{id}")
+    void updateFunction(Function function);
 
     @Delete("delete from funkcja " +
             "where funkcja_id = #{functionId}")

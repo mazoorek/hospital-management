@@ -16,6 +16,7 @@ public class LeaveOfAbsence {
     String name;
     String surname;
     Long employeeId;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC") // ciekawostka
     Date startDate;
     Date endDate;
 }

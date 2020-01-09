@@ -18,9 +18,12 @@ public interface EmployeesMapper {
     })
     List<Employee> getEmployees();
 
-    @Insert("insert into pracownik(typ, imie, nazwisko) " +
-            "values(#{type}, #{name}, #{surname})")
-    void insertEmployee(Employee employee);
+    @Update("update pracownik " +
+            "set " +
+            "imie = #{name}, " +
+            "nazwisko = #{surname} " +
+            "where pracownik_id = #{id}")
+    void updateEmployee(Employee employee);
 
     @Delete("delete from pracownik " +
             "where pracownik_id = #{employeeId}")

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   background: $section-background-color;
   text-align: center;
@@ -43,6 +43,85 @@
 @mixin flex {
   display: flex;
   min-width: 1px;
+}
+
+@mixin form {
+  .form-container {
+
+    .form-body {
+      text-align: right;
+      display: flex;
+      flex-flow: column;
+
+      .form-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+
+        &:not(:first-of-type) {
+          margin-top: 20px;
+        }
+      }
+    }
+
+    label {
+      text-transform: uppercase;
+      padding-right: 20px;
+      font-size: 28px;
+      width: 300px;
+    }
+
+    select {
+      width: 320px;
+      height: 50px;
+      font-size: 24px;
+      background-color: $white-color;
+
+      &.ng-invalid.ng-touched {
+        border: 1px solid red;
+      }
+    }
+
+    input {
+      width: 320px;
+      height: 50px;
+      font-size: 24px;
+
+      &.ng-invalid.ng-touched {
+        border: 1px solid red;
+      }
+    }
+
+    .validation-error {
+      color: red;
+    }
+
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+
+      .form-button {
+        margin-top: 30px;
+        padding: 10px;
+      }
+    }
+  }
+}
+
+@mixin form-below-list {
+  .section-body {
+    flex-flow: column;
+
+    .form-container {
+      margin-top: 40px;
+      .form-body {
+        .form-row {
+          width: 600px;
+          margin: 10px auto;
+        }
+      }
+    }
+  }
 }
 
 

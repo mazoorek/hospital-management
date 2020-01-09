@@ -21,6 +21,14 @@ export class LeavesOfAbsenceService {
     return this.http.delete<LeaveOfAbsence>(this.LEAVES_API_URL + `/${leaveId}`);
   }
 
+  insertLeaveOfAbsence(leaveOfAbsence: LeaveOfAbsence): Observable<LeaveOfAbsence> {
+    return this.http.post<LeaveOfAbsence>(this.LEAVES_API_URL, leaveOfAbsence);
+  }
+
+  updateLeaveOfAbsence(leaveOfAbsence: LeaveOfAbsence): Observable<LeaveOfAbsence> {
+    return this.http.put<LeaveOfAbsence>(this.LEAVES_API_URL, leaveOfAbsence);
+  }
+
   loadLeavesOfAbsence(): void {
     this.loadLeavesOfAbsenceSubject.next();
   }

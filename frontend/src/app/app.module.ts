@@ -19,7 +19,7 @@ import {OperationTypesComponent} from "./operation-types/operation-types.compone
 import {SpecializationsComponent} from "./specializations/specializations.component";
 import {StaffComponent} from "./staff/staff.component";
 import {FunctionsComponent} from "./functions/functions.component";
-import {AppointmentTypesComponent} from "./appointment-type/appointment-types.component";
+import {AppointmentTypesComponent} from "./appointment-types/appointment-types.component";
 import {RoomsService} from "./rooms/rooms.service";
 import {HospitalWardsService} from "./hospital-wards/hospital-wards.service";
 import {DoctorsService} from "./doctors/doctors.service";
@@ -31,7 +31,7 @@ import {PatientsService} from "./patients/patients.service";
 import {SpecializationsService} from "./specializations/specializations.service";
 import {StaffService} from "./staff/staff.service";
 import {AppointmentsService} from "./appointments/appointments.service";
-import {AppointmentTypesService} from "./appointment-type/appointment-types.service";
+import {AppointmentTypesService} from "./appointment-types/appointment-types.service";
 import {OverlayModule} from "@angular/cdk/overlay";
 import {TooltipComponent} from "../common/tooltip/tooltip.component";
 import {TooltipDirective} from "../common/tooltip/tooltip.directive";

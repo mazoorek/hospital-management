@@ -1,5 +1,5 @@
 export interface Appointment {
-  id: string;
+  id: number;
   startDate: string;
   endDate: string;
   roomId: string;

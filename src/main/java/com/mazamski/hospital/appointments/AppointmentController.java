@@ -23,7 +23,12 @@ public class AppointmentController {
         appointmentMapper.insertAppointment(appointment);
     }
 
-    @PostMapping("/{appointmentId}")
+    @PutMapping()
+    void updateAppointment(@RequestBody Appointment appointment) {
+        appointmentMapper.updateAppointment(appointment);
+    }
+
+    @DeleteMapping("/{appointmentId}")
     void deleteAppointment(@PathVariable Long appointmentId) {
         appointmentMapper.deleteAppointment(appointmentId);
     }
