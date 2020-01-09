@@ -366,7 +366,7 @@ begin
     values ('operacja', 1);
 
     insert into wizyta(data_poczatku, data_konca, pacjent_id, lekarz_id, pokoj_id, charakter_wizyty_id)
-    VALUES (current_date, date_add(current_date, interval 1 hour), 1, 3, 4, 1);
+    VALUES (current_date, date_add(current_date, interval 1 hour), 1, 1, 2, 4);
 end;
 
 create function count_tables()

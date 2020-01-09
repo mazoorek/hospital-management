@@ -23,9 +23,30 @@ public interface AppointmentMapper {
     })
     List<Appointment> getAppointments();
 
-    @Insert("insert into specjalizacja(nazwa) values(#{name})")
+    @Insert("insert into wizyta(data_poczatku, data_konca, pacjent_id, lekarz_id, pokoj_id, charakter_wizyty_id, typ_operacji_id) " +
+            "values(" +
+            "#{startDate}, " +
+            "#{endDate}, " +
+            "(select pacjent_id from pacjent where pesel = #{pesel}), " +
+            "#{doctorId}, " +
+            "#{roomId}, " +
+            "(select charakter_wizyty_id from charakter_wizyty where charakter = #{appointmentType}), " +
+            "(select typ_operacji_id from typ_operacji where typ = coalesce(#{operationType}))" +
+            ")")
     void insertAppointment(Appointment appointment);
 
-    @Delete("delete from specjalizacja where specjalizacja_id = #{appointmentId}")
+    @Update("update wizyta " +
+            "set " +
+            "data_poczatku = #{startDate}, " +
+            "data_konca = #{endDate}, " +
+            "pacjent_id = (select pacjent_id from pacjent where pesel = #{pesel}), " +
+            "lekarz_id = #{doctorId}, " +
+            "pokoj_id = #{roomId}, " +
+            "charakter_wizyty_id = (select charakter_wizyty_id from charakter_wizyty where charakter = #{appointmentType}), " +
+            "typ_operacji_id = (select typ_operacji_id from typ_operacji where typ = #{operationType}) " +
+            "where wizyta_id = #{id}")
+    void updateAppointment(Appointment appointment);
+
+    @Delete("delete from wizyta where wizyta_id = #{appointmentId}")
     void deleteAppointment(Long appointmentId);
 }

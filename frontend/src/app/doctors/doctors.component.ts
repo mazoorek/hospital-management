@@ -16,6 +16,10 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
     <h1 class="section-header">LEKARZE</h1>
     <spinner *ngIf="loading"></spinner>
     <div class="section-body" *ngIf="!loading">
+      <list class="flex-item list-flex-item"
+            (addOrUpdateRowChange)="loadForm($event)"
+            (removeRowChange)="deleteDoctor($event)"
+            [listContent]="listContent"></list>
       <div class="flex-item form-flex-item"
            [ngClass]="{'collapsed': !showForm}">
         <div *ngIf="showForm" class="form-container">
@@ -28,10 +32,10 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
                      formControlName="name"
                      id="name">
             </div>
-            <div class="validation-error" *ngIf="formDoctorName.errors?.pattern">
+            <div class="validation-error form-row" *ngIf="formDoctorName.errors?.pattern">
               Pole może zawierać małe/duże litery oraz znaki spacji
             </div>
-            <div class="validation-error" *ngIf="formDoctorName.errors?.required && formDoctorName.touched">
+            <div class="validation-error form-row" *ngIf="formDoctorName.errors?.required && formDoctorName.touched">
               Pole nie może być puste
             </div>
             <div class="form-row">
@@ -42,10 +46,10 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
                      formControlName="surname"
                      id="surname">
             </div>
-            <div class="validation-error" *ngIf="formDoctorSurname.errors?.pattern">
+            <div class="validation-error form-row" *ngIf="formDoctorSurname.errors?.pattern">
               Pole może zawierać małe/duże litery oraz znaki spacji
             </div>
-            <div class="validation-error" *ngIf="formDoctorSurname.errors?.required && formDoctorSurname.touched">
+            <div class="validation-error form-row" *ngIf="formDoctorSurname.errors?.required && formDoctorSurname.touched">
               Pole nie może być puste
             </div>
             <div class="form-row">
@@ -88,10 +92,6 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
           </div>
         </div>
       </div>
-      <list class="flex-item list-flex-item"
-            (addOrUpdateRowChange)="loadForm($event)"
-            (removeRowChange)="deleteDoctor($event)"
-            [listContent]="listContent"></list>
     </div>
   `,
   styleUrls: ['./doctors.component.scss']

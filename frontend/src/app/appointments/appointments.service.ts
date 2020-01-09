@@ -21,6 +21,14 @@ export class AppointmentsService {
     return this.http.delete<Appointment>(this.APPOINTMENTS_API_URL + `/${appointmentId}`);
   }
 
+  insertAppointment(appointment: Appointment): Observable<Appointment> {
+    return this.http.post<Appointment>(this.APPOINTMENTS_API_URL, appointment);
+  }
+
+  updateAppointment(appointment: Appointment): Observable<Appointment> {
+    return this.http.put<Appointment>(this.APPOINTMENTS_API_URL, appointment);
+  }
+
   loadAppointments(): void {
     this.loadAppointmentsSubject.next();
   }

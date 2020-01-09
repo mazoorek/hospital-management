@@ -3,4 +3,5 @@
 :host {
   @include section;
   @include form;
+  @include form-below-list;
 }

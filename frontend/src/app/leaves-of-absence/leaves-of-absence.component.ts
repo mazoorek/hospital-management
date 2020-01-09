@@ -12,7 +12,10 @@ import {Employee} from "../employees/employee.model";
     <h1 class="section-header">URLOPY</h1>
     <spinner *ngIf="loading"></spinner>
     <div class="section-body" *ngIf="!loading">
-
+      <list class="flex-item list-flex-item"
+            (addOrUpdateRowChange)="loadForm($event)"
+            (removeRowChange)="deleteLeaveOfAbsence($event)"
+            [listContent]="listContent"></list>
       <div class="flex-item form-flex-item"
            [ngClass]="{'collapsed': !showForm}">
         <div *ngIf="showForm" class="form-container">
@@ -26,14 +29,14 @@ import {Employee} from "../employees/employee.model";
                      formControlName="startDate"
                      id="startDate">
             </div>
-            <div class="validation-error" *ngIf="formLeaveStartDate.errors?.required && formLeaveStartDate.touched">
+            <div class="validation-error form-row" *ngIf="formLeaveStartDate.errors?.required && formLeaveStartDate.touched">
               Pole nie może być puste
             </div>
-            <div class="validation-error"
+            <div class="validation-error form-row"
                  *ngIf="addRowForm.get('startDate').hasError('badDataFormat')">
               Wpisz poprawną datę w formacie yyyy-mm-dd
             </div>
-            <div class="validation-error"
+            <div class="validation-error form-row"
                  *ngIf="addRowForm.get('startDate').hasError('forbiddenStartDate')">
               Data urlopu dla tego pracownika już zajęta
             </div>
@@ -46,13 +49,13 @@ import {Employee} from "../employees/employee.model";
                      formControlName="endDate"
                      id="endDate">
             </div>
-            <div class="validation-error" *ngIf="formLeaveEndDate.errors?.required && formLeaveEndDate.touched">
+            <div class="validation-error form-row" *ngIf="formLeaveEndDate.errors?.required && formLeaveEndDate.touched">
               Pole nie może być puste
             </div>
-            <div class="validation-error" *ngIf="addRowForm.get('endDate').hasError('badDataFormat')">
+            <div class="validation-error form-row" *ngIf="addRowForm.get('endDate').hasError('badDataFormat')">
               Wpisz poprawną datę w formacie yyyy-mm-dd
             </div>
-            <div class="validation-error"
+            <div class="validation-error form-row"
                  *ngIf="addRowForm.get('endDate').hasError('forbiddenEndDate')">
               Niepoprawna data (zajęta lub mniejsza od daty początkowej)
             </div>
@@ -84,10 +87,6 @@ import {Employee} from "../employees/employee.model";
           </div>
         </div>
       </div>
-      <list class="flex-item list-flex-item"
-            (addOrUpdateRowChange)="loadForm($event)"
-            (removeRowChange)="deleteLeaveOfAbsence($event)"
-            [listContent]="listContent"></list>
     </div>
   `,
   styleUrls: ['./leaves-of-absence.component.scss']
