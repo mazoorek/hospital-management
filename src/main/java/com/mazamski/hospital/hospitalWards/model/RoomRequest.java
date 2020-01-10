@@ -1,4 +1,4 @@
-package com.mazamski.hospital.ward.model;
+package com.mazamski.hospital.hospitalWards.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HospitalWard {
+public class RoomRequest {
     Long id;
-    String name;
+    Integer number;
 }

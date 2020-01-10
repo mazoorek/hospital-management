@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {HospitalWard} from "./hospital-ward.model";
+import {HospitalWard, HospitalWardDoctorRequest, HospitalWardRoomRequest} from "./hospital-ward.model";
+import {Appointment} from "../appointments/appointment.model";
 
 
 @Injectable({providedIn: "root"})
@@ -29,6 +30,18 @@ export class HospitalWardsService {
 
   updateHospitalWard(hospitalWard: HospitalWard): Observable<HospitalWard> {
     return this.http.put<HospitalWard>(this.HOSPITAL_WARD_API_URL, hospitalWard);
+  }
+
+  getHospitalWardAppointments(wardId: number): Observable<Appointment []> {
+    return this.http.get<Appointment []>(this.HOSPITAL_WARD_API_URL + `/${wardId}` + '/appointments');
+  }
+
+  getHospitalWardRooms(wardId: number): Observable<HospitalWardRoomRequest []> {
+    return this.http.get<HospitalWardRoomRequest []>(this.HOSPITAL_WARD_API_URL + `/${wardId}` + '/rooms');
+  }
+
+  getHospitalWardDoctors(wardId: number): Observable<HospitalWardDoctorRequest []> {
+    return this.http.get<HospitalWardDoctorRequest []>(this.HOSPITAL_WARD_API_URL + `/${wardId}` + '/doctors');
   }
 
   loadHospitalWards(): void {

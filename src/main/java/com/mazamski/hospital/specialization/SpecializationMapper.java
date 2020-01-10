@@ -1,7 +1,6 @@
 package com.mazamski.hospital.specialization;
 
 import com.mazamski.hospital.specialization.model.Specialization;
-import com.mazamski.hospital.ward.model.HospitalWard;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

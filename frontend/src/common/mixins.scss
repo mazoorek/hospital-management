@@ -124,4 +124,48 @@
   }
 }
 
+@mixin selection-buttons {
+  .selected-row-buttons-container {
+    margin-top: 20px;
+
+    action-button {
+      margin: 0 10px;
+    }
+  }
+}
+
+@mixin display-list {
+  .display-list {
+    list {
+      margin: auto;
+      position:fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 101;
+    }
+
+    &:after {
+      content:'';
+      width: 100vw;
+      height: 100vh;
+      position:fixed;
+      top: 0;
+      z-index: 100;
+      opacity: .6;
+      background-color: $dark-grey-color;
+    }
+  }
+}
+
+@mixin section-container {
+  .section-container {
+    @include section;
+    @include form;
+    @include selection-buttons;
+  }
+
+  @include display-list;
+}
+
 
