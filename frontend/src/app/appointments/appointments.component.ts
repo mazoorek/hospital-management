@@ -476,7 +476,7 @@ export class AppointmentsComponent implements OnInit {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter', 'typ operacji'],
+      columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty', 'typ operacji'],
       rows: this.loadRows()
     }
   }

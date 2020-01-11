@@ -62,7 +62,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
               [height]="80"
               *ngIf="selectedRow>-1"
               (click)="onShowFunctionStaff()"
-              text="doktorzy specjalizacji"></action-button>
+              text="pracownicy funkcji"></action-button>
           </div>
         </div>
       </div>

@@ -34,8 +34,11 @@ import {Specialization} from "../specializations/specialization.model";
               </div>
               <div class="form-row">
                 <label for="specializationName">Nazwa specjalizacji</label>
-                <select id="specializationName" class="select-field" (change)="changeSpecialization($event)" formControlName="specialization">
-                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę specjalizacji</option>
+                <select id="specializationName" class="select-field" (change)="changeSpecialization($event)"
+                        formControlName="specialization">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę
+                    specjalizacji
+                  </option>
                   <option *ngFor="let specialization of specializations"
                           [ngValue]="specialization">{{specialization}}</option>
                 </select>
@@ -61,10 +64,25 @@ import {Specialization} from "../specializations/specialization.model";
         <div class="flex-item list-flex-item">
           <list class="flex-item list-flex-item"
                 (addOrUpdateRowChange)="loadForm($event)"
+                (selectedRowChange)="selectedRow=$event"
                 (removeRowChange)="deleteAppointmentType($event)"
                 [listContent]="listContent"></list>
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
+            <action-button
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowAppointmentTypeAppointments()"
+              text="wizyty o danym charakterze"></action-button>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="display-list" *ngIf="showAppointmentTypeAppointments">
+      <list [listContent]="appointmentListContent"
+            (closeListChange)="closeAppointmentTypeAppointments()"
+            [editable]="false"></list>
     </div>
   `,
   styleUrls: ['./appointment-types.component.scss']
@@ -73,10 +91,13 @@ export class AppointmentTypesComponent implements OnInit {
   appointmentTypes: AppointmentType[];
   loading: boolean = true;
   showForm: boolean = false;
+  showAppointmentTypeAppointments = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   specializations: string[];
   addRowForm: FormGroup;
   listContent: ListContent;
+  appointmentListContent: ListContent;
 
   constructor(private appointmentTypesService: AppointmentTypesService,
               private specializationsService: SpecializationsService,
@@ -89,6 +110,42 @@ export class AppointmentTypesComponent implements OnInit {
     this.appointmentTypesService.loadAppointmentTypesSubject.subscribe(() => {
       this.loadAppointmentTypes();
     });
+  }
+
+  onShowAppointmentTypeAppointments() {
+    this.loading = true;
+    this.appointmentTypesService.getAppointmentTypeAppointments(this.selectedRow).subscribe(appointments => {
+      appointments = appointments.map(appointment => ({
+        ...appointment,
+        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T',' '),
+        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T',' ')
+      }));
+      let rows: Row[] = [];
+        for (let appointment of appointments) {
+          rows.push({
+            row: [
+              String(appointment.id),
+              appointment.startDate,
+              appointment.endDate,
+              appointment.roomId,
+              appointment.pesel,
+              appointment.doctorId,
+              appointment.operationType ? appointment.operationType : '',
+            ]
+          })
+        }
+      this.appointmentListContent = {
+        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'typ operacji'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showAppointmentTypeAppointments = true;
+    });
+  }
+
+  closeAppointmentTypeAppointments() {
+    this.showAppointmentTypeAppointments = false;
+    this.selectedRow = -1;
   }
 
   get formAppointmentType() {

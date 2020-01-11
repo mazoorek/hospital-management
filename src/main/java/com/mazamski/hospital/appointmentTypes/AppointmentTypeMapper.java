@@ -1,6 +1,8 @@
 package com.mazamski.hospital.appointmentTypes;
 
+import com.mazamski.hospital.appointmentTypes.model.AppointmentRequest;
 import com.mazamski.hospital.appointmentTypes.model.AppointmentType;
+import com.mazamski.hospital.appointments.model.Appointment;
 import com.mazamski.hospital.function.model.Function;
 import org.apache.ibatis.annotations.*;
 
@@ -34,4 +36,20 @@ public interface AppointmentTypeMapper {
     @Delete("delete from charakter_wizyty " +
             "where charakter_wizyty_id = #{appointmentTypeId}")
     void deleteAppointmentType(Long appointmentTypeId);
+
+    @Select("select wizyta_id, data_poczatku, data_konca, p.pesel, lekarz_id, pokoj_id, t.typ " +
+            "from wizyta w join pacjent p on p.pacjent_id = w.pacjent_id " +
+            "join charakter_wizyty c on w.charakter_wizyty_id = c.charakter_wizyty_id " +
+            "left join typ_operacji t on w.typ_operacji_id = t.typ_operacji_id " +
+            "where c.charakter_wizyty_id = #{appointmentTypeId}")
+    @Results({
+            @Result(property = "id", column = "wizyta_id"),
+            @Result(property = "startDate", column = "data_poczatku"),
+            @Result(property = "endDate", column = "data_konca"),
+            @Result(property = "pesel", column = "pesel"),
+            @Result(property = "doctorId", column = "lekarz_id"),
+            @Result(property = "roomId", column = "pokoj_id"),
+            @Result(property = "operationType", column = "typ"),
+    })
+    List<AppointmentRequest> getAppointmentTypeAppointments(Long appointmentTypeId);
 }

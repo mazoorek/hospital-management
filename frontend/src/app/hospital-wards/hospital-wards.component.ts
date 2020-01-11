@@ -146,6 +146,11 @@ export class HospitalWardsComponent implements OnInit {
   onShowWardAppointments(): void {
     this.loading = true;
     this.hospitalWardsService.getHospitalWardAppointments(this.selectedRow).subscribe(appointments => {
+      appointments = appointments.map(appointment => ({
+        ...appointment,
+        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T',' '),
+        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T',' ')
+      }));
       let rows: Row[] = [];
       for (let appointment of appointments) {
         rows.push({
@@ -162,7 +167,7 @@ export class HospitalWardsComponent implements OnInit {
         })
       }
       this.appointmentsListContent = {
-        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter', 'typ operacji'],
+        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty', 'typ operacji'],
         rows: rows
       };
       this.loading = false;
