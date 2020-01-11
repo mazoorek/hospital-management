@@ -20,8 +20,18 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            (selectedRowChange)="selectedRow=$event"
             (removeRowChange)="deleteDoctor($event)"
             [listContent]="listContent"></list>
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
+            <action-button
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowAppointmentTypeAppointments()"
+              text="wizyty o danym typie"></action-button>
+          </div>
         </div>
         <div class="flex-item form-flex-item"
              [ngClass]="{'collapsed': !showForm}">
@@ -52,7 +62,8 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
               <div class="validation-error form-row" *ngIf="formDoctorSurname.errors?.pattern">
                 Pole może zawierać małe/duże litery oraz znaki spacji
               </div>
-              <div class="validation-error form-row" *ngIf="formDoctorSurname.errors?.required && formDoctorSurname.touched">
+              <div class="validation-error form-row"
+                   *ngIf="formDoctorSurname.errors?.required && formDoctorSurname.touched">
                 Pole nie może być puste
               </div>
               <div class="form-row">
@@ -97,6 +108,11 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
         </div>
       </div>
     </div>
+    <div class="display-list" *ngIf="showDoctorAppointments">
+      <list [listContent]="appointmentListContent"
+            (closeListChange)="closeDoctorAppointments()"
+            [editable]="false"></list>
+    </div>
   `,
   styleUrls: ['./doctors.component.scss']
 })
@@ -104,7 +120,10 @@ export class DoctorsComponent implements OnInit {
 
   loading: boolean = true;
   listContent: ListContent;
+  appointmentListContent: ListContent;
   showForm: boolean = false;
+  showDoctorAppointments = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   specializations: string[];
   hospitalWards: string[];
@@ -127,6 +146,42 @@ export class DoctorsComponent implements OnInit {
     this.doctorsService.addNewDoctorSubject.subscribe(() => {
       this.loadForm(-1);
     })
+  }
+
+  onShowAppointmentTypeAppointments() {
+    this.loading = true;
+    this.doctorsService.getDoctorAppointments(this.selectedRow).subscribe(appointments => {
+      appointments = appointments.map(appointment => ({
+        ...appointment,
+        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T',' '),
+        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T',' ')
+      }));
+      let rows: Row[] = [];
+      for (let appointment of appointments) {
+        rows.push({
+          row: [
+            String(appointment.id),
+            appointment.startDate,
+            appointment.endDate,
+            appointment.roomId,
+            appointment.pesel,
+            appointment.appointmentType,
+            appointment.operationType
+          ]
+        })
+      }
+      this.appointmentListContent = {
+        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'charakter wizyty', 'typ operacji'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showDoctorAppointments = true;
+    });
+  }
+
+  closeDoctorAppointments() {
+    this.showDoctorAppointments = false;
+    this.selectedRow = -1;
   }
 
   get formDoctorName() {

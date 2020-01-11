@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
 import {Observable, Subject} from "rxjs";
-import {Doctor} from "./doctor.model";
+import {Doctor, DoctorAppointmentRequest} from "./doctor.model";
 import {HttpClient} from "@angular/common/http";
+import {OperationTypeAppointmentRequest} from "../operation-types/operation-types.model";
 
 @Injectable({providedIn: "root"})
 export class DoctorsService {
@@ -29,6 +30,10 @@ export class DoctorsService {
 
   deleteDoctor(doctorId: number): Observable<Doctor> {
     return this.http.delete<Doctor>(this.DOCTORS_API_URL + `/${doctorId}`);
+  }
+
+  getDoctorAppointments(doctorId: number): Observable<DoctorAppointmentRequest []> {
+    return this.http.get<DoctorAppointmentRequest []>(this.DOCTORS_API_URL + `/${doctorId}`+'/appointments');
   }
 
   loadDoctors(): void {
