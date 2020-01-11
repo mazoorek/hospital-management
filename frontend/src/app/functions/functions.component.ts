@@ -58,8 +58,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
           <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
             <action-button
               [aquamarine]="true"
-              [width]="100"
-              [height]="80"
+              [width]="120"
+              [height]="100"
               *ngIf="selectedRow>-1"
               (click)="onShowFunctionStaff()"
               text="pracownicy funkcji"></action-button>

@@ -60,22 +60,22 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
           <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
             <action-button
               [aquamarine]="true"
-              [width]="100"
-              [height]="80"
+              [width]="120"
+              [height]="100"
               *ngIf="selectedRow>-1"
               (click)="onShowSpecializationDoctors()"
               text="doktorzy specjalizacji"></action-button>
             <action-button
               [aquamarine]="true"
-              [width]="100"
-              [height]="80"
+              [width]="120"
+              [height]="100"
               *ngIf="selectedRow>-1"
               (click)="onShowSpecializationAppointmentTypes()"
               text="typy wizyt specjalizacji"></action-button>
             <action-button
               [aquamarine]="true"
-              [width]="100"
-              [height]="80"
+              [width]="120"
+              [height]="100"
               *ngIf="selectedRow>-1"
               (click)="onShowSpecializationOperationTypes()"
               text="typy operacji specjalizacji"></action-button>

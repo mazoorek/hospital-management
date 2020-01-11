@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
 import {Observable, Subject} from "rxjs";
-import {Room} from "./room.model";
+import {Room, RoomAppointmentRequest} from "./room.model";
 import {HttpClient} from "@angular/common/http";
+import {OperationTypeAppointmentRequest} from "../operation-types/operation-types.model";
 
 @Injectable({providedIn: "root"})
 export class RoomsService {
@@ -27,6 +28,10 @@ export class RoomsService {
 
   updateRoom(appointmentType: Room): Observable<Room> {
     return this.http.put<Room>(this.ROOMS_API_URL, appointmentType);
+  }
+
+  getRoomAppointments(roomId: number): Observable<RoomAppointmentRequest []> {
+    return this.http.get<OperationTypeAppointmentRequest []>(this.ROOMS_API_URL + `/${roomId}`+'/appointments');
   }
 
   loadRooms() {

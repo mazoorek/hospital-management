@@ -74,7 +74,7 @@ import {SpecializationsService} from "../specializations/specializations.service
               [width]="120"
               [height]="100"
               *ngIf="selectedRow>-1"
-              (click)="onShowAppointmentTypeAppointments()"
+              (click)="onShowOperationTypeAppointments()"
               text="wizyty o danym typie"></action-button>
           </div>
         </div>
@@ -114,7 +114,7 @@ export class OperationTypesComponent implements OnInit{
     });
   }
 
-  onShowAppointmentTypeAppointments() {
+  onShowOperationTypeAppointments() {
     this.loading = true;
     this.operationTypesService.getOperationTypeAppointments(this.selectedRow).subscribe(appointments => {
       appointments = appointments.map(appointment => ({

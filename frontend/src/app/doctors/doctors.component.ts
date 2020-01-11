@@ -30,7 +30,7 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
               [height]="100"
               *ngIf="selectedRow>-1"
               (click)="onShowAppointmentTypeAppointments()"
-              text="wizyty o danym typie"></action-button>
+              text="wizyty lekarza"></action-button>
           </div>
         </div>
         <div class="flex-item form-flex-item"

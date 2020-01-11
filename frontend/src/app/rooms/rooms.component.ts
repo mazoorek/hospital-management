@@ -70,10 +70,25 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            (selectedRowChange)="selectedRow=$event"
             (removeRowChange)="deleteRoom($event)"
             [listContent]="listContent"></list>
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
+            <action-button
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowRoomAppointments()"
+              text="wizyty w pokoju"></action-button>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="display-list" *ngIf="showRoomAppointments">
+      <list [listContent]="appointmentListContent"
+            (closeListChange)="closeRoomAppointments()"
+            [editable]="false"></list>
     </div>
   `,
   styleUrls: ['./rooms.component.scss']
@@ -83,12 +98,16 @@ export class RoomsComponent implements OnInit {
   rooms: Room [];
   loading: boolean = true;
   showForm: boolean = false;
+  showRoomAppointments = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   editedRowRoomNumber: number = -1;
   editedRowWardName: string = '';
   hospitalWards: string[];
   addRowForm: FormGroup;
   listContent: ListContent;
+  appointmentListContent: ListContent;
+
 
   constructor(private roomsService: RoomsService,
               private hospitalWardsService: HospitalWardsService,
@@ -130,6 +149,42 @@ export class RoomsComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  onShowRoomAppointments() {
+    this.loading = true;
+    this.roomsService.getRoomAppointments(this.selectedRow).subscribe(appointments => {
+      appointments = appointments.map(appointment => ({
+        ...appointment,
+        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T',' '),
+        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T',' ')
+      }));
+      let rows: Row[] = [];
+      for (let appointment of appointments) {
+        rows.push({
+          row: [
+            String(appointment.id),
+            appointment.startDate,
+            appointment.endDate,
+            appointment.pesel,
+            appointment.doctorId,
+            appointment.appointmentType,
+            appointment.operationType
+          ]
+        })
+      }
+      this.appointmentListContent = {
+        columns: ['id', 'data początku', 'data końca', 'pesel', 'id lekarza', 'charakter wizyty', 'typ operacji'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showRoomAppointments = true;
+    });
+  }
+
+  closeRoomAppointments() {
+    this.showRoomAppointments = false;
+    this.selectedRow = -1;
   }
 
   setupForm(): void {
