@@ -78,10 +78,25 @@ import {NavbarService} from "../header/navbar/navbar.service";
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            (selectedRowChange)="selectedRow=$event"
             (removeRowChange)="deleteEmployee($event)"
             [listContent]="listContent"></list>
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
+            <action-button
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowEmployeeLeavesOfAbsence()"
+              text="urlopy pracownika"></action-button>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="display-list" *ngIf="showEmployeeLeavesOfAbsence">
+      <list [listContent]="leavesOfAbsenceListContent"
+            (closeListChange)="closeEmployeeLeavesOfAbsence()"
+            [editable]="false"></list>
     </div>
   `,
   styleUrls: ['./employees.component.scss']
@@ -90,12 +105,16 @@ export class EmployeesComponent implements OnInit {
   loading: boolean = true;
   listContent: ListContent;
   showForm: boolean = false;
+  showEmployeeLeavesOfAbsence = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   addRowForm: FormGroup;
   employees: Employee [];
   employeeTypes: string [] = ['lekarz', 'personel'];
   doctorsSection: ElementRef;
   staffSection: ElementRef;
+  leavesOfAbsenceListContent: ListContent;
+
 
   constructor(private employeeService: EmployeesService,
               private doctorsService: DoctorsService,
@@ -114,6 +133,40 @@ export class EmployeesComponent implements OnInit {
       this.doctorsSection = pageSections.doctors;
       this.staffSection = pageSections.staff;
     });
+  }
+
+  onShowEmployeeLeavesOfAbsence() {
+    this.loading = true;
+    this.employeeService.getEmployeeLeavesOfAbsence(this.selectedRow).subscribe(leavesOfAbsence => {
+      leavesOfAbsence = leavesOfAbsence.map(leave => ({
+        ...leave,
+        startDate: new Date(leave.startDate).toISOString().substring(0, 10),
+        endDate: new Date(leave.endDate).toISOString().substring(0, 10)
+      }));
+      let rows: Row[] = [];
+      for (let leaveOfAbsence of leavesOfAbsence) {
+        rows.push({
+          row: [
+            String(leaveOfAbsence.id),
+            leaveOfAbsence.name,
+            leaveOfAbsence.surname,
+            leaveOfAbsence.startDate,
+            leaveOfAbsence.endDate
+          ]
+        })
+      }
+      this.leavesOfAbsenceListContent = {
+        columns: ['id', 'imię', 'nazwisko', 'początek', 'koniec'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showEmployeeLeavesOfAbsence = true;
+    });
+  }
+
+  closeEmployeeLeavesOfAbsence() {
+    this.showEmployeeLeavesOfAbsence = false;
+    this.selectedRow = -1;
   }
 
   get formEmployeeName() {
