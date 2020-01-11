@@ -10,57 +10,61 @@ import {Specialization} from "../specializations/specialization.model";
 @Component({
   selector: 'appointment-types',
   template: `
-    <h1 class="section-header">CHARAKTERY WIZYT</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="appointmentType">Charakter wizyty</label>
-              <input type="text"
-                     placeholder="wpisz charakter wizyty"
-                     class="form-control"
-                     formControlName="appointmentType"
-                     id="appointmentType">
+    <div class="section-container">
+      <h1 class="section-header">CHARAKTERY WIZYT</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="appointmentType">Charakter wizyty</label>
+                <input type="text"
+                       placeholder="wpisz charakter wizyty"
+                       class="form-control"
+                       formControlName="appointmentType"
+                       id="appointmentType">
+              </div>
+              <div class="validation-error" *ngIf="formAppointmentType.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error" *ngIf="formAppointmentType.errors?.required && formAppointmentType.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="specializationName">Nazwa specjalizacji</label>
+                <select id="specializationName" class="select-field" (change)="changeSpecialization($event)" formControlName="specialization">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę specjalizacji</option>
+                  <option *ngFor="let specialization of specializations"
+                          [ngValue]="specialization">{{specialization}}</option>
+                </select>
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="formAppointmentType.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error" *ngIf="formAppointmentType.errors?.required && formAppointmentType.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="specializationName">Nazwa specjalizacji</label>
-              <select id="specializationName" class="select-field" (change)="changeSpecialization($event)" formControlName="specialization">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę specjalizacji</option>
-                <option *ngFor="let specialization of specializations"
-                        [ngValue]="specialization">{{specialization}}</option>
-              </select>
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
+        <div class="flex-item list-flex-item">
+          <list class="flex-item list-flex-item"
+                (addOrUpdateRowChange)="loadForm($event)"
+                (removeRowChange)="deleteAppointmentType($event)"
+                [listContent]="listContent"></list>
+        </div>
       </div>
-      <list class="flex-item list-flex-item"
-            (addOrUpdateRowChange)="loadForm($event)"
-            (removeRowChange)="deleteAppointmentType($event)"
-            [listContent]="listContent"></list>
     </div>
   `,
   styleUrls: ['./appointment-types.component.scss']

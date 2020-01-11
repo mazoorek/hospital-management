@@ -8,83 +8,87 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 @Component({
   selector: 'patients',
   template: `
-    <h1 class="section-header">PACJENCI</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="pesel">Pesel</label>
-              <input type="text"
-                     placeholder="wpisz pesel"
-                     class="form-control"
-                     formControlName="pesel"
-                     id="pesel">
+    <div class="section-container">
+      <h1 class="section-header">PACJENCI</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="pesel">Pesel</label>
+                <input type="text"
+                       placeholder="wpisz pesel"
+                       class="form-control"
+                       formControlName="pesel"
+                       id="pesel">
+              </div>
+              <div class="validation-error" *ngIf="formPesel.errors?.pattern">
+                Pole może zawierać tylko cyfry z zakresu 0-9
+              </div>
+              <div class="validation-error" *ngIf="(addRowForm.get('pesel').hasError('minlength') || addRowForm.get('pesel').hasError('maxlength')) && formPesel.touched">
+                Pole musi się składać z 11 cyfr
+              </div>
+              <div class="validation-error"
+                   *ngIf="formPesel.errors?.required && formPesel.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="name">Imię</label>
+                <input type="text"
+                       placeholder="wpisz imię"
+                       class="form-control"
+                       formControlName="name"
+                       id="name">
+              </div>
+              <div class="validation-error" *ngIf="formPatientName.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error"
+                   *ngIf="formPatientName.errors?.required && formPatientName.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="surname">Nazwisko</label>
+                <input type="text"
+                       placeholder="wpisz pesel"
+                       class="form-control"
+                       formControlName="surname"
+                       id="surname">
+              </div>
+              <div class="validation-error" *ngIf="formPatientSurname.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error"
+                   *ngIf="formPatientSurname.errors?.required && formPatientSurname.touched">
+                Pole nie może być puste
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="formPesel.errors?.pattern">
-              Pole może zawierać tylko cyfry z zakresu 0-9
-            </div>
-            <div class="validation-error" *ngIf="(addRowForm.get('pesel').hasError('minlength') || addRowForm.get('pesel').hasError('maxlength')) && formPesel.touched">
-              Pole musi się składać z 11 cyfr
-            </div>
-            <div class="validation-error"
-                 *ngIf="formPesel.errors?.required && formPesel.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="name">Imię</label>
-              <input type="text"
-                     placeholder="wpisz imię"
-                     class="form-control"
-                     formControlName="name"
-                     id="name">
-            </div>
-            <div class="validation-error" *ngIf="formPatientName.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error"
-                 *ngIf="formPatientName.errors?.required && formPatientName.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="surname">Nazwisko</label>
-              <input type="text"
-                     placeholder="wpisz pesel"
-                     class="form-control"
-                     formControlName="surname"
-                     id="surname">
-            </div>
-            <div class="validation-error" *ngIf="formPatientSurname.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error"
-                 *ngIf="formPatientSurname.errors?.required && formPatientSurname.touched">
-              Pole nie może być puste
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
+        <div class="flex-item list-flex-item">
+          <list
+                (addOrUpdateRowChange)="loadForm($event)"
+                (removeRowChange)="deletePatient($event)"
+                [listContent]="listContent"></list>
+        </div>
       </div>
-      <list class="flex-item list-flex-item"
-            (addOrUpdateRowChange)="loadForm($event)"
-            (removeRowChange)="deletePatient($event)"
-            [listContent]="listContent"></list>
     </div>
   `,
   styleUrls: ['./patients.component.scss']

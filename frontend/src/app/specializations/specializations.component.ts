@@ -10,50 +10,76 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 @Component({
   selector: 'specializations',
   template: `
-    <h1 class="section-header">SPECJALIZACJE</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="SpecializationName">Nazwa Specializacji</label>
-              <input type="text"
-                     placeholder="wpisz nazwę specializacji"
-                     class="form-control"
-                     formControlName="name"
-                     id="SpecializationName">
+    <div class="section-container">
+      <h1 class="section-header">SPECJALIZACJE</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="SpecializationName">Nazwa Specializacji</label>
+                <input type="text"
+                       placeholder="wpisz nazwę specializacji"
+                       class="form-control"
+                       formControlName="name"
+                       id="SpecializationName">
+              </div>
+              <div class="validation-error" *ngIf="formSpecializationName.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error"
+                   *ngIf="formSpecializationName.errors?.required && formSpecializationName.touched">
+                Pole nie może być puste
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="formSpecializationName.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error"
-                 *ngIf="formSpecializationName.errors?.required && formSpecializationName.touched">
-              Pole nie może być puste
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
+        <div class="flex-item list-flex-item">
+          <list class="flex-item list-flex-item"
+                (addOrUpdateRowChange)="loadForm($event)"
+                (removeRowChange)="deleteSpecializations($event)"
+                [listContent]="listContent"></list>
+          <!--        <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">-->
+          <!--          <action-button-->
+          <!--            [aquamarine]="true"-->
+          <!--            [width]="80"-->
+          <!--            [height]="60"-->
+          <!--            *ngIf="selectedRow>-1"-->
+          <!--            (click)="onShowWardAppointments()"-->
+          <!--            text="wizyty oddziału"></action-button>-->
+          <!--          <action-button-->
+          <!--            [aquamarine]="true"-->
+          <!--            [width]="80"-->
+          <!--            [height]="60"-->
+          <!--            *ngIf="selectedRow>-1"-->
+          <!--            (click)="onShowWardRooms()"-->
+          <!--            text="pokoje oddziału"></action-button>-->
+          <!--          <action-button-->
+          <!--            [aquamarine]="true"-->
+          <!--            [width]="80"-->
+          <!--            [height]="60"-->
+          <!--            *ngIf="selectedRow>-1"-->
+          <!--            (click)="onShowWardDoctors()"-->
+          <!--            text="lekarze oddziału"></action-button>-->
+        </div>
       </div>
-      <list class="flex-item list-flex-item"
-            (addOrUpdateRowChange)="loadForm($event)"
-            (removeRowChange)="deleteSpecializations($event)"
-            [listContent]="listContent"></list>
     </div>
   `,
   styleUrls: ['./specializations.component.scss']
@@ -143,9 +169,9 @@ export class SpecializationsComponent implements OnInit {
   }
 
   onClickAddOrUpdate(): void {
-    if(this.addRowForm.valid) {
+    if (this.addRowForm.valid) {
       this.loading = true;
-      if(this.formRowId===-1) {
+      if (this.formRowId === -1) {
         this.specializationsService.insertSpecialization({
           name: this.addRowForm.value['name']
         } as Specialization).subscribe(() => {

@@ -11,58 +11,61 @@ import {SpecializationsService} from "../specializations/specializations.service
 @Component({
   selector: 'operation-types',
   template: `
-    <h1 class="section-header">TYPY OPERACJI</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="operationType">Typ operacji</label>
-              <input type="text"
-                     placeholder="wpisz typ operacji"
-                     class="form-control"
-                     formControlName="operationType"
-                     id="operationType">
+    <div class="section-container">
+      <h1 class="section-header">TYPY OPERACJI</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="operationType">Typ operacji</label>
+                <input type="text"
+                       placeholder="wpisz typ operacji"
+                       class="form-control"
+                       formControlName="operationType"
+                       id="operationType">
+              </div>
+              <div class="validation-error" *ngIf="formOperationType.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error" *ngIf="formOperationType.errors?.required && formOperationType.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="specializationName">Nazwa specjalizacji</label>
+                <select id="specializationName" class="select-field" (change)="changeSpecialization($event)" formControlName="specialization">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę specjalizacji</option>
+                  <option *ngFor="let specialization of specializations"
+                          [ngValue]="specialization">{{specialization}}</option>
+                </select>
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="formOperationType.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error" *ngIf="formOperationType.errors?.required && formOperationType.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="specializationName">Nazwa specjalizacji</label>
-              <select id="specializationName" class="select-field" (change)="changeSpecialization($event)" formControlName="specialization">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę specjalizacji</option>
-                <option *ngFor="let specialization of specializations"
-                        [ngValue]="specialization">{{specialization}}</option>
-              </select>
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
-      </div>
-      <list class="flex-item list-flex-item"
+        <div class="flex-item list-flex-item">
+          <list
             (addOrUpdateRowChange)="loadForm($event)"
             (removeRowChange)="deleteOperationTypes($event)"
             [listContent]="listContent"></list>
+        </div>
+      </div>
     </div>
   `,
   styleUrls: ['./operation-types.component.scss']

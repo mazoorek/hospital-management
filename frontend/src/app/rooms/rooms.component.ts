@@ -10,66 +10,70 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
 @Component({
   selector: 'rooms',
   template: `
-    <h1 class="section-header">POKOJE</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="roomNumber">Numer pokoju</label>
-              <input type="text"
-                     placeholder="wpisz numer pokoju"
-                     class="form-control"
-                     formControlName="roomNumber"
-                     id="roomNumber">
+    <div class="section-container">
+      <h1 class="section-header">POKOJE</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="roomNumber">Numer pokoju</label>
+                <input type="text"
+                       placeholder="wpisz numer pokoju"
+                       class="form-control"
+                       formControlName="roomNumber"
+                       id="roomNumber">
+              </div>
+              <div class="validation-error" *ngIf="addRowForm.get('roomNumber').hasError('numberIsForbidden')">
+                Numer pokoju musi być unikatowy dla danego oddziału
+              </div>
+              <div class="validation-error" *ngIf="formRoomNumber.errors?.pattern">
+                Pole musi zawierać cyfry
+              </div>
+              <div class="validation-error" *ngIf="formRoomNumber.errors?.required && formRoomNumber.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="hospitalWardName">Nazwa oddziału</label>
+                <select id="hospitalWardName" class="select-field" (change)="changeHospitalWard($event)"
+                        formControlName="hospitalWardName">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę
+                    oddziału
+                  </option>
+                  <option *ngFor="let hospitalWard of hospitalWards"
+                          [ngValue]="hospitalWard">{{hospitalWard}}</option>
+                </select>
+              </div>
+              <div class="validation-error" *ngIf="addRowForm.get('hospitalWardName').hasError('wardIsForbidden')">
+                Numer pokoju musi być unikatowy dla danego oddziału
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="addRowForm.get('roomNumber').hasError('numberIsForbidden')">
-              Numer pokoju musi być unikatowy dla danego oddziału
-            </div>
-            <div class="validation-error" *ngIf="formRoomNumber.errors?.pattern">
-              Pole musi zawierać cyfry
-            </div>
-            <div class="validation-error" *ngIf="formRoomNumber.errors?.required && formRoomNumber.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="hospitalWardName">Nazwa oddziału</label>
-              <select id="hospitalWardName" class="select-field" (change)="changeHospitalWard($event)"
-                      formControlName="hospitalWardName">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę
-                  oddziału
-                </option>
-                <option *ngFor="let hospitalWard of hospitalWards"
-                        [ngValue]="hospitalWard">{{hospitalWard}}</option>
-              </select>
-            </div>
-            <div class="validation-error" *ngIf="addRowForm.get('hospitalWardName').hasError('wardIsForbidden')">
-              Numer pokoju musi być unikatowy dla danego oddziału
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
-      </div>
-      <list class="flex-item list-flex-item"
+        <div class="flex-item list-flex-item">
+          <list
             (addOrUpdateRowChange)="loadForm($event)"
             (removeRowChange)="deleteRoom($event)"
             [listContent]="listContent"></list>
+        </div>
+      </div>
     </div>
   `,
   styleUrls: ['./rooms.component.scss']

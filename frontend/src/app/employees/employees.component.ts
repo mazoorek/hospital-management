@@ -6,79 +6,82 @@ import {DoctorsService} from "../doctors/doctors.service";
 import {StaffService} from "../staff/staff.service";
 import {LeavesOfAbsenceService} from "../leaves-of-absence/leaves-of-absence.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Staff} from "../staff/staff.model";
 import {NavbarService} from "../header/navbar/navbar.service";
 
 @Component({
   selector: 'employees',
   template: `
-    <h1 class="section-header">PRACOWNICY</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row" *ngIf="formRowId>-1">
-              <label for="name">Imię</label>
-              <input type="text"
-                     placeholder="wpisz imię"
-                     class="form-control"
-                     formControlName="name"
-                     id="name">
+    <div class="section-container">
+      <h1 class="section-header">PRACOWNICY</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row" *ngIf="formRowId>-1">
+                <label for="name">Imię</label>
+                <input type="text"
+                       placeholder="wpisz imię"
+                       class="form-control"
+                       formControlName="name"
+                       id="name">
+              </div>
+              <div class="validation-error" *ngIf="formEmployeeName.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error" *ngIf="formEmployeeName.errors?.required && formEmployeeName.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row" *ngIf="formRowId>-1">
+                <label for="surname">Nazwisko</label>
+                <input type="text"
+                       placeholder="wpisz nazwisko"
+                       class="form-control"
+                       formControlName="surname"
+                       id="surname">
+              </div>
+              <div class="validation-error" *ngIf="formEmployeeSurname.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error" *ngIf="formEmployeeSurname.errors?.required && formEmployeeSurname.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row" *ngIf="formRowId===-1">
+                <label for="employeeType">Typ pracownnika</label>
+                <select id="employeeType" class="select-field" (change)="changeEmployeeType($event)"
+                        formControlName="employeeType">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz Typ Pracownika
+                  </option>
+                  <option *ngFor="let employeeType of employeeTypes"
+                          [ngValue]="employeeType">{{employeeType}}</option>
+                </select>
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="formEmployeeName.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error" *ngIf="formEmployeeName.errors?.required && formEmployeeName.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row" *ngIf="formRowId>-1">
-              <label for="surname">Nazwisko</label>
-              <input type="text"
-                     placeholder="wpisz nazwisko"
-                     class="form-control"
-                     formControlName="surname"
-                     id="surname">
-            </div>
-            <div class="validation-error" *ngIf="formEmployeeSurname.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error" *ngIf="formEmployeeSurname.errors?.required && formEmployeeSurname.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row" *ngIf="formRowId===-1">
-              <label for="employeeType">Typ pracownnika</label>
-              <select id="employeeType" class="select-field" (change)="changeEmployeeType($event)"
-                      formControlName="employeeType">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz Typ Pracownika
-                </option>
-                <option *ngFor="let employeeType of employeeTypes"
-                        [ngValue]="employeeType">{{employeeType}}</option>
-              </select>
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
-      </div>
-      <list class="flex-item list-flex-item"
+        <div class="flex-item list-flex-item">
+          <list
             (addOrUpdateRowChange)="loadForm($event)"
             (removeRowChange)="deleteEmployee($event)"
             [listContent]="listContent"></list>
+        </div>
+      </div>
     </div>
   `,
   styleUrls: ['./employees.component.scss']

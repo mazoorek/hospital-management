@@ -9,81 +9,85 @@ import {Employee} from "../employees/employee.model";
 @Component({
   selector: 'leaves-of-absence',
   template: `
-    <h1 class="section-header">URLOPY</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <list class="flex-item list-flex-item"
+    <div class="section-container">
+      <h1 class="section-header">URLOPY</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item list-flex-item">
+          <list
             (addOrUpdateRowChange)="loadForm($event)"
             (removeRowChange)="deleteLeaveOfAbsence($event)"
             [listContent]="listContent"></list>
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="startDate">Data początku</label>
-              <input type="text"
-                     (change)="updateValidationForDates()"
-                     placeholder="wpisz początkową datę"
-                     class="form-control"
-                     formControlName="startDate"
-                     id="startDate">
+        </div>
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="startDate">Data początku</label>
+                <input type="text"
+                       (change)="updateValidationForDates()"
+                       placeholder="wpisz początkową datę"
+                       class="form-control"
+                       formControlName="startDate"
+                       id="startDate">
+              </div>
+              <div class="validation-error form-row" *ngIf="formLeaveStartDate.errors?.required && formLeaveStartDate.touched">
+                Pole nie może być puste
+              </div>
+              <div class="validation-error form-row"
+                   *ngIf="addRowForm.get('startDate').hasError('badDataFormat')">
+                Wpisz poprawną datę w formacie yyyy-mm-dd
+              </div>
+              <div class="validation-error form-row"
+                   *ngIf="addRowForm.get('startDate').hasError('forbiddenStartDate')">
+                Data urlopu dla tego pracownika już zajęta
+              </div>
+              <div class="form-row">
+                <label for="endDate">Data końca</label>
+                <input type="text"
+                       (change)="updateValidationForDates()"
+                       placeholder="wpisz datę końca"
+                       class="form-control"
+                       formControlName="endDate"
+                       id="endDate">
+              </div>
+              <div class="validation-error form-row" *ngIf="formLeaveEndDate.errors?.required && formLeaveEndDate.touched">
+                Pole nie może być puste
+              </div>
+              <div class="validation-error form-row" *ngIf="addRowForm.get('endDate').hasError('badDataFormat')">
+                Wpisz poprawną datę w formacie yyyy-mm-dd
+              </div>
+              <div class="validation-error form-row"
+                   *ngIf="addRowForm.get('endDate').hasError('forbiddenEndDate')">
+                Niepoprawna data (zajęta lub mniejsza od daty początkowej)
+              </div>
+              <div class="form-row">
+                <label for="employeeId">Id pracownika</label>
+                <select id="employeeId" class="select-field" (change)="changeEmployeeId($event)"
+                        formControlName="employeeId">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz pracownika
+                  </option>
+                  <option *ngFor="let employeeId of employeeIds"
+                          [ngValue]="employeeId">{{employeeId}}</option>
+                </select>
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error form-row" *ngIf="formLeaveStartDate.errors?.required && formLeaveStartDate.touched">
-              Pole nie może być puste
-            </div>
-            <div class="validation-error form-row"
-                 *ngIf="addRowForm.get('startDate').hasError('badDataFormat')">
-              Wpisz poprawną datę w formacie yyyy-mm-dd
-            </div>
-            <div class="validation-error form-row"
-                 *ngIf="addRowForm.get('startDate').hasError('forbiddenStartDate')">
-              Data urlopu dla tego pracownika już zajęta
-            </div>
-            <div class="form-row">
-              <label for="endDate">Data końca</label>
-              <input type="text"
-                     (change)="updateValidationForDates()"
-                     placeholder="wpisz datę końca"
-                     class="form-control"
-                     formControlName="endDate"
-                     id="endDate">
-            </div>
-            <div class="validation-error form-row" *ngIf="formLeaveEndDate.errors?.required && formLeaveEndDate.touched">
-              Pole nie może być puste
-            </div>
-            <div class="validation-error form-row" *ngIf="addRowForm.get('endDate').hasError('badDataFormat')">
-              Wpisz poprawną datę w formacie yyyy-mm-dd
-            </div>
-            <div class="validation-error form-row"
-                 *ngIf="addRowForm.get('endDate').hasError('forbiddenEndDate')">
-              Niepoprawna data (zajęta lub mniejsza od daty początkowej)
-            </div>
-            <div class="form-row">
-              <label for="employeeId">Id pracownika</label>
-              <select id="employeeId" class="select-field" (change)="changeEmployeeId($event)"
-                      formControlName="employeeId">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz pracownika
-                </option>
-                <option *ngFor="let employeeId of employeeIds"
-                        [ngValue]="employeeId">{{employeeId}}</option>
-              </select>
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
       </div>

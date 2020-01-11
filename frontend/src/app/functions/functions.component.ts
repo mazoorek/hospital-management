@@ -9,50 +9,53 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 @Component({
   selector: 'functions',
   template: `
-    <h1 class="section-header">FUNKCJE</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div class="form-body" *ngIf="showForm" class="form-container">
-          <form [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="hospitalWardName">Nazwa Funkcji</label>
-              <input type="text"
-                     placeholder="wpisz nazwę funkcji"
-                     class="form-control"
-                     formControlName="name"
-                     id="hospitalWardName">
+    <div class="section-container">
+      <h1 class="section-header">FUNKCJE</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div class="form-body" *ngIf="showForm" class="form-container">
+            <form [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="hospitalWardName">Nazwa Funkcji</label>
+                <input type="text"
+                       placeholder="wpisz nazwę funkcji"
+                       class="form-control"
+                       formControlName="name"
+                       id="hospitalWardName">
+              </div>
+              <div class="validation-error" *ngIf="formFunctionName.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error" *ngIf="formFunctionName.errors?.required && formFunctionName.touched">
+                Pole nie może być puste
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled] = "addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="formFunctionName.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error" *ngIf="formFunctionName.errors?.required && formFunctionName.touched">
-              Pole nie może być puste
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled] = "addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
-      </div>
-      <list class="flex-item list-flex-item"
+        <div class="flex-item list-flex-item">
+          <list
             (addOrUpdateRowChange)="loadForm($event)"
             (removeRowChange)="deleteFunctions($event)"
             [listContent]="listContent"></list>
+        </div>
+      </div>
     </div>
   `,
   styleUrls: ['./functions.component.scss']

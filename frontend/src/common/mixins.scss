@@ -109,15 +109,18 @@
 }
 
 @mixin form-below-list {
-  .section-body {
-    flex-flow: column;
 
-    .form-container {
-      margin-top: 40px;
-      .form-body {
-        .form-row {
-          width: 600px;
-          margin: 10px auto;
+  .section-container {
+    .section-body {
+      flex-flow: column;
+
+      .form-container {
+        margin-top: 40px;
+        .form-body {
+          .form-row {
+            width: 600px;
+            margin: 10px auto;
+          }
         }
       }
     }
@@ -167,5 +170,6 @@
 
   @include display-list;
 }
+
 
 

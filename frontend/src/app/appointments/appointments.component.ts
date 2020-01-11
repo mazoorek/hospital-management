@@ -33,134 +33,138 @@ export interface SimplifiedRoom {
 @Component({
   selector: 'appointments',
   template: `
-    <h1 class="section-header">WIZYTY</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <list class="flex-item list-flex-item"
+    <div class="section-container">
+      <h1 class="section-header">WIZYTY</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item list-flex-item">
+          <list
             (addOrUpdateRowChange)="loadForm($event)"
             (removeRowChange)="deleteAppointment($event)"
             [listContent]="listContent"></list>
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="startDate">Data początku</label>
-              <input type="text"
-                     (change)="updateValidationForDates()"
-                     placeholder="wpisz początkową datę"
-                     class="form-control"
-                     formControlName="startDate"
-                     id="startDate">
+        </div>
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="startDate">Data początku</label>
+                <input type="text"
+                       (change)="updateValidationForDates()"
+                       placeholder="wpisz początkową datę"
+                       class="form-control"
+                       formControlName="startDate"
+                       id="startDate">
+              </div>
+              <div class="validation-error form-row"
+                   *ngIf="formLeaveStartDate.errors?.required && formLeaveStartDate.touched">
+                Pole nie może być puste
+              </div>
+              <div class="validation-error form-row"
+                   *ngIf="addRowForm.get('startDate').hasError('badDataFormat')">
+                Wpisz poprawną datę w formacie 'yyyy-mm-dd hh:mm'
+              </div>
+              <div class="validation-error form-row"
+                   *ngIf="addRowForm.get('startDate').hasError('forbiddenStartDate')">
+                Data urlopu dla tego pracownika już zajęta
+              </div>
+              <div class="form-row">
+                <label for="endDate">Data końca</label>
+                <input type="text"
+                       (change)="updateValidationForDates()"
+                       placeholder="wpisz datę końca"
+                       class="form-control"
+                       formControlName="endDate"
+                       id="endDate">
+              </div>
+              <div class="validation-error form-row"
+                   *ngIf="formLeaveEndDate.errors?.required && formLeaveEndDate.touched">
+                Pole nie może być puste
+              </div>
+              <div class="validation-error form-row" *ngIf="addRowForm.get('endDate').hasError('badDataFormat')">
+                Wpisz poprawną datę w formacie 'yyyy-mm-dd hh:mm'
+              </div>
+              <div class="validation-error form-row"
+                   *ngIf="addRowForm.get('endDate').hasError('forbiddenEndDate')">
+                Niepoprawna data (zajęta lub mniejsza lub równa dacie początkowej)
+              </div>
+              <div class="form-row">
+                <label for="pesel">Id pacjenta</label>
+                <select id="pesel" class="select-field" (change)="changePesel($event)"
+                        formControlName="pesel">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz pacjenta
+                  </option>
+                  <option *ngFor="let pesel of pesels"
+                          [ngValue]="pesel">{{pesel}}</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="appointmentType">Typ wizyty</label>
+                <select id="appointmentType" class="select-field" (change)="changeAppointmentType($event)"
+                        formControlName="appointmentType">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz typ wizyty
+                  </option>
+                  <option *ngFor="let appointmentType of simplifiedAppointmentTypes"
+                          [ngValue]="appointmentType.appointmentType">{{appointmentType.appointmentType}}</option>
+                </select>
+              </div>
+              <div class="form-row" *ngIf="addRowForm.get('appointmentType').value=='operacja'">
+                <label for="operationType">Typ operacji</label>
+                <select id="operationType" class="select-field" (change)="changeOperationType($event)"
+                        formControlName="operationType">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz typ operacji
+                  </option>
+                  <option *ngFor="let operationType of operationTypes"
+                          [ngValue]="operationType">{{operationType}}</option>
+                </select>
+              </div>
+              <div class="form-row" *ngIf="shouldShowDoctors()">
+                <label for="doctorId">Id lekarza</label>
+                <select id="doctorId" class="select-field"
+                        *ngIf="getFilteredDoctors().length>0"
+                        (change)="changeDoctorId($event)"
+                        formControlName="doctorId">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz lekarza
+                  </option>
+                  <option *ngFor="let doctor of getFilteredDoctors()"
+                          [ngValue]="doctor">{{doctor}}</option>
+                </select>
+                <p *ngIf="getFilteredDoctors().length==0">
+                  Brak wolnych lekarzy w tym terminie/ dla tej specjalizacji
+                </p>
+              </div>
+              <div class="form-row" *ngIf="shouldShowRooms()">
+                <label for="roomId">Id pokoju</label>
+                <select id="roomId"
+                        class="select-field"
+                        *ngIf="getFilteredRooms().length>0"
+                        (change)="changeRoomId($event)"
+                        formControlName="roomId">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz pokój
+                  </option>
+                  <option *ngFor="let room of getFilteredRooms()"
+                          [ngValue]="room">{{room}}</option>
+                </select>
+                <p *ngIf="getFilteredRooms().length==0">
+                  Brak wolnych pokoi w tym terminie/ dla tego oddziału
+                </p>
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error form-row"
-                 *ngIf="formLeaveStartDate.errors?.required && formLeaveStartDate.touched">
-              Pole nie może być puste
-            </div>
-            <div class="validation-error form-row"
-                 *ngIf="addRowForm.get('startDate').hasError('badDataFormat')">
-              Wpisz poprawną datę w formacie 'yyyy-mm-dd hh:mm'
-            </div>
-            <div class="validation-error form-row"
-                 *ngIf="addRowForm.get('startDate').hasError('forbiddenStartDate')">
-              Data urlopu dla tego pracownika już zajęta
-            </div>
-            <div class="form-row">
-              <label for="endDate">Data końca</label>
-              <input type="text"
-                     (change)="updateValidationForDates()"
-                     placeholder="wpisz datę końca"
-                     class="form-control"
-                     formControlName="endDate"
-                     id="endDate">
-            </div>
-            <div class="validation-error form-row"
-                 *ngIf="formLeaveEndDate.errors?.required && formLeaveEndDate.touched">
-              Pole nie może być puste
-            </div>
-            <div class="validation-error form-row" *ngIf="addRowForm.get('endDate').hasError('badDataFormat')">
-              Wpisz poprawną datę w formacie 'yyyy-mm-dd hh:mm'
-            </div>
-            <div class="validation-error form-row"
-                 *ngIf="addRowForm.get('endDate').hasError('forbiddenEndDate')">
-              Niepoprawna data (zajęta lub mniejsza lub równa dacie początkowej)
-            </div>
-            <div class="form-row">
-              <label for="pesel">Id pacjenta</label>
-              <select id="pesel" class="select-field" (change)="changePesel($event)"
-                      formControlName="pesel">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz pacjenta
-                </option>
-                <option *ngFor="let pesel of pesels"
-                        [ngValue]="pesel">{{pesel}}</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <label for="appointmentType">Typ wizyty</label>
-              <select id="appointmentType" class="select-field" (change)="changeAppointmentType($event)"
-                      formControlName="appointmentType">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz typ wizyty
-                </option>
-                <option *ngFor="let appointmentType of simplifiedAppointmentTypes"
-                        [ngValue]="appointmentType.appointmentType">{{appointmentType.appointmentType}}</option>
-              </select>
-            </div>
-            <div class="form-row" *ngIf="addRowForm.get('appointmentType').value=='operacja'">
-              <label for="operationType">Typ operacji</label>
-              <select id="operationType" class="select-field" (change)="changeOperationType($event)"
-                      formControlName="operationType">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz typ operacji
-                </option>
-                <option *ngFor="let operationType of operationTypes"
-                        [ngValue]="operationType">{{operationType}}</option>
-              </select>
-            </div>
-            <div class="form-row" *ngIf="shouldShowDoctors()">
-              <label for="doctorId">Id lekarza</label>
-              <select id="doctorId" class="select-field"
-                      *ngIf="getFilteredDoctors().length>0"
-                      (change)="changeDoctorId($event)"
-                      formControlName="doctorId">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz lekarza
-                </option>
-                <option *ngFor="let doctor of getFilteredDoctors()"
-                        [ngValue]="doctor">{{doctor}}</option>
-              </select>
-              <p *ngIf="getFilteredDoctors().length==0">
-                Brak wolnych lekarzy w tym terminie/ dla tej specjalizacji
-              </p>
-            </div>
-            <div class="form-row" *ngIf="shouldShowRooms()">
-              <label for="roomId">Id pokoju</label>
-              <select id="roomId"
-                      class="select-field"
-                      *ngIf="getFilteredRooms().length>0"
-                      (change)="changeRoomId($event)"
-                      formControlName="roomId">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz pokój
-                </option>
-                <option *ngFor="let room of getFilteredRooms()"
-                        [ngValue]="room">{{room}}</option>
-              </select>
-              <p *ngIf="getFilteredRooms().length==0">
-                Brak wolnych pokoi w tym terminie/ dla tego oddziału
-              </p>
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
       </div>

@@ -10,74 +10,78 @@ import {Function} from "../functions/function.model";
 @Component({
   selector: 'staff',
   template: `
-    <h1 class="section-header">PERSONEL</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="name">Imię</label>
-              <input type="text"
-                     placeholder="wpisz imię"
-                     class="form-control"
-                     formControlName="name"
-                     id="name">
+    <div class="section-container">
+      <h1 class="section-header">PERSONEL</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="name">Imię</label>
+                <input type="text"
+                       placeholder="wpisz imię"
+                       class="form-control"
+                       formControlName="name"
+                       id="name">
+              </div>
+              <div class="validation-error" *ngIf="formStaffMemberName.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error" *ngIf="formStaffMemberName.errors?.required && formStaffMemberName.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="surname">Nazwisko</label>
+                <input type="text"
+                       placeholder="wpisz nazwisko"
+                       class="form-control"
+                       formControlName="surname"
+                       id="surname">
+              </div>
+              <div class="validation-error" *ngIf="formStaffMemberSurname.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error"
+                   *ngIf="formStaffMemberSurname.errors?.required && formStaffMemberSurname.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="function">Nazwa Funkcji</label>
+                <select id="function" class="select-field" (change)="changeFunction($event)"
+                        formControlName="function">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz Funkcję
+                  </option>
+                  <option *ngFor="let hospitalFunction of functions"
+                          [ngValue]="hospitalFunction">{{hospitalFunction}}</option>
+                </select>
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="formStaffMemberName.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error" *ngIf="formStaffMemberName.errors?.required && formStaffMemberName.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="surname">Nazwisko</label>
-              <input type="text"
-                     placeholder="wpisz nazwisko"
-                     class="form-control"
-                     formControlName="surname"
-                     id="surname">
-            </div>
-            <div class="validation-error" *ngIf="formStaffMemberSurname.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error"
-                 *ngIf="formStaffMemberSurname.errors?.required && formStaffMemberSurname.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="function">Nazwa Funkcji</label>
-              <select id="function" class="select-field" (change)="changeFunction($event)"
-                      formControlName="function">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz Funkcję
-                </option>
-                <option *ngFor="let hospitalFunction of functions"
-                        [ngValue]="hospitalFunction">{{hospitalFunction}}</option>
-              </select>
-            </div>
-          </form>
-          <div class="buttons-container">
-            <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
           </div>
         </div>
-      </div>
-      <list class="flex-item list-flex-item"
+        <div class="flex-item list-flex-item">
+          <list
             (addOrUpdateRowChange)="loadForm($event)"
             (removeRowChange)="deleteStaffMember($event)"
             [listContent]="listContent"></list>
+        </div>
+      </div>
     </div>
   `,
   styleUrls: ['./staff.component.scss']
