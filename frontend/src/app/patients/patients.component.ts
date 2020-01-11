@@ -27,7 +27,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
               <div class="validation-error" *ngIf="formPesel.errors?.pattern">
                 Pole może zawierać tylko cyfry z zakresu 0-9
               </div>
-              <div class="validation-error" *ngIf="(addRowForm.get('pesel').hasError('minlength') || addRowForm.get('pesel').hasError('maxlength')) && formPesel.touched">
+              <div class="validation-error"
+                   *ngIf="(addRowForm.get('pesel').hasError('minlength') || addRowForm.get('pesel').hasError('maxlength')) && formPesel.touched">
                 Pole musi się składać z 11 cyfr
               </div>
               <div class="validation-error"
@@ -84,11 +85,38 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
         </div>
         <div class="flex-item list-flex-item">
           <list
-                (addOrUpdateRowChange)="loadForm($event)"
-                (removeRowChange)="deletePatient($event)"
-                [listContent]="listContent"></list>
+            (addOrUpdateRowChange)="loadForm($event)"
+            (selectedRowChange)="selectedRow=$event"
+            (removeRowChange)="deletePatient($event)"
+            [listContent]="listContent"></list>
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
+            <action-button
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowPatientAppointments()"
+              text="wizyty pacjenta"></action-button>
+            <action-button
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowPatientDoctors()"
+              text="lekarze pacjenta"></action-button>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="display-list" *ngIf="showPatientAppointments">
+      <list [listContent]="appointmentListContent"
+            (closeListChange)="closePatientAppointments()"
+            [editable]="false"></list>
+    </div>
+    <div class="display-list" *ngIf="showPatientDoctors">
+      <list [listContent]="doctorsListContent"
+            (closeListChange)="closePatientDoctors()"
+            [editable]="false"></list>
     </div>
   `,
   styleUrls: ['./patients.component.scss']
@@ -97,9 +125,14 @@ export class PatientsComponent implements OnInit {
   patients: Patient [];
   loading: boolean = true;
   showForm: boolean = false;
+  showPatientAppointments = false;
+  showPatientDoctors = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   addRowForm: FormGroup;
   listContent: ListContent;
+  appointmentListContent: ListContent;
+  doctorsListContent: ListContent;
 
   constructor(private patientsService: PatientsService,
               private appointmentsService: AppointmentsService) {
@@ -111,6 +144,76 @@ export class PatientsComponent implements OnInit {
     this.patientsService.loadPatientsSubject.subscribe(() => {
       this.loadPatients();
     });
+  }
+
+  check() {
+
+  }
+
+  onShowPatientAppointments() {
+    this.loading = true;
+    this.patientsService.getPatientAppointments(this.selectedRow).subscribe(appointments => {
+      appointments = appointments.map(appointment => ({
+        ...appointment,
+        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T',' '),
+        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T',' ')
+      }));
+      let rows: Row[] = [];
+      for (let appointment of appointments) {
+        rows.push({
+          row: [
+            String(appointment.id),
+            appointment.startDate,
+            appointment.endDate,
+            appointment.roomId,
+            appointment.doctorId,
+            appointment.appointmentType,
+            appointment.operationType ? appointment.operationType : '',
+          ]
+        })
+      }
+      this.appointmentListContent = {
+        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'id lekarza', 'charakter wizyty', 'typ operacji'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showPatientAppointments = true;
+    });
+  }
+
+  onShowPatientDoctors() {
+    this.loading = true;
+    this.patientsService.getPatientDoctors(this.selectedRow).subscribe(doctors => {
+      let rows: Row[] = [];
+      for (let doctor of doctors) {
+        rows.push({
+          row: [
+            String(doctor.id),
+            doctor.name,
+            doctor.surname,
+            String(doctor.employeeId),
+            doctor.specializationName,
+            doctor.wardName
+          ]
+        })
+      }
+      this.doctorsListContent = {
+        columns: ['id', 'imię', 'nazwisko', 'id pracownika', 'specjalizacja', 'oddział'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showPatientDoctors = true;
+    });
+  }
+
+  closePatientAppointments() {
+    this.showPatientAppointments = false;
+    this.selectedRow = -1;
+  }
+
+  closePatientDoctors() {
+    this.showPatientDoctors = false;
+    this.selectedRow = -1;
   }
 
   get formPesel() {
