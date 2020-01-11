@@ -35,8 +35,11 @@ import {SpecializationsService} from "../specializations/specializations.service
               </div>
               <div class="form-row">
                 <label for="specializationName">Nazwa specjalizacji</label>
-                <select id="specializationName" class="select-field" (change)="changeSpecialization($event)" formControlName="specialization">
-                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę specjalizacji</option>
+                <select id="specializationName" class="select-field" (change)="changeSpecialization($event)"
+                        formControlName="specialization">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę
+                    specjalizacji
+                  </option>
                   <option *ngFor="let specialization of specializations"
                           [ngValue]="specialization">{{specialization}}</option>
                 </select>
@@ -62,10 +65,25 @@ import {SpecializationsService} from "../specializations/specializations.service
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            (selectedRowChange)="selectedRow=$event"
             (removeRowChange)="deleteOperationTypes($event)"
             [listContent]="listContent"></list>
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
+            <action-button
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowAppointmentTypeAppointments()"
+              text="wizyty o danym typie"></action-button>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="display-list" *ngIf="showOperationTypeAppointments">
+      <list [listContent]="appointmentListContent"
+            (closeListChange)="closeOperationTypeAppointments()"
+            [editable]="false"></list>
     </div>
   `,
   styleUrls: ['./operation-types.component.scss']
@@ -74,10 +92,14 @@ export class OperationTypesComponent implements OnInit{
   operationTypes: OperationType[];
   loading: boolean = true;
   showForm: boolean = false;
+  showOperationTypeAppointments = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   specializations: string[];
   addRowForm: FormGroup;
   listContent: ListContent;
+  appointmentListContent: ListContent;
+
 
   constructor(private operationTypesService: OperationTypesService,
               private specializationsService: SpecializationsService,
@@ -90,6 +112,42 @@ export class OperationTypesComponent implements OnInit{
     this.operationTypesService.loadOperationTypesSubject.subscribe(() => {
       this.loadOperationTypes();
     });
+  }
+
+  onShowAppointmentTypeAppointments() {
+    this.loading = true;
+    this.operationTypesService.getOperationTypeAppointments(this.selectedRow).subscribe(appointments => {
+      appointments = appointments.map(appointment => ({
+        ...appointment,
+        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T',' '),
+        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T',' ')
+      }));
+      let rows: Row[] = [];
+      for (let appointment of appointments) {
+        rows.push({
+          row: [
+            String(appointment.id),
+            appointment.startDate,
+            appointment.endDate,
+            appointment.roomId,
+            appointment.pesel,
+            appointment.doctorId,
+            appointment.appointmentType,
+          ]
+        })
+      }
+      this.appointmentListContent = {
+        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showOperationTypeAppointments = true;
+    });
+  }
+
+  closeOperationTypeAppointments() {
+    this.showOperationTypeAppointments = false;
+    this.selectedRow = -1;
   }
 
   get formOperationType() {

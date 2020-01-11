@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DoctorRequest {
+public class HospitalWardDoctorRequest {
     Long id;
     Long employeeId;
     String name;

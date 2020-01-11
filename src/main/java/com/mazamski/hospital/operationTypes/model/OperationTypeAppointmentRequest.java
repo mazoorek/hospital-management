@@ -1,4 +1,4 @@
-package com.mazamski.hospital.appointmentTypes.model;
+package com.mazamski.hospital.operationTypes.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppointmentRequest {
+public class OperationTypeAppointmentRequest {
     Long id;
     Date startDate;
     Date endDate;
@@ -19,5 +19,4 @@ public class AppointmentRequest {
     Long doctorId;
     String pesel;
     String appointmentType;
-    String operationType;
 }

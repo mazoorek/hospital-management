@@ -1,9 +1,9 @@
 package com.mazamski.hospital.hospitalWards;
 
 import com.mazamski.hospital.appointments.model.Appointment;
-import com.mazamski.hospital.hospitalWards.model.DoctorRequest;
+import com.mazamski.hospital.hospitalWards.model.HospitalWardDoctorRequest;
 import com.mazamski.hospital.hospitalWards.model.HospitalWard;
-import com.mazamski.hospital.hospitalWards.model.RoomRequest;
+import com.mazamski.hospital.hospitalWards.model.HospitalWardRoomRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -42,12 +42,12 @@ public class HospitalWardController {
     }
 
     @GetMapping("/{id}/rooms")
-    public List<RoomRequest> getWardRooms(@PathVariable Long id) {
+    public List<HospitalWardRoomRequest> getWardRooms(@PathVariable Long id) {
         return hospitalWardMapper.getWardRooms(id);
     }
 
     @GetMapping("/{id}/doctors")
-    public List<DoctorRequest> getWardDoctors(@PathVariable Long id) {
+    public List<HospitalWardDoctorRequest> getWardDoctors(@PathVariable Long id) {
         return hospitalWardMapper.getWardDoctors(id);
     }
 

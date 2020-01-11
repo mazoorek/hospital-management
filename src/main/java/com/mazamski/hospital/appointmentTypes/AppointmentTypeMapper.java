@@ -1,9 +1,7 @@
 package com.mazamski.hospital.appointmentTypes;
 
-import com.mazamski.hospital.appointmentTypes.model.AppointmentRequest;
+import com.mazamski.hospital.appointmentTypes.model.AppointmentTypeAppointmentRequest;
 import com.mazamski.hospital.appointmentTypes.model.AppointmentType;
-import com.mazamski.hospital.appointments.model.Appointment;
-import com.mazamski.hospital.function.model.Function;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -51,5 +49,5 @@ public interface AppointmentTypeMapper {
             @Result(property = "roomId", column = "pokoj_id"),
             @Result(property = "operationType", column = "typ"),
     })
-    List<AppointmentRequest> getAppointmentTypeAppointments(Long appointmentTypeId);
+    List<AppointmentTypeAppointmentRequest> getAppointmentTypeAppointments(Long appointmentTypeId);
 }

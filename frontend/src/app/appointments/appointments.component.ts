@@ -250,17 +250,19 @@ export class AppointmentsComponent implements OnInit {
       .map(doctor => doctor.doctorId)
       .filter(doctor => {
         let free = true;
-        this.appointments.forEach(appointment => {
-          if(+appointment.doctorId === doctor) {
-            let appointmentStartDate = new Date(appointment.startDate);
-            let appointmentEndDate = new Date(appointment.endDate);
-            if(startDate <= appointmentEndDate) {
-              if(startDate >= appointmentStartDate && startDate <= appointmentEndDate) free = false;
-              else if(endDate >= appointmentStartDate && endDate <= appointmentEndDate) free = false;
-              else if(startDate <appointmentStartDate && endDate > appointmentEndDate) free = false;
+        if (doctor !== +this.editedRow.doctorId) {
+          this.appointments.forEach(appointment => {
+            if (+appointment.doctorId === doctor) {
+              let appointmentStartDate = new Date(appointment.startDate);
+              let appointmentEndDate = new Date(appointment.endDate);
+              if (startDate <= appointmentEndDate) {
+                if (startDate >= appointmentStartDate && startDate <= appointmentEndDate) free = false;
+                else if (endDate >= appointmentStartDate && endDate <= appointmentEndDate) free = false;
+                else if (startDate < appointmentStartDate && endDate > appointmentEndDate) free = false;
+              }
             }
-          }
-        });
+          });
+        }
         return free;
       });
   }
@@ -281,17 +283,19 @@ export class AppointmentsComponent implements OnInit {
       .map(room => room.roomId)
       .filter(room => {
         let free = true;
-        this.appointments.forEach(appointment => {
-          if(+appointment.roomId === room) {
-            let appointmentStartDate = new Date(appointment.startDate);
-            let appointmentEndDate = new Date(appointment.endDate);
-            if(startDate <= appointmentEndDate) {
-              if(startDate >= appointmentStartDate && startDate <= appointmentEndDate) free = false;
-              else if(endDate >= appointmentStartDate && endDate <= appointmentEndDate) free = false;
-              else if(startDate <appointmentStartDate && endDate > appointmentEndDate) free = false;
+        if(room !== +this.editedRow.roomId) {
+          this.appointments.forEach(appointment => {
+            if (+appointment.roomId === room) {
+              let appointmentStartDate = new Date(appointment.startDate);
+              let appointmentEndDate = new Date(appointment.endDate);
+              if (startDate <= appointmentEndDate) {
+                if (startDate >= appointmentStartDate && startDate <= appointmentEndDate) free = false;
+                else if (endDate >= appointmentStartDate && endDate <= appointmentEndDate) free = false;
+                else if (startDate < appointmentStartDate && endDate > appointmentEndDate) free = false;
+              }
             }
-          }
-        });
+          });
+        }
         return free;
       });
   }
@@ -306,8 +310,8 @@ export class AppointmentsComponent implements OnInit {
     this.appointmentsService.getAppointments().subscribe(appointments => {
       this.appointments = appointments.map(appointment => ({
         ...appointment,
-        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T',' '),
-        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T',' ')
+        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T', ' '),
+        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T', ' ')
       }));
       this.loadListContent();
       this.loadFormData();
@@ -531,26 +535,26 @@ export class AppointmentsComponent implements OnInit {
       this.loading = true;
       if (this.formRowId === -1) {
         this.appointmentsService.insertAppointment({
-          startDate: String(this.addRowForm.value['startDate']).replace(' ','T')+':00.000Z',
-          endDate: String(this.addRowForm.value['endDate']).replace(' ','T')+':00.000Z',
+          startDate: String(this.addRowForm.value['startDate']).replace(' ', 'T') + ':00.000Z',
+          endDate: String(this.addRowForm.value['endDate']).replace(' ', 'T') + ':00.000Z',
           pesel: this.addRowForm.value['pesel'].split(" ").slice(-1)[0],
           doctorId: String(this.addRowForm.value['doctorId']).split(" ").slice(-1)[0],
           roomId: String(this.addRowForm.value['roomId']).split(" ").slice(-1)[0],
           appointmentType: this.addRowForm.value['appointmentType'].split(" ").slice(-1)[0],
-          operationType: this.addRowForm.value['operationType'] ? this.addRowForm.value['operationType'].split(" ").slice(-1)[0]: ''
+          operationType: this.addRowForm.value['operationType'] ? this.addRowForm.value['operationType'].split(" ").slice(-1)[0] : ''
         } as Appointment).subscribe(() => {
           this.showForm = false;
           this.loadAppointments();
         });
       } else {
         this.appointmentsService.updateAppointment({
-          startDate: String(this.addRowForm.value['startDate']).replace(' ','T')+':00.000Z',
-          endDate: String(this.addRowForm.value['endDate']).replace(' ','T')+':00.000Z',
+          startDate: String(this.addRowForm.value['startDate']).replace(' ', 'T') + ':00.000Z',
+          endDate: String(this.addRowForm.value['endDate']).replace(' ', 'T') + ':00.000Z',
           pesel: this.addRowForm.value['pesel'].split(" ").slice(-1)[0],
           doctorId: String(this.addRowForm.value['doctorId']).split(" ").slice(-1)[0],
           roomId: String(this.addRowForm.value['roomId']).split(" ").slice(-1)[0],
           appointmentType: this.addRowForm.value['appointmentType'].split(" ").slice(-1)[0],
-          operationType: this.addRowForm.value['operationType'] ? this.addRowForm.value['operationType'].split(" ").slice(-1)[0]: '',
+          operationType: this.addRowForm.value['operationType'] ? this.addRowForm.value['operationType'].split(" ").slice(-1)[0] : '',
           id: this.formRowId
         } as Appointment).subscribe(() => {
           this.showForm = false;

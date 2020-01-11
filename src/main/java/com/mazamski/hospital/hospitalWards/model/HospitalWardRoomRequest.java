@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomRequest {
+public class HospitalWardRoomRequest {
     Long id;
     Integer number;
 }

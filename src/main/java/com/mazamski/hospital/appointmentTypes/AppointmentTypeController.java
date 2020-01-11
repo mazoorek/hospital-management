@@ -1,6 +1,6 @@
 package com.mazamski.hospital.appointmentTypes;
 
-import com.mazamski.hospital.appointmentTypes.model.AppointmentRequest;
+import com.mazamski.hospital.appointmentTypes.model.AppointmentTypeAppointmentRequest;
 import com.mazamski.hospital.appointmentTypes.model.AppointmentType;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +35,7 @@ public class AppointmentTypeController {
     }
 
     @GetMapping("/{appointmentTypeId}/appointments")
-    List<AppointmentRequest> getAppointmentTypeAppointments(@PathVariable Long appointmentTypeId) {
+    List<AppointmentTypeAppointmentRequest> getAppointmentTypeAppointments(@PathVariable Long appointmentTypeId) {
         return appointmentTypeMapper.getAppointmentTypeAppointments(appointmentTypeId);
     }
 

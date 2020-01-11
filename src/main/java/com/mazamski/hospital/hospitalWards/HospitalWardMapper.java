@@ -1,10 +1,9 @@
 package com.mazamski.hospital.hospitalWards;
 
 import com.mazamski.hospital.appointments.model.Appointment;
-import com.mazamski.hospital.doctors.model.Doctor;
-import com.mazamski.hospital.hospitalWards.model.DoctorRequest;
+import com.mazamski.hospital.hospitalWards.model.HospitalWardDoctorRequest;
 import com.mazamski.hospital.hospitalWards.model.HospitalWard;
-import com.mazamski.hospital.hospitalWards.model.RoomRequest;
+import com.mazamski.hospital.hospitalWards.model.HospitalWardRoomRequest;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public interface HospitalWardMapper {
             @Result(property = "id", column = "pokoj_id"),
             @Result(property = "number", column = "numer"),
     })
-    List<RoomRequest> getWardRooms(Long wardId);
+    List<HospitalWardRoomRequest> getWardRooms(Long wardId);
 
     @Select("select lekarz_id, l.pracownik_id, p.imie, p.nazwisko, s.nazwa as nazwa_specjalizacji " +
             "from lekarz l join oddzial o on l.oddzial_id = o.oddzial_id " +
@@ -70,5 +69,5 @@ public interface HospitalWardMapper {
             @Result(property = "name", column = "imie"),
             @Result(property = "surname", column = "nazwisko"),
     })
-    List<DoctorRequest> getWardDoctors(Long wardId);
+    List<HospitalWardDoctorRequest> getWardDoctors(Long wardId);
 }

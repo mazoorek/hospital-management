@@ -4,7 +4,7 @@ export interface AppointmentType {
   specializationName: string;
 }
 
-export interface AppointmentRequest {
+export interface AppointmentTypeAppointmentRequest {
   id: number;
   startDate: string;
   endDate: string;
