@@ -57,46 +57,47 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
                 (removeRowChange)="deleteSpecializations($event)"
                 (selectedRowChange)="selectedRow=$event"
                 [listContent]="listContent"></list>
-                  <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
-                    <action-button
-                      [aquamarine]="true"
-                      [width]="100"
-                      [height]="80"
-                      *ngIf="selectedRow>-1"
-                      (click)="onShowSpecializationDoctors()"
-                      text="doktorzy specjalizacji"></action-button>
-                    <action-button
-                      [aquamarine]="true"
-                      [width]="100"
-                      [height]="80"
-                      *ngIf="selectedRow>-1"
-                      (click)="onShowSpecializationAppointmentTypes()"
-                      text="typy wizyt specjalizacji"></action-button>
-                    <action-button
-                      [aquamarine]="true"
-                      [width]="100"
-                      [height]="80"
-                      *ngIf="selectedRow>-1"
-                      (click)="onShowSpecializationOperationTypes()"
-                      text="typy operacji specjalizacji"></action-button>
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
+            <action-button
+              [aquamarine]="true"
+              [width]="100"
+              [height]="80"
+              *ngIf="selectedRow>-1"
+              (click)="onShowSpecializationDoctors()"
+              text="doktorzy specjalizacji"></action-button>
+            <action-button
+              [aquamarine]="true"
+              [width]="100"
+              [height]="80"
+              *ngIf="selectedRow>-1"
+              (click)="onShowSpecializationAppointmentTypes()"
+              text="typy wizyt specjalizacji"></action-button>
+            <action-button
+              [aquamarine]="true"
+              [width]="100"
+              [height]="80"
+              *ngIf="selectedRow>-1"
+              (click)="onShowSpecializationOperationTypes()"
+              text="typy operacji specjalizacji"></action-button>
+          </div>
         </div>
       </div>
     </div>
-      <div class="display-list" *ngIf="showSpecializationDoctors">
-        <list [listContent]="doctorsListContent"
-              (closeListChange)="closeSpecializationDoctors()"
-              [editable]="false"></list>
-      </div>
-      <div class="display-list" *ngIf="showSpecializationAppointmentTypes">
-        <list [listContent]="appointmentTypesListContent"
-              (closeListChange)="closeSpecializationAppointments()"
-              [editable]="false"></list>
-      </div>
-      <div class="display-list" *ngIf="showSpecializationOperationTypes">
-        <list [listContent]="operationTypesListContent"
-              (closeListChange)="closeSpecializationOperationTypes()"
-              [editable]="false"></list>
-      </div>
+    <div class="display-list" *ngIf="showSpecializationDoctors">
+      <list [listContent]="doctorsListContent"
+            (closeListChange)="closeSpecializationDoctors()"
+            [editable]="false"></list>
+    </div>
+    <div class="display-list" *ngIf="showSpecializationAppointmentTypes">
+      <list [listContent]="appointmentTypesListContent"
+            (closeListChange)="closeSpecializationAppointments()"
+            [editable]="false"></list>
+    </div>
+    <div class="display-list" *ngIf="showSpecializationOperationTypes">
+      <list [listContent]="operationTypesListContent"
+            (closeListChange)="closeSpecializationOperationTypes()"
+            [editable]="false"></list>
+    </div>
   `,
   styleUrls: ['./specializations.component.scss']
 })
@@ -205,6 +206,7 @@ export class SpecializationsComponent implements OnInit {
     this.showSpecializationAppointmentTypes = false;
     this.selectedRow = -1;
   }
+
   closeSpecializationOperationTypes() {
     this.showSpecializationOperationTypes = false;
     this.selectedRow = -1;
