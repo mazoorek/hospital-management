@@ -125,9 +125,12 @@
 
 @mixin selection-buttons {
   .selected-row-buttons-container {
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
 
     action-button {
+      word-spacing: 100vw;
       margin: 0 10px;
     }
   }
@@ -150,6 +153,7 @@
       height: 100vh;
       position: fixed;
       top: 0;
+      left: 0;
       z-index: 100;
       opacity: .6;
       background-color: $dark-grey-color;

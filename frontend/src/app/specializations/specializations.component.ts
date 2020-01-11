@@ -55,32 +55,48 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
           <list class="flex-item list-flex-item"
                 (addOrUpdateRowChange)="loadForm($event)"
                 (removeRowChange)="deleteSpecializations($event)"
+                (selectedRowChange)="selectedRow=$event"
                 [listContent]="listContent"></list>
-          <!--        <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">-->
-          <!--          <action-button-->
-          <!--            [aquamarine]="true"-->
-          <!--            [width]="80"-->
-          <!--            [height]="60"-->
-          <!--            *ngIf="selectedRow>-1"-->
-          <!--            (click)="onShowWardAppointments()"-->
-          <!--            text="wizyty oddziału"></action-button>-->
-          <!--          <action-button-->
-          <!--            [aquamarine]="true"-->
-          <!--            [width]="80"-->
-          <!--            [height]="60"-->
-          <!--            *ngIf="selectedRow>-1"-->
-          <!--            (click)="onShowWardRooms()"-->
-          <!--            text="pokoje oddziału"></action-button>-->
-          <!--          <action-button-->
-          <!--            [aquamarine]="true"-->
-          <!--            [width]="80"-->
-          <!--            [height]="60"-->
-          <!--            *ngIf="selectedRow>-1"-->
-          <!--            (click)="onShowWardDoctors()"-->
-          <!--            text="lekarze oddziału"></action-button>-->
+                  <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
+                    <action-button
+                      [aquamarine]="true"
+                      [width]="100"
+                      [height]="80"
+                      *ngIf="selectedRow>-1"
+                      (click)="onShowSpecializationDoctors()"
+                      text="doktorzy specjalizacji"></action-button>
+                    <action-button
+                      [aquamarine]="true"
+                      [width]="100"
+                      [height]="80"
+                      *ngIf="selectedRow>-1"
+                      (click)="onShowSpecializationAppointmentTypes()"
+                      text="typy wizyt specjalizacji"></action-button>
+                    <action-button
+                      [aquamarine]="true"
+                      [width]="100"
+                      [height]="80"
+                      *ngIf="selectedRow>-1"
+                      (click)="onShowSpecializationOperationTypes()"
+                      text="typy operacji specjalizacji"></action-button>
         </div>
       </div>
     </div>
+      <div class="display-list" *ngIf="showSpecializationDoctors">
+        <list [listContent]="doctorsListContent"
+              (closeListChange)="closeSpecializationDoctors()"
+              [editable]="false"></list>
+      </div>
+      <div class="display-list" *ngIf="showSpecializationAppointmentTypes">
+        <list [listContent]="appointmentTypesListContent"
+              (closeListChange)="closeSpecializationAppointments()"
+              [editable]="false"></list>
+      </div>
+      <div class="display-list" *ngIf="showSpecializationOperationTypes">
+        <list [listContent]="operationTypesListContent"
+              (closeListChange)="closeSpecializationOperationTypes()"
+              [editable]="false"></list>
+      </div>
   `,
   styleUrls: ['./specializations.component.scss']
 })
@@ -88,9 +104,16 @@ export class SpecializationsComponent implements OnInit {
   specializations: Specialization[];
   loading: boolean = true;
   showForm: boolean = false;
+  showSpecializationDoctors = false;
+  showSpecializationAppointmentTypes = false;
+  showSpecializationOperationTypes = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   addRowForm: FormGroup;
   listContent: ListContent;
+  doctorsListContent: ListContent;
+  appointmentTypesListContent: ListContent;
+  operationTypesListContent: ListContent;
 
   constructor(
     private specializationsService: SpecializationsService,
@@ -105,6 +128,86 @@ export class SpecializationsComponent implements OnInit {
     this.specializationsService.loadSpecializationsSubject.subscribe(() => {
       this.loadSpecializations();
     });
+  }
+
+  onShowSpecializationOperationTypes() {
+    this.loading = true;
+    this.specializationsService.getSpecializationAppointmentTypes(this.selectedRow).subscribe(operationTypes => {
+      let rows: Row[] = [];
+      for (let operationType of operationTypes) {
+        rows.push({
+          row: [
+            String(operationType.id),
+            operationType.type
+          ]
+        })
+      }
+      this.operationTypesListContent = {
+        columns: ['id', 'typ operacji'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showSpecializationOperationTypes = true;
+    });
+  }
+
+  onShowSpecializationAppointmentTypes() {
+    this.loading = true;
+    this.specializationsService.getSpecializationAppointmentTypes(this.selectedRow).subscribe(appointmentTypes => {
+      let rows: Row[] = [];
+      for (let appointmentType of appointmentTypes) {
+        rows.push({
+          row: [
+            String(appointmentType.id),
+            appointmentType.type
+          ]
+        })
+      }
+      this.appointmentTypesListContent = {
+        columns: ['id', 'charakter wizyty'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showSpecializationAppointmentTypes = true;
+    });
+  }
+
+  onShowSpecializationDoctors() {
+    this.loading = true;
+    this.specializationsService.getSpecializationDoctors(this.selectedRow).subscribe(doctors => {
+      let rows: Row[] = [];
+      for (let doctor of doctors) {
+        rows.push({
+          row: [
+            String(doctor.id),
+            doctor.name,
+            doctor.surname,
+            String(doctor.employeeId),
+            doctor.wardName
+          ]
+        })
+      }
+      this.doctorsListContent = {
+        columns: ['id', 'imię', 'nazwisko', 'id pracownika', 'nazwa oddzialu'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showSpecializationDoctors = true;
+    });
+  }
+
+  closeSpecializationDoctors() {
+    this.showSpecializationDoctors = false;
+    this.selectedRow = -1;
+  }
+
+  closeSpecializationAppointments() {
+    this.showSpecializationAppointmentTypes = false;
+    this.selectedRow = -1;
+  }
+  closeSpecializationOperationTypes() {
+    this.showSpecializationOperationTypes = false;
+    this.selectedRow = -1;
   }
 
   get formSpecializationName() {
