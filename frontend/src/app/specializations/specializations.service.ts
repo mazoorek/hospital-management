@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {Specialization} from "./specialization.model";
+import {AppointmentTypeRequest, DoctorRequest, OperationTypeRequest, Specialization} from "./specialization.model";
 
 
 @Injectable({providedIn: "root"})
@@ -29,6 +29,18 @@ export class SpecializationsService {
 
   updateSpecialization(specialization: Specialization): Observable<Specialization> {
     return this.http.put<Specialization>(this.SPECIALIZATIONS_API_URL, specialization);
+  }
+
+  getSpecializationDoctors(specializationId: number): Observable<DoctorRequest []> {
+    return this.http.get<DoctorRequest []>(this.SPECIALIZATIONS_API_URL + `/${specializationId}` + '/doctors');
+  }
+
+  getSpecializationAppointmentTypes(specializationId: number): Observable<AppointmentTypeRequest []> {
+    return this.http.get<AppointmentTypeRequest []>(this.SPECIALIZATIONS_API_URL + `/${specializationId}` + '/appointment-types');
+  }
+
+  getSpecializationOperationTypes(specializationId: number): Observable<OperationTypeRequest []> {
+    return this.http.get<OperationTypeRequest []>(this.SPECIALIZATIONS_API_URL + `/${specializationId}` + '/operation-types');
   }
 
   loadSpecializations(): void {

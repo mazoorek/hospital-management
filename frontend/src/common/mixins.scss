@@ -40,11 +40,6 @@
   }
 }
 
-@mixin flex {
-  display: flex;
-  min-width: 1px;
-}
-
 @mixin form {
   .form-container {
 
@@ -109,19 +104,74 @@
 }
 
 @mixin form-below-list {
-  .section-body {
-    flex-flow: column;
 
-    .form-container {
-      margin-top: 40px;
-      .form-body {
-        .form-row {
-          width: 600px;
-          margin: 10px auto;
+  .section-container {
+    .section-body {
+      flex-flow: column;
+
+      .form-container {
+        margin-top: 40px;
+
+        .form-body {
+          .form-row {
+            width: 600px;
+            margin: 10px auto;
+          }
         }
       }
     }
   }
 }
+
+@mixin selection-buttons {
+  .selected-row-buttons-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    action-button {
+      word-spacing: 100vw;
+      margin: 0 10px;
+    }
+  }
+}
+
+@mixin display-list {
+  .display-list {
+    list {
+      margin: auto;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 101;
+    }
+
+    &:after {
+      content: '';
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      opacity: .6;
+      background-color: $dark-grey-color;
+    }
+  }
+}
+
+@mixin section-container {
+  display: flex;
+  align-items: center;
+  .section-container {
+    @include section;
+    @include form;
+    @include selection-buttons;
+  }
+
+  @include display-list;
+}
+
 
 

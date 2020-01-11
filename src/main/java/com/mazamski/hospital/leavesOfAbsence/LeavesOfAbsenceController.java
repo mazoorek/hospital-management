@@ -15,7 +15,7 @@ public class LeavesOfAbsenceController {
 
     @GetMapping()
     List<LeaveOfAbsence> getLeavesOfAbsence() {
-        return leavesOfAbsenceMapper.getLeavesOfAbsence();
+        return leavesOfAbsenceMapper.getLeavesOfAbsences();
     }
 
     @PostMapping()

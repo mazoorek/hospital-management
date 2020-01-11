@@ -13,85 +13,105 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
 @Component({
   selector: 'doctors',
   template: `
-    <h1 class="section-header">LEKARZE</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <list class="flex-item list-flex-item"
+    <div class="section-container">
+      <h1 class="section-header">LEKARZE</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item list-flex-item">
+          <list
             (addOrUpdateRowChange)="loadForm($event)"
+            (selectedRowChange)="selectedRow=$event"
             (removeRowChange)="deleteDoctor($event)"
             [listContent]="listContent"></list>
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="name">Imię</label>
-              <input type="text"
-                     placeholder="wpisz imię"
-                     class="form-control"
-                     formControlName="name"
-                     id="name">
-            </div>
-            <div class="validation-error form-row" *ngIf="formDoctorName.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error form-row" *ngIf="formDoctorName.errors?.required && formDoctorName.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="surname">Nazwisko</label>
-              <input type="text"
-                     placeholder="wpisz nazwisko"
-                     class="form-control"
-                     formControlName="surname"
-                     id="surname">
-            </div>
-            <div class="validation-error form-row" *ngIf="formDoctorSurname.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error form-row" *ngIf="formDoctorSurname.errors?.required && formDoctorSurname.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="specializationName">Nazwa specjalizacji</label>
-              <select id="specializationName" class="select-field" (change)="changeSpecialization($event)"
-                      formControlName="specialization">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę
-                  specjalizacji
-                </option>
-                <option *ngFor="let specialization of specializations"
-                        [ngValue]="specialization">{{specialization}}</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <label for="hospitalWard">Nazwa oddziału</label>
-              <select id="hospitalWard" class="select-field" (change)="changeHospitalWard($event)"
-                      formControlName="hospitalWard">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę
-                  oddziału
-                </option>
-                <option *ngFor="let hospitalWard of hospitalWards"
-                        [ngValue]="hospitalWard">{{hospitalWard}}</option>
-              </select>
-            </div>
-          </form>
-          <div class="buttons-container">
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
             <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowAppointmentTypeAppointments()"
+              text="wizyty lekarza"></action-button>
+          </div>
+        </div>
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="name">Imię</label>
+                <input type="text"
+                       placeholder="wpisz imię"
+                       class="form-control"
+                       formControlName="name"
+                       id="name">
+              </div>
+              <div class="validation-error form-row" *ngIf="formDoctorName.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error form-row" *ngIf="formDoctorName.errors?.required && formDoctorName.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="surname">Nazwisko</label>
+                <input type="text"
+                       placeholder="wpisz nazwisko"
+                       class="form-control"
+                       formControlName="surname"
+                       id="surname">
+              </div>
+              <div class="validation-error form-row" *ngIf="formDoctorSurname.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error form-row"
+                   *ngIf="formDoctorSurname.errors?.required && formDoctorSurname.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="specializationName">Nazwa specjalizacji</label>
+                <select id="specializationName" class="select-field" (change)="changeSpecialization($event)"
+                        formControlName="specialization">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę
+                    specjalizacji
+                  </option>
+                  <option *ngFor="let specialization of specializations"
+                          [ngValue]="specialization">{{specialization}}</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label for="hospitalWard">Nazwa oddziału</label>
+                <select id="hospitalWard" class="select-field" (change)="changeHospitalWard($event)"
+                        formControlName="hospitalWard">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę
+                    oddziału
+                  </option>
+                  <option *ngFor="let hospitalWard of hospitalWards"
+                          [ngValue]="hospitalWard">{{hospitalWard}}</option>
+                </select>
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="display-list" *ngIf="showDoctorAppointments">
+      <list [listContent]="appointmentListContent"
+            (closeListChange)="closeDoctorAppointments()"
+            [editable]="false"></list>
     </div>
   `,
   styleUrls: ['./doctors.component.scss']
@@ -100,7 +120,10 @@ export class DoctorsComponent implements OnInit {
 
   loading: boolean = true;
   listContent: ListContent;
+  appointmentListContent: ListContent;
   showForm: boolean = false;
+  showDoctorAppointments = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   specializations: string[];
   hospitalWards: string[];
@@ -123,6 +146,42 @@ export class DoctorsComponent implements OnInit {
     this.doctorsService.addNewDoctorSubject.subscribe(() => {
       this.loadForm(-1);
     })
+  }
+
+  onShowAppointmentTypeAppointments() {
+    this.loading = true;
+    this.doctorsService.getDoctorAppointments(this.selectedRow).subscribe(appointments => {
+      appointments = appointments.map(appointment => ({
+        ...appointment,
+        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T',' '),
+        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T',' ')
+      }));
+      let rows: Row[] = [];
+      for (let appointment of appointments) {
+        rows.push({
+          row: [
+            String(appointment.id),
+            appointment.startDate,
+            appointment.endDate,
+            appointment.roomId,
+            appointment.pesel,
+            appointment.appointmentType,
+            appointment.operationType
+          ]
+        })
+      }
+      this.appointmentListContent = {
+        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'charakter wizyty', 'typ operacji'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showDoctorAppointments = true;
+    });
+  }
+
+  closeDoctorAppointments() {
+    this.showDoctorAppointments = false;
+    this.selectedRow = -1;
   }
 
   get formDoctorName() {

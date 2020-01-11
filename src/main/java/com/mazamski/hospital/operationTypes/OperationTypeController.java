@@ -1,5 +1,6 @@
 package com.mazamski.hospital.operationTypes;
 
+import com.mazamski.hospital.operationTypes.model.OperationTypeAppointmentRequest;
 import com.mazamski.hospital.operationTypes.model.OperationType;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,11 @@ public class OperationTypeController {
     @DeleteMapping("/{operationTypeId}")
     void deleteOperationType(@PathVariable Long operationTypeId) {
         operationTypeMapper.deleteOperationType(operationTypeId);
+    }
+
+    @GetMapping("/{operationTypeId}/appointments")
+    List<OperationTypeAppointmentRequest> getOperationTypeAppointments(@PathVariable Long operationTypeId) {
+        return operationTypeMapper.getOperationTypeAppointments(operationTypeId);
     }
 
     private OperationTypeMapper operationTypeMapper;

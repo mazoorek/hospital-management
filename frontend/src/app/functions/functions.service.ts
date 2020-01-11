@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {Function} from "./function.model";
+import {Function, StaffMemberRequest} from "./function.model";
 
 
 @Injectable({providedIn: "root"})
@@ -28,6 +28,10 @@ export class FunctionsService {
 
   updateFunction(func: Function): Observable<Function> {
     return this.http.put<Function>(this.FUNCTIONS_API_URL, func);
+  }
+
+  getFunctionStaff(functionId: number): Observable<StaffMemberRequest []> {
+    return this.http.get<StaffMemberRequest []>(this.FUNCTIONS_API_URL + `/${functionId}`+'/staff');
   }
 
   loadFunctions(): void {

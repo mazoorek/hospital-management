@@ -18,7 +18,7 @@ public interface LeavesOfAbsenceMapper {
             @Result(property = "startDate", column = "data_rozpoczecia"),
             @Result(property = "endDate", column = "data_zakonczenia"),
     })
-    List<LeaveOfAbsence> getLeavesOfAbsence();
+    List<LeaveOfAbsence> getLeavesOfAbsences();
 
     @Insert("insert into urlop(pracownik_id, data_rozpoczecia, data_zakonczenia) " +
             "values(#{employeeId}, #{startDate}, #{endDate})")

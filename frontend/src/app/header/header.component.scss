@@ -1,29 +1,21 @@
 @import "../../common/common";
 
 :host {
-  .header-section {
-    @include section;
-    justify-content: center;
-    padding: 0;
-    .title {
-      font-size: $font-size-huge;
-      margin: 0;
-      letter-spacing: $header-section-title-letter-spacing;
-    }
+    @include section-container;
+    .section-container {
+      justify-content: center;
+      padding: 0;
+      .title {
+        font-size: $font-size-huge;
+        margin: 0;
+        letter-spacing: $header-section-title-letter-spacing;
+      }
 
-    .subtitle {
-      margin-top: $section-subtitle-margin-top;
-      font-size: $font-size-medium;
-      letter-spacing: $header-section-subtitle-letter-spacing;
-      opacity: $section-subtitle-opacity;
-    }
-
-    navbar {
-      &.fixed {
-        position: fixed;
-        top: 0;
-        bottom: unset;
+      .subtitle {
+        margin-top: $section-subtitle-margin-top;
+        font-size: $font-size-medium;
+        letter-spacing: $header-section-subtitle-letter-spacing;
+        opacity: $section-subtitle-opacity;
       }
     }
-  }
 }

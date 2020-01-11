@@ -55,6 +55,7 @@
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
+          cursor: pointer;
 
           .row-item-content {
             text-overflow: ellipsis;
@@ -69,7 +70,7 @@
       }
     }
 
-    .add-button {
+    .footer-button {
       margin-top: 30px;
     }
   }

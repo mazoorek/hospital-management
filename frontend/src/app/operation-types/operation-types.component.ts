@@ -11,58 +11,79 @@ import {SpecializationsService} from "../specializations/specializations.service
 @Component({
   selector: 'operation-types',
   template: `
-    <h1 class="section-header">TYPY OPERACJI</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="operationType">Typ operacji</label>
-              <input type="text"
-                     placeholder="wpisz typ operacji"
-                     class="form-control"
-                     formControlName="operationType"
-                     id="operationType">
+    <div class="section-container">
+      <h1 class="section-header">TYPY OPERACJI</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="operationType">Typ operacji</label>
+                <input type="text"
+                       placeholder="wpisz typ operacji"
+                       class="form-control"
+                       formControlName="operationType"
+                       id="operationType">
+              </div>
+              <div class="validation-error" *ngIf="formOperationType.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error" *ngIf="formOperationType.errors?.required && formOperationType.touched">
+                Pole nie może być puste
+              </div>
+              <div class="form-row">
+                <label for="specializationName">Nazwa specjalizacji</label>
+                <select id="specializationName" class="select-field" (change)="changeSpecialization($event)"
+                        formControlName="specialization">
+                  <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę
+                    specjalizacji
+                  </option>
+                  <option *ngFor="let specialization of specializations"
+                          [ngValue]="specialization">{{specialization}}</option>
+                </select>
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="formOperationType.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error" *ngIf="formOperationType.errors?.required && formOperationType.touched">
-              Pole nie może być puste
-            </div>
-            <div class="form-row">
-              <label for="specializationName">Nazwa specjalizacji</label>
-              <select id="specializationName" class="select-field" (change)="changeSpecialization($event)" formControlName="specialization">
-                <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz nazwę specjalizacji</option>
-                <option *ngFor="let specialization of specializations"
-                        [ngValue]="specialization">{{specialization}}</option>
-              </select>
-            </div>
-          </form>
-          <div class="buttons-container">
+          </div>
+        </div>
+        <div class="flex-item list-flex-item">
+          <list
+            (addOrUpdateRowChange)="loadForm($event)"
+            (selectedRowChange)="selectedRow=$event"
+            (removeRowChange)="deleteOperationTypes($event)"
+            [listContent]="listContent"></list>
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
             <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
-            <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowOperationTypeAppointments()"
+              text="wizyty o danym typie"></action-button>
           </div>
         </div>
       </div>
-      <list class="flex-item list-flex-item"
-            (addOrUpdateRowChange)="loadForm($event)"
-            (removeRowChange)="deleteOperationTypes($event)"
-            [listContent]="listContent"></list>
+    </div>
+    <div class="display-list" *ngIf="showOperationTypeAppointments">
+      <list [listContent]="appointmentListContent"
+            (closeListChange)="closeOperationTypeAppointments()"
+            [editable]="false"></list>
     </div>
   `,
   styleUrls: ['./operation-types.component.scss']
@@ -71,10 +92,14 @@ export class OperationTypesComponent implements OnInit{
   operationTypes: OperationType[];
   loading: boolean = true;
   showForm: boolean = false;
+  showOperationTypeAppointments = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   specializations: string[];
   addRowForm: FormGroup;
   listContent: ListContent;
+  appointmentListContent: ListContent;
+
 
   constructor(private operationTypesService: OperationTypesService,
               private specializationsService: SpecializationsService,
@@ -87,6 +112,42 @@ export class OperationTypesComponent implements OnInit{
     this.operationTypesService.loadOperationTypesSubject.subscribe(() => {
       this.loadOperationTypes();
     });
+  }
+
+  onShowOperationTypeAppointments() {
+    this.loading = true;
+    this.operationTypesService.getOperationTypeAppointments(this.selectedRow).subscribe(appointments => {
+      appointments = appointments.map(appointment => ({
+        ...appointment,
+        startDate: new Date(appointment.startDate).toISOString().substring(0, 16).replace('T',' '),
+        endDate: new Date(appointment.endDate).toISOString().substring(0, 16).replace('T',' ')
+      }));
+      let rows: Row[] = [];
+      for (let appointment of appointments) {
+        rows.push({
+          row: [
+            String(appointment.id),
+            appointment.startDate,
+            appointment.endDate,
+            appointment.roomId,
+            appointment.pesel,
+            appointment.doctorId,
+            appointment.appointmentType,
+          ]
+        })
+      }
+      this.appointmentListContent = {
+        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showOperationTypeAppointments = true;
+    });
+  }
+
+  closeOperationTypeAppointments() {
+    this.showOperationTypeAppointments = false;
+    this.selectedRow = -1;
   }
 
   get formOperationType() {

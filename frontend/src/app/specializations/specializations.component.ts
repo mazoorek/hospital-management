@@ -10,50 +10,93 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 @Component({
   selector: 'specializations',
   template: `
-    <h1 class="section-header">SPECJALIZACJE</h1>
-    <spinner *ngIf="loading"></spinner>
-    <div class="section-body" *ngIf="!loading">
-      <div class="flex-item form-flex-item"
-           [ngClass]="{'collapsed': !showForm}">
-        <div *ngIf="showForm" class="form-container">
-          <form class="form-body" [formGroup]="addRowForm">
-            <div class="form-row">
-              <label for="SpecializationName">Nazwa Specializacji</label>
-              <input type="text"
-                     placeholder="wpisz nazwę specializacji"
-                     class="form-control"
-                     formControlName="name"
-                     id="SpecializationName">
+    <div class="section-container">
+      <h1 class="section-header">SPECJALIZACJE</h1>
+      <spinner *ngIf="loading"></spinner>
+      <div class="section-body" *ngIf="!loading">
+        <div class="flex-item form-flex-item"
+             [ngClass]="{'collapsed': !showForm}">
+          <div *ngIf="showForm" class="form-container">
+            <form class="form-body" [formGroup]="addRowForm">
+              <div class="form-row">
+                <label for="SpecializationName">Nazwa Specializacji</label>
+                <input type="text"
+                       placeholder="wpisz nazwę specializacji"
+                       class="form-control"
+                       formControlName="name"
+                       id="SpecializationName">
+              </div>
+              <div class="validation-error" *ngIf="formSpecializationName.errors?.pattern">
+                Pole może zawierać małe/duże litery oraz znaki spacji
+              </div>
+              <div class="validation-error"
+                   *ngIf="formSpecializationName.errors?.required && formSpecializationName.touched">
+                Pole nie może być puste
+              </div>
+            </form>
+            <div class="buttons-container">
+              <action-button
+                class="form-button"
+                (click)="onClickAddOrUpdate()"
+                [green]="true"
+                [disabled]="addRowForm.invalid"
+                text="Zatwierdź rekord"
+                [width]="200"></action-button>
+              <action-button
+                class="form-button"
+                (click)="onClickHideForm()"
+                [red]="true"
+                text="Porzuć"
+                [width]="200"></action-button>
             </div>
-            <div class="validation-error" *ngIf="formSpecializationName.errors?.pattern">
-              Pole może zawierać małe/duże litery oraz znaki spacji
-            </div>
-            <div class="validation-error"
-                 *ngIf="formSpecializationName.errors?.required && formSpecializationName.touched">
-              Pole nie może być puste
-            </div>
-          </form>
-          <div class="buttons-container">
+          </div>
+        </div>
+        <div class="flex-item list-flex-item">
+          <list class="flex-item list-flex-item"
+                (addOrUpdateRowChange)="loadForm($event)"
+                (removeRowChange)="deleteSpecializations($event)"
+                (selectedRowChange)="selectedRow=$event"
+                [listContent]="listContent"></list>
+          <div class="selected-row-buttons-container" *ngIf="selectedRow>-1">
             <action-button
-              class="form-button"
-              (click)="onClickAddOrUpdate()"
-              [green]="true"
-              [disabled]="addRowForm.invalid"
-              text="Zatwierdź rekord"
-              [width]="200"></action-button>
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowSpecializationDoctors()"
+              text="doktorzy specjalizacji"></action-button>
             <action-button
-              class="form-button"
-              (click)="onClickHideForm()"
-              [red]="true"
-              text="Porzuć"
-              [width]="200"></action-button>
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowSpecializationAppointmentTypes()"
+              text="typy wizyt specjalizacji"></action-button>
+            <action-button
+              [aquamarine]="true"
+              [width]="120"
+              [height]="100"
+              *ngIf="selectedRow>-1"
+              (click)="onShowSpecializationOperationTypes()"
+              text="typy operacji specjalizacji"></action-button>
           </div>
         </div>
       </div>
-      <list class="flex-item list-flex-item"
-            (addOrUpdateRowChange)="loadForm($event)"
-            (removeRowChange)="deleteSpecializations($event)"
-            [listContent]="listContent"></list>
+    </div>
+    <div class="display-list" *ngIf="showSpecializationDoctors">
+      <list [listContent]="doctorsListContent"
+            (closeListChange)="closeSpecializationDoctors()"
+            [editable]="false"></list>
+    </div>
+    <div class="display-list" *ngIf="showSpecializationAppointmentTypes">
+      <list [listContent]="appointmentTypesListContent"
+            (closeListChange)="closeSpecializationAppointments()"
+            [editable]="false"></list>
+    </div>
+    <div class="display-list" *ngIf="showSpecializationOperationTypes">
+      <list [listContent]="operationTypesListContent"
+            (closeListChange)="closeSpecializationOperationTypes()"
+            [editable]="false"></list>
     </div>
   `,
   styleUrls: ['./specializations.component.scss']
@@ -62,9 +105,16 @@ export class SpecializationsComponent implements OnInit {
   specializations: Specialization[];
   loading: boolean = true;
   showForm: boolean = false;
+  showSpecializationDoctors = false;
+  showSpecializationAppointmentTypes = false;
+  showSpecializationOperationTypes = false;
+  selectedRow: number = -1;
   formRowId: number = -1;
   addRowForm: FormGroup;
   listContent: ListContent;
+  doctorsListContent: ListContent;
+  appointmentTypesListContent: ListContent;
+  operationTypesListContent: ListContent;
 
   constructor(
     private specializationsService: SpecializationsService,
@@ -79,6 +129,87 @@ export class SpecializationsComponent implements OnInit {
     this.specializationsService.loadSpecializationsSubject.subscribe(() => {
       this.loadSpecializations();
     });
+  }
+
+  onShowSpecializationOperationTypes() {
+    this.loading = true;
+    this.specializationsService.getSpecializationAppointmentTypes(this.selectedRow).subscribe(operationTypes => {
+      let rows: Row[] = [];
+      for (let operationType of operationTypes) {
+        rows.push({
+          row: [
+            String(operationType.id),
+            operationType.type
+          ]
+        })
+      }
+      this.operationTypesListContent = {
+        columns: ['id', 'typ operacji'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showSpecializationOperationTypes = true;
+    });
+  }
+
+  onShowSpecializationAppointmentTypes() {
+    this.loading = true;
+    this.specializationsService.getSpecializationAppointmentTypes(this.selectedRow).subscribe(appointmentTypes => {
+      let rows: Row[] = [];
+      for (let appointmentType of appointmentTypes) {
+        rows.push({
+          row: [
+            String(appointmentType.id),
+            appointmentType.type
+          ]
+        })
+      }
+      this.appointmentTypesListContent = {
+        columns: ['id', 'charakter wizyty'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showSpecializationAppointmentTypes = true;
+    });
+  }
+
+  onShowSpecializationDoctors() {
+    this.loading = true;
+    this.specializationsService.getSpecializationDoctors(this.selectedRow).subscribe(doctors => {
+      let rows: Row[] = [];
+      for (let doctor of doctors) {
+        rows.push({
+          row: [
+            String(doctor.id),
+            doctor.name,
+            doctor.surname,
+            String(doctor.employeeId),
+            doctor.wardName
+          ]
+        })
+      }
+      this.doctorsListContent = {
+        columns: ['id', 'imię', 'nazwisko', 'id pracownika', 'nazwa oddzialu'],
+        rows: rows
+      };
+      this.loading = false;
+      this.showSpecializationDoctors = true;
+    });
+  }
+
+  closeSpecializationDoctors() {
+    this.showSpecializationDoctors = false;
+    this.selectedRow = -1;
+  }
+
+  closeSpecializationAppointments() {
+    this.showSpecializationAppointmentTypes = false;
+    this.selectedRow = -1;
+  }
+
+  closeSpecializationOperationTypes() {
+    this.showSpecializationOperationTypes = false;
+    this.selectedRow = -1;
   }
 
   get formSpecializationName() {
@@ -143,9 +274,9 @@ export class SpecializationsComponent implements OnInit {
   }
 
   onClickAddOrUpdate(): void {
-    if(this.addRowForm.valid) {
+    if (this.addRowForm.valid) {
       this.loading = true;
-      if(this.formRowId===-1) {
+      if (this.formRowId === -1) {
         this.specializationsService.insertSpecialization({
           name: this.addRowForm.value['name']
         } as Specialization).subscribe(() => {

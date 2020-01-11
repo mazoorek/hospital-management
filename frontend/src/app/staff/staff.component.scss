@@ -1,6 +1,5 @@
 @import "../../common/common";
 
 :host {
-  @include section;
-  @include form;
+  @include section-container;
 }

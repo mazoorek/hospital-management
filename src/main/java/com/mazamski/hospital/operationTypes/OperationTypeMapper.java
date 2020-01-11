@@ -1,6 +1,6 @@
 package com.mazamski.hospital.operationTypes;
 
-import com.mazamski.hospital.appointmentTypes.model.AppointmentType;
+import com.mazamski.hospital.operationTypes.model.OperationTypeAppointmentRequest;
 import com.mazamski.hospital.operationTypes.model.OperationType;
 import org.apache.ibatis.annotations.*;
 
@@ -35,4 +35,20 @@ public interface OperationTypeMapper {
     @Delete("delete from typ_operacji " +
             "where typ_operacji_id = #{operationTypeId}")
     void deleteOperationType(Long operationTypeId);
+
+    @Select("select wizyta_id, data_poczatku, data_konca, p.pesel, lekarz_id, pokoj_id, c.charakter " +
+            "from wizyta w join pacjent p on p.pacjent_id = w.pacjent_id " +
+            "join charakter_wizyty c on w.charakter_wizyty_id = c.charakter_wizyty_id " +
+            "left join typ_operacji t on w.typ_operacji_id = t.typ_operacji_id " +
+            "where t.typ_operacji_id = #{operationTypeId}")
+    @Results({
+            @Result(property = "id", column = "wizyta_id"),
+            @Result(property = "startDate", column = "data_poczatku"),
+            @Result(property = "endDate", column = "data_konca"),
+            @Result(property = "pesel", column = "pesel"),
+            @Result(property = "doctorId", column = "lekarz_id"),
+            @Result(property = "roomId", column = "pokoj_id"),
+            @Result(property = "appointmentType", column = "charakter"),
+    })
+    List<OperationTypeAppointmentRequest> getOperationTypeAppointments(Long operationTypeId);
 }

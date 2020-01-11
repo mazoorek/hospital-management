@@ -254,6 +254,10 @@ begin
     values ('okulistyka');
     insert into specjalizacja(nazwa)
     values ('urologia');
+    insert into specjalizacja(nazwa)
+    values ('ortopedia');
+    insert into specjalizacja(nazwa)
+    values ('onkologia');
 
     insert into funkcja(nazwa)
     values ('pielegniarka');
@@ -346,24 +350,24 @@ begin
     VALUES (current_date, date_add(current_date, interval 7 day), 1);
 
     insert into typ_operacji(typ, specjalizacja_id)
-    values ('serca', 1);
+    values ('serca', 3);
     insert into typ_operacji(typ, specjalizacja_id)
-    values ('kolana', 1);
+    values ('kolana', 8);
     insert into typ_operacji(typ, specjalizacja_id)
-    values ('oczu', 1);
+    values ('oczu', 6);
     insert into typ_operacji(typ, specjalizacja_id)
-    values ('mózgu', 1);
+    values ('mózgu', 5);
     insert into typ_operacji(typ, specjalizacja_id)
-    values ('nowotworowa', 1);
+    values ('nowotworowa', 9);
 
     insert into charakter_wizyty(charakter, specjalizacja_id)
-    values ('konsultacja', 1);
+    values ('konsultacja', 2);
     insert into charakter_wizyty(charakter, specjalizacja_id)
-    values ('wizyta', 1);
+    values ('wizyta', 2);
     insert into charakter_wizyty(charakter, specjalizacja_id)
-    values ('usg', 1);
+    values ('usg', 7);
     insert into charakter_wizyty(charakter, specjalizacja_id)
-    values ('operacja', 1);
+    values ('operacja', 5);
 
     insert into wizyta(data_poczatku, data_konca, pacjent_id, lekarz_id, pokoj_id, charakter_wizyty_id)
     VALUES (current_date, date_add(current_date, interval 1 hour), 1, 1, 2, 4);

@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
-import {Employee} from "./employee.model";
+import {Employee, LeaveOfAbsenceRequest} from "./employee.model";
 import {Observable, Subject} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import {OperationTypeAppointmentRequest} from "../operation-types/operation-types.model";
 
 @Injectable({providedIn: "root"})
 export class EmployeesService {
@@ -23,6 +24,10 @@ export class EmployeesService {
 
   deleteEmployee(employeeId: number): Observable<Employee> {
     return this.http.delete<Employee>(this.EMPLOYEES_API_URL + `/${employeeId}`);
+  }
+
+  getEmployeeLeavesOfAbsence(employeeId: number): Observable<LeaveOfAbsenceRequest []> {
+    return this.http.get<LeaveOfAbsenceRequest []>(this.EMPLOYEES_API_URL + `/${employeeId}`+'/leaves-of-absence');
   }
 
   loadEmployees(): void {

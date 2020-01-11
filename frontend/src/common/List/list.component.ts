@@ -14,7 +14,7 @@ import {ListContent, Row} from "./ListContent/list-content.model";
                  [(ngModel)]="filterValue"
                  (ngModelChange)="applyFilter(filterValue, i)">
         </div>
-        <action-button [transparent]="true" [ngStyle]="{'margin-left.px': 30}"></action-button>
+        <action-button *ngIf="editable" [transparent]="true" [ngStyle]="{'margin-left.px': 30}"></action-button>
         <action-button [aquamarine]="true"
                        (click)="onResetFilter()"
                        text="zresetuj filtr"></action-button>
@@ -28,28 +28,43 @@ import {ListContent, Row} from "./ListContent/list-content.model";
           {{headerColumn}}
           <span *ngIf="headerColumn===sortingColumn">&darr;</span>
         </div>
-        <action-button [ngStyle]="{'margin-left.px': 30}" [transparent]="true"></action-button>
+        <action-button [ngStyle]="{'margin-left.px': 30}" [transparent]="true" *ngIf="editable"></action-button>
         <action-button [transparent]="true"></action-button>
       </div>
       <div class="rows"
            [ngStyle]=" {'width':getHeaderColumns().length>1 ? getMaxRowLength() + '.px': 'unset'}">
-        <div class="row" *ngFor="let row of filteredRows; let i = index">
-          <div class="row-item" tooltipText="{{rowItem}}" *ngFor="let rowItem of row.row">
+        <div class="row"
+             [ngStyle]="{'background-color': selectedRow===i ? '#cceea1': 'unset'}"
+             *ngFor="let row of filteredRows; let i = index">
+          <div class="row-item"
+               tooltipText="{{rowItem}}"
+               (click)="onEmitSelected(i)"
+               *ngFor="let rowItem of row.row">
             {{rowItem}}
           </div>
           <action-button [aquamarine]="true"
                          text="edytuj"
+                         *ngIf="editable"
                          (click)="onClickAddOrEditRow(i)"
                          [ngStyle]="{'margin-left.px': 30}"></action-button>
           <action-button [red]="true"
                          text="usuń"
+                         *ngIf="editable"
                          (click)="removeRow(i)"></action-button>
+          <action-button *ngIf="!editable" [transparent]="true"></action-button>
         </div>
       </div>
-      <action-button class="add-button"
+      <action-button class="footer-button"
                      (click)="onClickAddOrEditRow()"
                      [green]="true"
+                     *ngIf="editable"
                      text="Dodaj nowy rekord"
+                     [width]="200"></action-button>
+      <action-button class="footer-button"
+                     (click)="closeList()"
+                     [red]="true"
+                     *ngIf="!editable"
+                     text="Zamknij"
                      [width]="200"></action-button>
     </div>
   `,
@@ -57,8 +72,12 @@ import {ListContent, Row} from "./ListContent/list-content.model";
 })
 export class ListComponent implements OnInit {
   @Input() listContent: ListContent;
+  @Input() selectedRow: number = -1;
+  @Input() editable: boolean = true;
   @Output() removeRowChange: EventEmitter<number> = new EventEmitter<number>();
   @Output() addOrUpdateRowChange: EventEmitter<number> = new EventEmitter<number>();
+  @Output() selectedRowChange: EventEmitter<number> = new EventEmitter<number>();
+  @Output() closeListChange: EventEmitter<void> = new EventEmitter<void>();
 
   readonly BUTTON_SPACE: number = 90;
   readonly MAX_ROW_WIDTH: number = 170;
@@ -82,8 +101,11 @@ export class ListComponent implements OnInit {
     return index;
   }
 
+  closeList(): void {
+    this.closeListChange.emit();
+  }
   onClickAddOrEditRow(rowIndex?: number): void {
-    (rowIndex ||  rowIndex === 0) ? this.addOrUpdateRowChange.emit(+this.rows[rowIndex].row[0]) : this.addOrUpdateRowChange.emit(-1);
+    (rowIndex || rowIndex === 0) ? this.addOrUpdateRowChange.emit(+this.rows[rowIndex].row[0]) : this.addOrUpdateRowChange.emit(-1);
   }
 
   getHeaderColumns(): string[] {
@@ -95,7 +117,16 @@ export class ListComponent implements OnInit {
   }
 
   removeRow(rowIndex: number): void {
+    if(rowIndex === this.selectedRow) {
+      this.selectedRow = -1;
+      this.selectedRowChange.emit(-1);
+    }
     this.removeRowChange.emit(+this.rows[rowIndex].row[0]);
+  }
+
+  onEmitSelected(rowIndex: number): void {
+    this.selectedRowChange.emit(+this.rows[rowIndex].row[0]);
+    this.selectedRow = rowIndex;
   }
 
 

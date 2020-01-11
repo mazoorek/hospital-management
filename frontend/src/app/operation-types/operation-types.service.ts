@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {OperationType} from "./operation-types.model";
-import {AppointmentType} from "../appointment-types/appointment-types.model";
+import {OperationType, OperationTypeAppointmentRequest} from "./operation-types.model";
+import {AppointmentType, AppointmentTypeAppointmentRequest} from "../appointment-types/appointment-types.model";
 
 
 @Injectable({providedIn: "root"})
@@ -30,6 +30,10 @@ export class OperationTypesService {
 
   updateOperationType(operationType: OperationType): Observable<OperationType> {
     return this.http.put<OperationType>(this.OPERATION_TYPES_API_URL, operationType);
+  }
+
+  getOperationTypeAppointments(operationTypeId: number): Observable<OperationTypeAppointmentRequest []> {
+    return this.http.get<OperationTypeAppointmentRequest []>(this.OPERATION_TYPES_API_URL + `/${operationTypeId}`+'/appointments');
   }
 
   loadOperationTypes(): void {
