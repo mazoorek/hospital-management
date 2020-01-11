@@ -40,11 +40,6 @@
   }
 }
 
-@mixin flex {
-  display: flex;
-  min-width: 1px;
-}
-
 @mixin form {
   .form-container {
 
@@ -116,6 +111,7 @@
 
       .form-container {
         margin-top: 40px;
+
         .form-body {
           .form-row {
             width: 600px;
@@ -141,7 +137,7 @@
   .display-list {
     list {
       margin: auto;
-      position:fixed;
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -149,10 +145,10 @@
     }
 
     &:after {
-      content:'';
+      content: '';
       width: 100vw;
       height: 100vh;
-      position:fixed;
+      position: fixed;
       top: 0;
       z-index: 100;
       opacity: .6;
@@ -162,6 +158,8 @@
 }
 
 @mixin section-container {
+  display: flex;
+  align-items: center;
   .section-container {
     @include section;
     @include form;

@@ -17,13 +17,5 @@
         letter-spacing: $header-section-subtitle-letter-spacing;
         opacity: $section-subtitle-opacity;
       }
-
-      navbar {
-        &.fixed {
-          position: fixed;
-          top: 0;
-          bottom: unset;
-        }
-      }
     }
 }

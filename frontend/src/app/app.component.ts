@@ -1,12 +1,13 @@
 import {AfterViewInit, Component, ElementRef, HostListener, ViewChild} from '@angular/core';
 import {NavbarService} from "./header/navbar/navbar.service";
 
-const TAB_CONTAINER_HEIGHT: number = 70;
+const TAB_CONTAINER_HEIGHT: number = 90;
 
 @Component({
   selector: 'app-root',
   template: `
-    <header #header [fixed]="fixed"></header>
+    <header #header></header>
+    <navbar [ngClass]="{'fixed': fixed}"></navbar>
     <hospital-wards #wards></hospital-wards>
     <specializations #specializations></specializations>
     <functions #functions></functions>

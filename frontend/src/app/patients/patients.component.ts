@@ -190,7 +190,6 @@ export class PatientsComponent implements OnInit {
           .filter(patient => patient.id === this.formRowId)
           .map(patient => patient.surname)[0]
       });
-      console.log(this.addRowForm.value['pesel'])
     } else {
       this.addRowForm.reset();
     }
