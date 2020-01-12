@@ -43,6 +43,7 @@ public interface HospitalWardMapper {
             @Result(property = "pesel", column = "pesel"),
             @Result(property = "doctorId", column = "lekarz_id"),
             @Result(property = "roomId", column = "pokoj_id"),
+            @Result(property = "appointmentType", column = "charakter"),
             @Result(property = "operationType", column = "typ"),
     })
     List<Appointment> getWardAppointments(Long wardId);
