@@ -314,13 +314,15 @@ begin
     values (2, 2, 2);
     insert into lekarz(pracownik_id, specjalizacja_id, oddzial_id)
     values (3, 3, 3);
+     insert into lekarz(pracownik_id, specjalizacja_id, oddzial_id)
+    values (4, 5, 1);
 
     insert into personel(pracownik_id, funkcja_id)
-    values (4, 1);
+    values (5, 1);
     insert into personel(pracownik_id, funkcja_id)
-    values (5, 2);
+    values (6, 2);
     insert into personel(pracownik_id, funkcja_id)
-    values (6, 3);
+    values (7, 3);
 
     insert into pokoj(numer, oddzial_id)
     values (1, 1);
