@@ -66,7 +66,7 @@ begin
     (
         pracownik_id integer      not null auto_increment,
         imie         varchar(100) not null,
-        nazwisko      varchar(100) not null,
+        nazwisko     varchar(100) not null,
         typ          varchar(100) not null,
         primary key (pracownik_id)
     ) ENGINE = InnoDB
@@ -74,7 +74,7 @@ begin
       DEFAULT charset = utf8
       COLLATE utf8_unicode_ci;
 
-     create table oddzial
+    create table oddzial
     (
         oddzial_id integer      not null auto_increment,
         nazwa      varchar(100) not null,
@@ -100,11 +100,14 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table lekarz
-        add constraint lekarz_fk_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
+        add constraint lekarz_fk_pracownik_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
+    create index lekarz_fk_pracownik_id_index on lekarz (pracownik_id);
     alter table lekarz
         add constraint lekarz_fk_specjalizacja_id foreign key (specjalizacja_id) references specjalizacja (specjalizacja_id) on delete cascade;
+    create index lekarz_fk_specjalizacja_id_index on lekarz (specjalizacja_id);
     alter table lekarz
         add constraint lekarz_fk_oddzial_id foreign key (oddzial_id) references oddzial (oddzial_id) on delete cascade;
+    create index lekarz_fk_oddzial_id_index on lekarz (oddzial_id);
     alter table lekarz
         add constraint lekarz_u_1 unique (pracownik_id, specjalizacja_id);
 
@@ -121,9 +124,11 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table personel
-        add constraint staff_fk_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
+        add constraint staff_fk_pracownik_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
+    create index staff_fk_pracownik_id_index on personel (pracownik_id);
     alter table personel
         add constraint staff_fk_funkcja foreign key (funkcja_id) references funkcja (funkcja_id) on delete cascade;
+    create index staff_fk_funkcja_index on personel (funkcja_id);
     alter table personel
         add constraint personel_u_1 unique (pracownik_id, funkcja_id);
 
@@ -140,6 +145,7 @@ begin
 
     alter table pokoj
         add constraint pokoj_fk_oddzial_id foreign key (oddzial_id) references oddzial (oddzial_id) on delete cascade;
+    create index pokoj_fk_oddzial_id_index on pokoj (oddzial_id);
     alter table pokoj
         add constraint pokoj_u_1 unique (numer, oddzial_id);
 
@@ -161,10 +167,10 @@ begin
 
     create table urlop
     (
-        urlop_id            integer      not null auto_increment,
-        data_rozpoczecia    varchar(100) not null,
-        data_zakonczenia    varchar(100) not null,
-        pracownik_id       integer      not null,
+        urlop_id         integer      not null auto_increment,
+        data_rozpoczecia varchar(100) not null,
+        data_zakonczenia varchar(100) not null,
+        pracownik_id     integer      not null,
         primary key (urlop_id)
     ) ENGINE = InnoDB
       AUTO_INCREMENT = 1
@@ -172,7 +178,8 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table urlop
-        add constraint leave_of_absence_fk_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
+        add constraint leave_of_absence_fk_pracownik_id foreign key (pracownik_id) references pracownik (pracownik_id) on delete cascade;
+    create index leave_of_absence_fk_pracownik_id_index on urlop (pracownik_id);
     alter table urlop
         add constraint urlop_u_1 unique (pracownik_id, data_rozpoczecia);
 
@@ -188,7 +195,8 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table typ_operacji
-        add constraint typ_operacji_fk_specjalizacja foreign key (specjalizacja_id) references specjalizacja (specjalizacja_id) on delete cascade;
+        add constraint typ_operacji_fk_specjalizacja_id foreign key (specjalizacja_id) references specjalizacja (specjalizacja_id) on delete cascade;
+    create index typ_operacji_fk_specjalizacja_id_index on typ_operacji (specjalizacja_id);
     alter table typ_operacji
         add constraint typ_operacji_u_1 unique (typ);
 
@@ -204,13 +212,14 @@ begin
       COLLATE utf8_unicode_ci;
 
     alter table charakter_wizyty
-        add constraint charakter_wizyty_fk_specjalizacja foreign key (specjalizacja_id) references specjalizacja (specjalizacja_id) on delete cascade;
+        add constraint charakter_wizyty_fk_specjalizacja_id foreign key (specjalizacja_id) references specjalizacja (specjalizacja_id) on delete cascade;
+    create index charakter_wizyty_fk_specjalizacja_id_index on charakter_wizyty (specjalizacja_id);
     alter table charakter_wizyty
         add constraint charakter_wizyty_u_1 unique (charakter);
 
     create table wizyta
     (
-        wizyta_id                  integer      not null auto_increment,
+        wizyta_id           integer      not null auto_increment,
         data_poczatku       varchar(100) not null,
         data_konca          varchar(100) not null,
         pacjent_id          integer      not null,
@@ -226,14 +235,19 @@ begin
 
     alter table wizyta
         add constraint wizyta_fk_patient_pacjent_id foreign key (pacjent_id) references pacjent (pacjent_id) on delete cascade;
+    create index wizyta_fk_patient_pacjent_id_index on wizyta (pacjent_id);
     alter table wizyta
         add constraint wizyta_fk_patient_doctor_id foreign key (lekarz_id) references lekarz (lekarz_id) on delete cascade;
+    create index wizyta_fk_patient_doctor_id_index on wizyta (lekarz_id);
     alter table wizyta
         add constraint wizyta_fk_patient_pokoj_id foreign key (pokoj_id) references pokoj (pokoj_id) on delete cascade;
+    create index wizyta_fk_patient_pokoj_id_index on wizyta (pokoj_id);
     alter table wizyta
         add constraint wizyta_fk_patient_charakter_wizyty_id foreign key (charakter_wizyty_id) references charakter_wizyty (charakter_wizyty_id) on delete cascade;
+    create index wwizyta_fk_patient_charakter_wizyty_id_index on wizyta (charakter_wizyty_id);
     alter table wizyta
         add constraint wizyta_fk_patient_typ_operacji_id foreign key (typ_operacji_id) references typ_operacji (typ_operacji_id) on delete cascade;
+    create index wizyta_fk_patient_typ_operacji_id_index on wizyta (typ_operacji_id);
     alter table wizyta
         add constraint wizyta_u_1 unique (data_poczatku, pacjent_id);
 end;
@@ -398,18 +412,17 @@ begin
             (select oddzial_id from oddzial where nazwa = hospital_ward));
 end;
 
-create procedure update_doctor(employee_id integer, name varchar(128), surname varchar(128), specialization varchar(128),
+create procedure update_doctor(employee_id integer, name varchar(128), surname varchar(128),
+                               specialization varchar(128),
                                hospital_ward varchar(128))
 begin
     update pracownik
-        set
-        imie = name,
+    set imie     = name,
         nazwisko = surname
     where pracownik_id = employee_id;
     update lekarz
-    set
-    specjalizacja_id = (select specjalizacja_id from specjalizacja where nazwa = specialization),
-    oddzial_id = (select oddzial_id from oddzial where nazwa = hospital_ward)
+    set specjalizacja_id = (select specjalizacja_id from specjalizacja where nazwa = specialization),
+        oddzial_id       = (select oddzial_id from oddzial where nazwa = hospital_ward)
     where pracownik_id = employee_id;
 end;
 
@@ -426,15 +439,14 @@ begin
             ), (select funkcja_id from funkcja where nazwa = function));
 end;
 
-create procedure update_staff_member(employee_id integer, name varchar(128), surname varchar(128), function varchar(128))
+create procedure update_staff_member(employee_id integer, name varchar(128), surname varchar(128),
+                                     function varchar(128))
 begin
     update pracownik
-    set
-        imie = name,
+    set imie     = name,
         nazwisko = surname
     where pracownik_id = employee_id;
     update personel
-    set
-        funkcja_id = (select funkcja_id from funkcja where nazwa = function)
+    set funkcja_id = (select funkcja_id from funkcja where nazwa = function)
     where pracownik_id = employee_id;
 end;
