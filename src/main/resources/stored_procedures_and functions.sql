@@ -289,6 +289,8 @@ begin
     insert into pracownik(imie, nazwisko, typ)
     values ('Kamila', 'Sikorska', 'lekarz');
     insert into pracownik(imie, nazwisko, typ)
+    values ('Michal', 'Szpak', 'lekarz');
+    insert into pracownik(imie, nazwisko, typ)
     values ('Zbigniew', 'Ratajski', 'personel');
     insert into pracownik(imie, nazwisko, typ)
     values ('Julia', 'Skrzypczak', 'personel');
@@ -314,7 +316,7 @@ begin
     values (2, 2, 2);
     insert into lekarz(pracownik_id, specjalizacja_id, oddzial_id)
     values (3, 3, 3);
-     insert into lekarz(pracownik_id, specjalizacja_id, oddzial_id)
+    insert into lekarz(pracownik_id, specjalizacja_id, oddzial_id)
     values (4, 5, 1);
 
     insert into personel(pracownik_id, funkcja_id)
