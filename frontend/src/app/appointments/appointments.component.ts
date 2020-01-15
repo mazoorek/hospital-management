@@ -200,6 +200,20 @@ export class AppointmentsComponent implements OnInit {
     this.appointmentsService.loadAppointmentsSubject.subscribe(() => {
       this.loadAppointments();
     });
+    this.resetEditedRow();
+  }
+
+  resetEditedRow(): void {
+    this.editedRow = {
+      id: -1,
+      startDate: '',
+      endDate: '',
+      roomId: '-1',
+      pesel: '',
+      doctorId: '-1',
+      appointmentType: '',
+      operationType: '',
+    }
   }
 
   get formLeaveStartDate() {
@@ -245,6 +259,8 @@ export class AppointmentsComponent implements OnInit {
       .map(appointmentType => appointmentType.specializationName)[0];
     let startDate = new Date(this.addRowForm.get('startDate').value);
     let endDate = new Date(this.addRowForm.get('endDate').value);
+    console.log(this.simplifiedDoctors);
+    console.log(this.editedRow);
     return this.simplifiedDoctors
       .filter(doctor => doctor.specializationName === specialization)
       .map(doctor => doctor.doctorId)
@@ -557,6 +573,7 @@ export class AppointmentsComponent implements OnInit {
           operationType: this.addRowForm.value['operationType'] ? this.addRowForm.value['operationType'].split(" ").slice(-1)[0] : '',
           id: this.formRowId
         } as Appointment).subscribe(() => {
+          this.resetEditedRow();
           this.showForm = false;
           this.formRowId = -1;
           this.loadAppointments();

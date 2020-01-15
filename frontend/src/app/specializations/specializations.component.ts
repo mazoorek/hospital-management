@@ -33,6 +33,10 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
                    *ngIf="formSpecializationName.errors?.required && formSpecializationName.touched">
                 Pole nie może być puste
               </div>
+              <div class="validation-error"
+                   *ngIf="addRowForm.get('name').hasError('forbiddenName')">
+                Nazwa specjalizacji jest już zajęta
+              </div>
             </form>
             <div class="buttons-container">
               <action-button
@@ -103,6 +107,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class SpecializationsComponent implements OnInit {
   specializations: Specialization[];
+  editedSpecializationName: string;
   loading: boolean = true;
   showForm: boolean = false;
   showSpecializationDoctors = false;
@@ -228,8 +233,21 @@ export class SpecializationsComponent implements OnInit {
 
   setupForm(): void {
     this.addRowForm = new FormGroup({
-      'name': new FormControl('', [Validators.required, Validators.pattern('^[A-Za-z\\s]+$')])
+      'name': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[A-Za-z\\s]+$'),
+        this.forbiddenName.bind(this)
+      ])
     });
+  }
+
+  forbiddenName(control: FormControl): { [s: string]: boolean } {
+    if (control.value) {
+      if (this.specializations.filter(specialization => (specialization.name == control.value && specialization.name !== this.editedSpecializationName)).length) {
+        return {'forbiddenName': true};
+      }
+    }
+    return null;
   }
 
   loadListContent(): void {
@@ -262,10 +280,9 @@ export class SpecializationsComponent implements OnInit {
   loadForm(id: number): void {
     this.formRowId = id;
     if (this.formRowId >= 0) {
+      this.editedSpecializationName = this.specializations.filter(specialization => specialization.id === this.formRowId).map(specialization => specialization.name)[0];
       this.addRowForm.patchValue({
-        'name': this.specializations
-          .filter(specialization => specialization.id === this.formRowId)
-          .map(specialization => specialization.name)
+        'name': this.editedSpecializationName
       })
     } else {
       this.addRowForm.reset();

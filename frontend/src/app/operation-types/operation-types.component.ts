@@ -33,6 +33,10 @@ import {SpecializationsService} from "../specializations/specializations.service
               <div class="validation-error" *ngIf="formOperationType.errors?.required && formOperationType.touched">
                 Pole nie może być puste
               </div>
+              <div class="validation-error"
+                   *ngIf="addRowForm.get('operationType').hasError('forbiddenOperationType')">
+                Typ operacji jest już zajęty
+              </div>
               <div class="form-row">
                 <label for="specializationName">Nazwa specjalizacji</label>
                 <select id="specializationName" class="select-field" (change)="changeSpecialization($event)"
@@ -90,6 +94,7 @@ import {SpecializationsService} from "../specializations/specializations.service
 })
 export class OperationTypesComponent implements OnInit{
   operationTypes: OperationType[];
+  editedOperationType: string;
   loading: boolean = true;
   showForm: boolean = false;
   showOperationTypeAppointments = false;
@@ -181,10 +186,20 @@ export class OperationTypesComponent implements OnInit{
     this.addRowForm = new FormGroup({
       'operationType': new FormControl('', [
         Validators.required,
-        Validators.pattern('^[A-Za-z\\s]+$')
+        Validators.pattern('^[A-Za-z\\s]+$'),
+        this.forbiddenOperationType.bind(this)
       ]),
       'specialization': new FormControl('', Validators.required)
     });
+  }
+
+  forbiddenOperationType(control: FormControl): { [s: string]: boolean } {
+    if (control.value) {
+      if (this.operationTypes.filter(appointmentType => (appointmentType.type == control.value && appointmentType.type !== this.editedOperationType)).length) {
+        return {'forbiddenOperationType': true};
+      }
+    }
+    return null;
   }
 
   loadListContent(): void {
@@ -218,8 +233,9 @@ export class OperationTypesComponent implements OnInit{
   loadForm(id: number): void {
     this.formRowId = id;
     if (this.formRowId >= 0) {
+      this.editedOperationType = this.operationTypes.filter(type => type.id === this.formRowId).map(type => type.type)[0];
       this.addRowForm.patchValue({
-        'operationType': this.operationTypes.filter(type => type.id === this.formRowId).map(type => type.type)[0],
+        'operationType': this.editedOperationType,
         'specialization': this.operationTypes.filter(type => type.id === this.formRowId).map(type => type.specializationName)[0]
       });
     } else {
@@ -246,6 +262,7 @@ export class OperationTypesComponent implements OnInit{
           specializationName: this.addRowForm.value['specialization'].split(" ").filter(word => word.match(filterByRegex)).join(" "),
           id: this.formRowId
         } as OperationType).subscribe(() => {
+          this.editedOperationType = '';
           this.showForm = false;
           this.formRowId = -1;
           this.loadSelfAndDependentTables();

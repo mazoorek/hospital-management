@@ -35,6 +35,10 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
                    *ngIf="formPesel.errors?.required && formPesel.touched">
                 Pole nie może być puste
               </div>
+              <div class="validation-error"
+                   *ngIf="addRowForm.get('pesel').hasError('forbiddenPesel')">
+                Pesel jest już zajęty
+              </div>
               <div class="form-row">
                 <label for="name">Imię</label>
                 <input type="text"
@@ -123,6 +127,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class PatientsComponent implements OnInit {
   patients: Patient [];
+  editedPesel: string = '';
   loading: boolean = true;
   showForm: boolean = false;
   showPatientAppointments = false;
@@ -243,11 +248,27 @@ export class PatientsComponent implements OnInit {
         Validators.required,
         Validators.pattern('^[0-9]+$'),
         Validators.minLength(11),
-        Validators.maxLength(11)
+        Validators.maxLength(11),
+        this.forbiddenPesel.bind(this)
       ]),
-      'name': new FormControl('', [Validators.required, Validators.pattern('^[A-Za-z\\s]+$')]),
-      'surname': new FormControl('', [Validators.required, Validators.pattern('^[A-Za-z\\s]+$')]),
+      'name': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[A-Za-z\\s]+$')
+      ]),
+      'surname': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[A-Za-z\\s]+$')
+      ]),
     });
+  }
+
+  forbiddenPesel(control: FormControl): { [s: string]: boolean } {
+    if (control.value) {
+      if (this.patients.filter(patient => (patient.pesel == control.value && patient.pesel !== this.editedPesel)).length) {
+        return {'forbiddenPesel': true};
+      }
+    }
+    return null;
   }
 
   loadListContent(): void {
@@ -282,16 +303,11 @@ export class PatientsComponent implements OnInit {
   loadForm(id: number): void {
     this.formRowId = id;
     if (this.formRowId >= 0) {
+      this.editedPesel = this.patients.filter(patient => patient.id === this.formRowId).map(patient => patient.pesel)[0];
       this.addRowForm.patchValue({
-        'pesel': this.patients
-          .filter(patient => patient.id === this.formRowId)
-          .map(patient => patient.pesel)[0],
-        'name': this.patients
-          .filter(patient => patient.id === this.formRowId)
-          .map(patient => patient.name)[0],
-        'surname': this.patients
-          .filter(patient => patient.id === this.formRowId)
-          .map(patient => patient.surname)[0]
+        'pesel': this.editedPesel,
+        'name': this.patients.filter(patient => patient.id === this.formRowId).map(patient => patient.name)[0],
+        'surname': this.patients.filter(patient => patient.id === this.formRowId).map(patient => patient.surname)[0]
       });
     } else {
       this.addRowForm.reset();
@@ -318,6 +334,7 @@ export class PatientsComponent implements OnInit {
           surname: this.addRowForm.value['surname'],
           id: this.formRowId
         } as Patient).subscribe(() => {
+          this.editedPesel ='';
           this.showForm = false;
           this.formRowId = -1;
           this.loadSelfAndDependentTables();

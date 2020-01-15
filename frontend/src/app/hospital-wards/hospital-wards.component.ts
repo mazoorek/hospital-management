@@ -33,6 +33,10 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
                    *ngIf="formHospitalWardName.errors?.required && formHospitalWardName.touched">
                 Pole nie może być puste
               </div>
+              <div class="validation-error"
+                   *ngIf="addRowForm.get('name').hasError('forbiddenName')">
+                Nazwa oddziału jest już zajęta
+              </div>
             </form>
             <div class="buttons-container">
               <action-button
@@ -103,6 +107,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class HospitalWardsComponent implements OnInit {
   hospitalWards: HospitalWard[];
+  editedHospitalWardName: string;
   loading: boolean = true;
   showForm: boolean = false;
   showWardAppointments = false;
@@ -235,9 +240,23 @@ export class HospitalWardsComponent implements OnInit {
 
   setupForm(): void {
     this.addRowForm = new FormGroup({
-      'name': new FormControl('', [Validators.required, Validators.pattern('^[A-Za-z\\s]+$')])
+      'name': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[A-Za-z\\s]+$'),
+        this.forbiddenName.bind(this)
+      ])
     });
   }
+
+  forbiddenName(control: FormControl): { [s: string]: boolean } {
+    if (control.value) {
+      if (this.hospitalWards.filter(hospitalWard => (hospitalWard.name == control.value && hospitalWard.name !== this.editedHospitalWardName)).length) {
+        return {'forbiddenName': true};
+      }
+    }
+    return null;
+  }
+
 
   loadListContent(): void {
     this.listContent = {
@@ -270,8 +289,9 @@ export class HospitalWardsComponent implements OnInit {
   loadForm(id: number): void {
     this.formRowId = id;
     if (this.formRowId >= 0) {
+      this.editedHospitalWardName = this.hospitalWards.filter(ward => ward.id === this.formRowId).map(ward => ward.name)[0];
       this.addRowForm.patchValue({
-        'name': this.hospitalWards.filter(ward => ward.id === this.formRowId).map(ward => ward.name)
+        'name': this.editedHospitalWardName
       })
     } else {
       this.addRowForm.reset();
@@ -294,6 +314,7 @@ export class HospitalWardsComponent implements OnInit {
           name: this.addRowForm.value['name'],
           id: this.formRowId
         } as HospitalWard).subscribe(() => {
+          this.editedHospitalWardName = '';
           this.showForm = false;
           this.formRowId = -1;
           this.loadSelfAndDependentTables();
