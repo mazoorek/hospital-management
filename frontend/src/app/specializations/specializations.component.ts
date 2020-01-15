@@ -58,6 +58,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
         <div class="flex-item list-flex-item">
           <list class="flex-item list-flex-item"
                 (addOrUpdateRowChange)="loadForm($event)"
+                [showIdColumn]="false"
                 (removeRowChange)="deleteSpecializations($event)"
                 (selectedRowChange)="selectedRow=$event"
                 [listContent]="listContent"></list>
@@ -143,13 +144,12 @@ export class SpecializationsComponent implements OnInit {
       for (let operationType of operationTypes) {
         rows.push({
           row: [
-            String(operationType.id),
             operationType.type
           ]
         })
       }
       this.operationTypesListContent = {
-        columns: ['id', 'typ operacji'],
+        columns: ['typ operacji'],
         rows: rows
       };
       this.loading = false;
@@ -164,13 +164,12 @@ export class SpecializationsComponent implements OnInit {
       for (let appointmentType of appointmentTypes) {
         rows.push({
           row: [
-            String(appointmentType.id),
             appointmentType.type
           ]
         })
       }
       this.appointmentTypesListContent = {
-        columns: ['id', 'charakter wizyty'],
+        columns: ['charakter wizyty'],
         rows: rows
       };
       this.loading = false;
@@ -252,7 +251,7 @@ export class SpecializationsComponent implements OnInit {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'nazwa'],
+      columns: ['nazwa'],
       rows: this.loadRows()
     };
   }

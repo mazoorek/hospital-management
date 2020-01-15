@@ -56,6 +56,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            [showIdColumn]="false"
             (selectedRowChange)="selectedRow=$event"
             (removeRowChange)="deleteFunctions($event)"
             [listContent]="listContent"></list>
@@ -166,7 +167,7 @@ export class FunctionsComponent implements OnInit{
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'nazwa'],
+      columns: ['nazwa'],
       rows: this.loadRows()
     };
   }

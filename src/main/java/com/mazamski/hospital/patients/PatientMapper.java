@@ -58,7 +58,9 @@ public interface PatientMapper {
             "join specjalizacja s on l.specjalizacja_id = s.specjalizacja_id " +
             "join pracownik p on l.pracownik_id = p.pracownik_id " +
             "join pokoj pok on pok.oddzial_id = o.oddzial_id " +
-            "where pok.pokoj_id = #{patientId}")
+            "join wizyta w on w.lekarz_id = l.lekarz_id " +
+            "join pacjent on pacjent.pesel = w.pesel " +
+            "where pacjent.pacjent_id = #{patientId}")
     @Results({
             @Result(property = "id", column = "lekarz_id"),
             @Result(property = "employeeId", column = "pracownik_id"),

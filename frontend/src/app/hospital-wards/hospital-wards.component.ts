@@ -58,6 +58,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            [showIdColumn]="false"
             (removeRowChange)="deleteHospitalWard($event)"
             (selectedRowChange)="selectedRow=$event"
             [listContent]="listContent"></list>
@@ -160,7 +161,6 @@ export class HospitalWardsComponent implements OnInit {
       for (let appointment of appointments) {
         rows.push({
           row: [
-            String(appointment.id),
             appointment.startDate,
             appointment.endDate,
             appointment.roomId,
@@ -172,7 +172,7 @@ export class HospitalWardsComponent implements OnInit {
         })
       }
       this.appointmentsListContent = {
-        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty', 'typ operacji'],
+        columns: ['data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty', 'typ operacji'],
         rows: rows
       };
       this.loading = false;
@@ -187,13 +187,12 @@ export class HospitalWardsComponent implements OnInit {
       for (let room of rooms) {
         rows.push({
           row: [
-            String(room.id),
             String(room.number),
           ]
         })
       }
       this.roomsListContent = {
-        columns: ['id', 'numer pokoju'],
+        columns: ['numer pokoju'],
         rows: rows
       };
       this.loading = false;
@@ -260,7 +259,7 @@ export class HospitalWardsComponent implements OnInit {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'oddział'],
+      columns: ['oddział'],
       rows: this.loadRows()
     };
   }
