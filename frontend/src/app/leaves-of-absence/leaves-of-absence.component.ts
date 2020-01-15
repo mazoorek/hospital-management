@@ -16,6 +16,7 @@ import {Employee} from "../employees/employee.model";
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            [showIdColumn]="false"
             (removeRowChange)="deleteLeaveOfAbsence($event)"
             [listContent]="listContent"></list>
         </div>
@@ -285,7 +286,7 @@ export class LeavesOfAbsenceComponent implements OnInit {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'id pracownika', 'imię', 'nazwisko', 'początek', 'koniec'],
+      columns: ['id pracownika', 'imię', 'nazwisko', 'początek', 'koniec'],
       rows: this.loadRows()
     }
   }

@@ -40,6 +40,7 @@ export interface SimplifiedRoom {
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            [showIdColumn]="false"
             (removeRowChange)="deleteAppointment($event)"
             [listContent]="listContent"></list>
         </div>
@@ -496,7 +497,7 @@ export class AppointmentsComponent implements OnInit {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty', 'typ operacji'],
+      columns: ['data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty', 'typ operacji'],
       rows: this.loadRows()
     }
   }

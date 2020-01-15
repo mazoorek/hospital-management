@@ -68,6 +68,7 @@ import {Specialization} from "../specializations/specialization.model";
         <div class="flex-item list-flex-item">
           <list class="flex-item list-flex-item"
                 (addOrUpdateRowChange)="loadForm($event)"
+                [showIdColumn]="false"
                 (selectedRowChange)="selectedRow=$event"
                 (removeRowChange)="deleteAppointmentType($event)"
                 [listContent]="listContent"></list>
@@ -202,7 +203,7 @@ export class AppointmentTypesComponent implements OnInit {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'charakter wizyty', 'nazwa specjalizacji'],
+      columns: ['charakter wizyty', 'nazwa specjalizacji'],
       rows: this.loadRows()
     };
   }

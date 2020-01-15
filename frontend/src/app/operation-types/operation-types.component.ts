@@ -69,6 +69,7 @@ import {SpecializationsService} from "../specializations/specializations.service
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            [showIdColumn]="false"
             (selectedRowChange)="selectedRow=$event"
             (removeRowChange)="deleteOperationTypes($event)"
             [listContent]="listContent"></list>
@@ -131,7 +132,6 @@ export class OperationTypesComponent implements OnInit{
       for (let appointment of appointments) {
         rows.push({
           row: [
-            String(appointment.id),
             appointment.startDate,
             appointment.endDate,
             appointment.roomId,
@@ -142,7 +142,7 @@ export class OperationTypesComponent implements OnInit{
         })
       }
       this.appointmentListContent = {
-        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty'],
+        columns: ['data początku', 'data końca', 'id pokoju', 'pesel', 'id lekarza', 'charakter wizyty'],
         rows: rows
       };
       this.loading = false;
@@ -204,7 +204,7 @@ export class OperationTypesComponent implements OnInit{
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'typy operacji', 'nazwa specjalizacji'],
+      columns: ['typy operacji', 'nazwa specjalizacji'],
       rows: this.loadRows()
     };
   }

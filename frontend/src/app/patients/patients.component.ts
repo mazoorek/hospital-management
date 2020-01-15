@@ -90,6 +90,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
         <div class="flex-item list-flex-item">
           <list
             (addOrUpdateRowChange)="loadForm($event)"
+            [showIdColumn]="false"
             (selectedRowChange)="selectedRow=$event"
             (removeRowChange)="deletePatient($event)"
             [listContent]="listContent"></list>
@@ -167,7 +168,6 @@ export class PatientsComponent implements OnInit {
       for (let appointment of appointments) {
         rows.push({
           row: [
-            String(appointment.id),
             appointment.startDate,
             appointment.endDate,
             appointment.roomId,
@@ -178,7 +178,7 @@ export class PatientsComponent implements OnInit {
         })
       }
       this.appointmentListContent = {
-        columns: ['id', 'data początku', 'data końca', 'id pokoju', 'id lekarza', 'charakter wizyty', 'typ operacji'],
+        columns: ['data początku', 'data końca', 'id pokoju', 'id lekarza', 'charakter wizyty', 'typ operacji'],
         rows: rows
       };
       this.loading = false;
@@ -273,7 +273,7 @@ export class PatientsComponent implements OnInit {
 
   loadListContent(): void {
     this.listContent = {
-      columns: ['id', 'pesel', 'imię', 'nazwisko'],
+      columns: ['pesel', 'imię', 'nazwisko'],
       rows: this.loadRows()
     }
   }
