@@ -32,6 +32,10 @@ import {Specialization} from "../specializations/specialization.model";
               <div class="validation-error" *ngIf="formAppointmentType.errors?.required && formAppointmentType.touched">
                 Pole nie może być puste
               </div>
+              <div class="validation-error"
+                   *ngIf="addRowForm.get('appointmentType').hasError('forbiddenAppointmentType')">
+                Charakter wizyty jest już zajęty
+              </div>
               <div class="form-row">
                 <label for="specializationName">Nazwa specjalizacji</label>
                 <select id="specializationName" class="select-field" (change)="changeSpecialization($event)"
@@ -89,6 +93,7 @@ import {Specialization} from "../specializations/specialization.model";
 })
 export class AppointmentTypesComponent implements OnInit {
   appointmentTypes: AppointmentType[];
+  editedAppointmentType: string;
   loading: boolean = true;
   showForm: boolean = false;
   showAppointmentTypeAppointments = false;
@@ -179,10 +184,20 @@ export class AppointmentTypesComponent implements OnInit {
     this.addRowForm = new FormGroup({
       'appointmentType': new FormControl('', [
         Validators.required,
-        Validators.pattern('^[A-Za-z\\s]+$')
+        Validators.pattern('^[A-Za-z\\s]+$'),
+        this.forbiddenAppointmentType.bind(this)
       ]),
       'specialization': new FormControl('', Validators.required)
     });
+  }
+
+  forbiddenAppointmentType(control: FormControl): { [s: string]: boolean } {
+    if (control.value) {
+      if (this.appointmentTypes.filter(appointmentType => (appointmentType.type == control.value && appointmentType.type !== this.editedAppointmentType)).length) {
+        return {'forbiddenAppointmentType': true};
+      }
+    }
+    return null;
   }
 
   loadListContent(): void {
@@ -216,8 +231,9 @@ export class AppointmentTypesComponent implements OnInit {
   loadForm(id: number): void {
     this.formRowId = id;
     if (this.formRowId >= 0) {
+      this.editedAppointmentType = this.appointmentTypes.filter(type => type.id === this.formRowId).map(type => type.type)[0]
       this.addRowForm.patchValue({
-        'appointmentType': this.appointmentTypes.filter(type => type.id === this.formRowId).map(type => type.type)[0],
+        'appointmentType': this.editedAppointmentType,
         'specialization': this.appointmentTypes.filter(type => type.id === this.formRowId).map(type => type.specializationName)[0]
       });
     } else {
@@ -244,6 +260,7 @@ export class AppointmentTypesComponent implements OnInit {
           specializationName: this.addRowForm.value['specialization'].split(" ").filter(word => word.match(filterByRegex)).join(" "),
           id: this.formRowId
         } as AppointmentType).subscribe(() => {
+          this.editedAppointmentType = '';
           this.showForm = false;
           this.formRowId = -1;
           this.loadSelfAndDependentTables();

@@ -31,6 +31,10 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
               <div class="validation-error" *ngIf="formFunctionName.errors?.required && formFunctionName.touched">
                 Pole nie może być puste
               </div>
+              <div class="validation-error"
+                   *ngIf="addRowForm.get('name').hasError('forbiddenName')">
+                Nazwa funkcji jest już zajęta
+              </div>
             </form>
             <div class="buttons-container">
               <action-button
@@ -77,6 +81,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class FunctionsComponent implements OnInit{
   functions: Function[];
+  editedFunction: string;
   loading: boolean = true;
   showForm: boolean = false;
   showFunctionStaff = false;
@@ -142,8 +147,21 @@ export class FunctionsComponent implements OnInit{
 
   setupForm(): void {
     this.addRowForm = new FormGroup({
-      'name': new FormControl('', [Validators.required, Validators.pattern('^[A-Za-z\\s]+$')])
+      'name': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[A-Za-z\\s]+$'),
+        this.forbiddenName.bind(this)
+      ])
     });
+  }
+
+  forbiddenName(control: FormControl): { [s: string]: boolean } {
+    if (control.value) {
+      if (this.functions.filter(hospitalFunction => (hospitalFunction.name == control.value && hospitalFunction.name !== this.editedFunction)).length) {
+        return {'forbiddenName': true};
+      }
+    }
+    return null;
   }
 
   loadListContent(): void {
@@ -176,8 +194,9 @@ export class FunctionsComponent implements OnInit{
   loadForm(id: number): void {
     this.formRowId = id;
     if (this.formRowId >= 0) {
+      this.editedFunction = this.functions.filter(func => func.id === this.formRowId).map(func => func.name)[0]
       this.addRowForm.patchValue({
-        'name': this.functions.filter(func => func.id === this.formRowId).map(func => func.name)
+        'name': this.editedFunction
       })
     } else {
       this.addRowForm.reset();
