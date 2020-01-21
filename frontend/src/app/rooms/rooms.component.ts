@@ -35,6 +35,10 @@ import {HospitalWard} from "../hospital-wards/hospital-ward.model";
               <div class="validation-error" *ngIf="formRoomNumber.errors?.required && formRoomNumber.touched">
                 Pole nie może być puste
               </div>
+              <div class="validation-error"
+                   *ngIf="addRowForm.get('roomNumber').hasError('maxlength') && formRoomNumber.touched">
+                Pole musi się składać z 9 cyfr
+              </div>
               <div class="form-row">
                 <label for="hospitalWardName">Nazwa oddziału</label>
                 <select id="hospitalWardName" class="select-field" (change)="changeHospitalWard($event)"
@@ -192,6 +196,7 @@ export class RoomsComponent implements OnInit {
       'roomNumber': new FormControl('', [
         Validators.required,
         Validators.pattern('^[0-9]+$'),
+        Validators.maxLength(9),
         this.forbiddenRoomNumber.bind(this),
       ]),
       'hospitalWardName': new FormControl('', [
