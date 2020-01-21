@@ -263,9 +263,12 @@ export class PatientsComponent implements OnInit {
   }
 
   forbiddenPesel(control: FormControl): { [s: string]: boolean } {
+    let controlValue = String(control.value).replace(new RegExp("\\s+", "g"),' ').trim();
     if (control.value) {
-      if (this.patients.filter(patient => (patient.pesel == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && patient.pesel !== this.editedPesel)).length) {
-        return {'forbiddenPesel': true};
+      if(this.formRowId === -1 || this.editedPesel!== controlValue) {
+        if (this.patients.filter(patient => (patient.pesel == controlValue)).length) {
+          return {'forbiddenName': true};
+        }
       }
     }
     return null;
@@ -305,9 +308,9 @@ export class PatientsComponent implements OnInit {
     if (this.formRowId >= 0) {
       this.editedPesel = this.patients.filter(patient => patient.id === this.formRowId).map(patient => patient.pesel)[0];
       this.addRowForm.patchValue({
-        'pesel': this.editedPesel,
-        'name': this.patients.filter(patient => patient.id === this.formRowId).map(patient => patient.name)[0],
-        'surname': this.patients.filter(patient => patient.id === this.formRowId).map(patient => patient.surname)[0]
+        'pesel': this.editedPesel.replace(new RegExp("\\s+", "g"),' ').trim(),
+        'name': this.patients.filter(patient => patient.id === this.formRowId).map(patient => patient.name)[0].replace(new RegExp("\\s+", "g"),' ').trim(),
+        'surname': this.patients.filter(patient => patient.id === this.formRowId).map(patient => patient.surname)[0].replace(new RegExp("\\s+", "g"),' ').trim()
       });
     } else {
       this.addRowForm.reset();
@@ -320,18 +323,18 @@ export class PatientsComponent implements OnInit {
       this.loading = true;
       if (this.formRowId === -1) {
         this.patientsService.insertPatient({
-          pesel: this.addRowForm.value['pesel'],
-          name: this.addRowForm.value['name'],
-          surname: this.addRowForm.value['surname']
+          pesel: String(this.addRowForm.value['pesel']).replace(new RegExp("\\s+", "g"),' ').trim(),
+          name: String(this.addRowForm.value['name']).replace(new RegExp("\\s+", "g"),' ').trim(),
+          surname: String(this.addRowForm.value['surname']).replace(new RegExp("\\s+", "g"),' ').trim()
         } as Patient).subscribe(() => {
           this.showForm = false;
           this.loadSelfAndDependentTables();
         });
       } else {
         this.patientsService.updatePatient({
-          pesel: this.addRowForm.value['pesel'],
-          name: this.addRowForm.value['name'],
-          surname: this.addRowForm.value['surname'],
+          pesel: String(this.addRowForm.value['pesel']).replace(new RegExp("\\s+", "g"),' ').trim(),
+          name: String(this.addRowForm.value['name']).replace(new RegExp("\\s+", "g"),' ').trim(),
+          surname: String(this.addRowForm.value['surname']).replace(new RegExp("\\s+", "g"),' ').trim(),
           id: this.formRowId
         } as Patient).subscribe(() => {
           this.editedPesel ='';

@@ -193,9 +193,12 @@ export class AppointmentTypesComponent implements OnInit {
   }
 
   forbiddenAppointmentType(control: FormControl): { [s: string]: boolean } {
+    let controlValue = String(control.value).replace(new RegExp("\\s+", "g"),' ').trim();
     if (control.value) {
-      if (this.appointmentTypes.filter(appointmentType => (appointmentType.type == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && appointmentType.type !== this.editedAppointmentType)).length) {
-        return {'forbiddenAppointmentType': true};
+      if(this.formRowId === -1 || this.editedAppointmentType!== controlValue) {
+        if (this.appointmentTypes.filter(appointmentType => (appointmentType.type == controlValue)).length) {
+          return {'forbiddenName': true};
+        }
       }
     }
     return null;
@@ -234,7 +237,7 @@ export class AppointmentTypesComponent implements OnInit {
     if (this.formRowId >= 0) {
       this.editedAppointmentType = this.appointmentTypes.filter(type => type.id === this.formRowId).map(type => type.type)[0]
       this.addRowForm.patchValue({
-        'appointmentType': this.editedAppointmentType,
+        'appointmentType': this.editedAppointmentType.replace(new RegExp("\\s+", "g"),' ').trim(),
         'specialization': this.appointmentTypes.filter(type => type.id === this.formRowId).map(type => type.specializationName)[0]
       });
     } else {
@@ -249,7 +252,7 @@ export class AppointmentTypesComponent implements OnInit {
       let filterByRegex = new RegExp('^[A-Za-z\\s]+$');
       if (this.formRowId === -1) {
         this.appointmentTypesService.insertAppointmentType({
-          type: this.addRowForm.value['appointmentType'],
+          type: String(this.addRowForm.value['appointmentType']).replace(new RegExp("\\s+", "g"),' ').trim(),
           specializationName: this.addRowForm.value['specialization'].split(" ").filter(word => word.match(filterByRegex)).join(" ")
         } as AppointmentType).subscribe(() => {
           this.showForm = false;
@@ -257,7 +260,7 @@ export class AppointmentTypesComponent implements OnInit {
         });
       } else {
         this.appointmentTypesService.updateAppointmentType({
-          type: this.addRowForm.value['appointmentType'],
+          type: String(this.addRowForm.value['appointmentType']).replace(new RegExp("\\s+", "g"),' ').trim(),
           specializationName: this.addRowForm.value['specialization'].split(" ").filter(word => word.match(filterByRegex)).join(" "),
           id: this.formRowId
         } as AppointmentType).subscribe(() => {

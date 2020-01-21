@@ -241,9 +241,12 @@ export class SpecializationsComponent implements OnInit {
   }
 
   forbiddenName(control: FormControl): { [s: string]: boolean } {
+    let controlValue = String(control.value).replace(new RegExp("\\s+", "g"),' ').trim();
     if (control.value) {
-      if (this.specializations.filter(specialization => (specialization.name == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && specialization.name !== this.editedSpecializationName)).length) {
-        return {'forbiddenName': true};
+      if(this.formRowId === -1 || this.editedSpecializationName!== controlValue) {
+        if (this.specializations.filter(specialization => (specialization.name == controlValue)).length) {
+          return {'forbiddenName': true};
+        }
       }
     }
     return null;
@@ -281,7 +284,7 @@ export class SpecializationsComponent implements OnInit {
     if (this.formRowId >= 0) {
       this.editedSpecializationName = this.specializations.filter(specialization => specialization.id === this.formRowId).map(specialization => specialization.name)[0];
       this.addRowForm.patchValue({
-        'name': this.editedSpecializationName
+        'name': this.editedSpecializationName.replace(new RegExp("\\s+", "g"),' ').trim(),
       })
     } else {
       this.addRowForm.reset();
@@ -294,14 +297,14 @@ export class SpecializationsComponent implements OnInit {
       this.loading = true;
       if (this.formRowId === -1) {
         this.specializationsService.insertSpecialization({
-          name: this.addRowForm.value['name']
+          name: String(this.addRowForm.value['name']).replace(new RegExp("\\s+", "g"),' ').trim()
         } as Specialization).subscribe(() => {
           this.showForm = false;
           this.loadSelfAndDependentTables();
         });
       } else {
         this.specializationsService.updateSpecialization({
-          name: this.addRowForm.value['name'],
+          name: String(this.addRowForm.value['name']).replace(new RegExp("\\s+", "g"),' ').trim(),
           id: this.formRowId
         } as Specialization).subscribe(() => {
           this.showForm = false;

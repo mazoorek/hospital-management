@@ -194,9 +194,12 @@ export class OperationTypesComponent implements OnInit{
   }
 
   forbiddenOperationType(control: FormControl): { [s: string]: boolean } {
+    let controlValue = String(control.value).replace(new RegExp("\\s+", "g"),' ').trim();
     if (control.value) {
-      if (this.operationTypes.filter(appointmentType => (appointmentType.type == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && appointmentType.type !== this.editedOperationType)).length) {
-        return {'forbiddenOperationType': true};
+      if(this.formRowId === -1 || this.editedOperationType!== controlValue) {
+        if (this.operationTypes.filter(operationType => (operationType.type == controlValue)).length) {
+          return {'forbiddenName': true};
+        }
       }
     }
     return null;
@@ -235,7 +238,7 @@ export class OperationTypesComponent implements OnInit{
     if (this.formRowId >= 0) {
       this.editedOperationType = this.operationTypes.filter(type => type.id === this.formRowId).map(type => type.type)[0];
       this.addRowForm.patchValue({
-        'operationType': this.editedOperationType,
+        'operationType': this.editedOperationType.replace(new RegExp("\\s+", "g"),' ').trim(),
         'specialization': this.operationTypes.filter(type => type.id === this.formRowId).map(type => type.specializationName)[0]
       });
     } else {
@@ -250,7 +253,7 @@ export class OperationTypesComponent implements OnInit{
       let filterByRegex = new RegExp('^[A-Za-z\\s]+$');
       if (this.formRowId === -1) {
         this.operationTypesService.insertOperationType({
-          type: this.addRowForm.value['operationType'],
+          type: String(this.addRowForm.value['operationType']).replace(new RegExp("\\s+", "g"),' ').trim(),
           specializationName: this.addRowForm.value['specialization'].split(" ").filter(word => word.match(filterByRegex)).join(" ")
         } as OperationType).subscribe(() => {
           this.showForm = false;
@@ -258,7 +261,7 @@ export class OperationTypesComponent implements OnInit{
         });
       } else {
         this.operationTypesService.updateOperationType({
-          type: this.addRowForm.value['operationType'],
+          type: String(this.addRowForm.value['operationType']).replace(new RegExp("\\s+", "g"),' ').trim(),
           specializationName: this.addRowForm.value['specialization'].split(" ").filter(word => word.match(filterByRegex)).join(" "),
           id: this.formRowId
         } as OperationType).subscribe(() => {

@@ -248,9 +248,12 @@ export class HospitalWardsComponent implements OnInit {
   }
 
   forbiddenName(control: FormControl): { [s: string]: boolean } {
+    let controlValue = String(control.value).replace(new RegExp("\\s+", "g"),' ').trim();
     if (control.value) {
-      if (this.hospitalWards.filter(hospitalWard => (hospitalWard.name == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && hospitalWard.name !== this.editedHospitalWardName)).length) {
-        return {'forbiddenName': true};
+      if(this.formRowId === -1 || this.editedHospitalWardName!== controlValue) {
+        if (this.hospitalWards.filter(hospitalWard => (hospitalWard.name == controlValue)).length) {
+          return {'forbiddenName': true};
+        }
       }
     }
     return null;
@@ -290,7 +293,7 @@ export class HospitalWardsComponent implements OnInit {
     if (this.formRowId >= 0) {
       this.editedHospitalWardName = this.hospitalWards.filter(ward => ward.id === this.formRowId).map(ward => ward.name)[0];
       this.addRowForm.patchValue({
-        'name': this.editedHospitalWardName
+        'name': this.editedHospitalWardName.replace(new RegExp("\\s+", "g"),' ').trim()
       })
     } else {
       this.addRowForm.reset();
@@ -303,14 +306,14 @@ export class HospitalWardsComponent implements OnInit {
       this.loading = true;
       if (this.formRowId === -1) {
         this.hospitalWardsService.insertHospitalWard({
-          name: this.addRowForm.value['name']
+          name: String(this.addRowForm.value['name']).replace(new RegExp("\\s+", "g"),' ').trim()
         } as HospitalWard).subscribe(() => {
           this.showForm = false;
           this.loadSelfAndDependentTables();
         });
       } else {
         this.hospitalWardsService.updateHospitalWard({
-          name: this.addRowForm.value['name'],
+          name: String(this.addRowForm.value['name']).replace(new RegExp("\\s+", "g"),' ').trim(),
           id: this.formRowId
         } as HospitalWard).subscribe(() => {
           this.editedHospitalWardName = '';

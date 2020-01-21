@@ -157,9 +157,12 @@ export class FunctionsComponent implements OnInit{
   }
 
   forbiddenName(control: FormControl): { [s: string]: boolean } {
+    let controlValue = String(control.value).replace(new RegExp("\\s+", "g"),' ').trim();
     if (control.value) {
-      if (this.functions.filter(hospitalFunction => (hospitalFunction.name == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && hospitalFunction.name !== this.editedFunction)).length) {
-        return {'forbiddenName': true};
+      if(this.formRowId === -1 || this.editedFunction!== controlValue) {
+        if (this.functions.filter(func => (func.name == controlValue)).length) {
+          return {'forbiddenName': true};
+        }
       }
     }
     return null;
@@ -197,7 +200,7 @@ export class FunctionsComponent implements OnInit{
     if (this.formRowId >= 0) {
       this.editedFunction = this.functions.filter(func => func.id === this.formRowId).map(func => func.name)[0]
       this.addRowForm.patchValue({
-        'name': this.editedFunction
+        'name': this.editedFunction.replace(new RegExp("\\s+", "g"),' ').trim()
       })
     } else {
       this.addRowForm.reset();
@@ -210,14 +213,14 @@ export class FunctionsComponent implements OnInit{
       this.loading = true;
       if(this.formRowId===-1) {
         this.functionsService.insertFunction({
-          name: this.addRowForm.value['name']
+          name: String(this.addRowForm.value['name']).replace(new RegExp("\\s+", "g"),' ').trim()
         } as Function).subscribe(() => {
           this.showForm = false;
           this.loadSelfAndDependentTables();
         });
       } else {
         this.functionsService.updateFunction({
-          name: this.addRowForm.value['name'],
+          name: String(this.addRowForm.value['name']).replace(new RegExp("\\s+", "g"),' ').trim(),
           id: this.formRowId
         } as Function).subscribe(() => {
           this.showForm = false;
