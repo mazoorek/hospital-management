@@ -194,7 +194,7 @@ export class AppointmentTypesComponent implements OnInit {
 
   forbiddenAppointmentType(control: FormControl): { [s: string]: boolean } {
     if (control.value) {
-      if (this.appointmentTypes.filter(appointmentType => (appointmentType.type == control.value && appointmentType.type !== this.editedAppointmentType)).length) {
+      if (this.appointmentTypes.filter(appointmentType => (appointmentType.type == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && appointmentType.type !== this.editedAppointmentType)).length) {
         return {'forbiddenAppointmentType': true};
       }
     }

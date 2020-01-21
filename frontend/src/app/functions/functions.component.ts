@@ -158,7 +158,7 @@ export class FunctionsComponent implements OnInit{
 
   forbiddenName(control: FormControl): { [s: string]: boolean } {
     if (control.value) {
-      if (this.functions.filter(hospitalFunction => (hospitalFunction.name == control.value && hospitalFunction.name !== this.editedFunction)).length) {
+      if (this.functions.filter(hospitalFunction => (hospitalFunction.name == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && hospitalFunction.name !== this.editedFunction)).length) {
         return {'forbiddenName': true};
       }
     }

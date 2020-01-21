@@ -249,7 +249,7 @@ export class HospitalWardsComponent implements OnInit {
 
   forbiddenName(control: FormControl): { [s: string]: boolean } {
     if (control.value) {
-      if (this.hospitalWards.filter(hospitalWard => (hospitalWard.name == control.value && hospitalWard.name !== this.editedHospitalWardName)).length) {
+      if (this.hospitalWards.filter(hospitalWard => (hospitalWard.name == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && hospitalWard.name !== this.editedHospitalWardName)).length) {
         return {'forbiddenName': true};
       }
     }

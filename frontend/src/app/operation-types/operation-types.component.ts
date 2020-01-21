@@ -195,7 +195,7 @@ export class OperationTypesComponent implements OnInit{
 
   forbiddenOperationType(control: FormControl): { [s: string]: boolean } {
     if (control.value) {
-      if (this.operationTypes.filter(appointmentType => (appointmentType.type == control.value && appointmentType.type !== this.editedOperationType)).length) {
+      if (this.operationTypes.filter(appointmentType => (appointmentType.type == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && appointmentType.type !== this.editedOperationType)).length) {
         return {'forbiddenOperationType': true};
       }
     }

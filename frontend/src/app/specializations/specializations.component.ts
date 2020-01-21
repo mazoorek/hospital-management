@@ -242,7 +242,7 @@ export class SpecializationsComponent implements OnInit {
 
   forbiddenName(control: FormControl): { [s: string]: boolean } {
     if (control.value) {
-      if (this.specializations.filter(specialization => (specialization.name == control.value && specialization.name !== this.editedSpecializationName)).length) {
+      if (this.specializations.filter(specialization => (specialization.name == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && specialization.name !== this.editedSpecializationName)).length) {
         return {'forbiddenName': true};
       }
     }
