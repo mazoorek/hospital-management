@@ -264,7 +264,7 @@ export class PatientsComponent implements OnInit {
 
   forbiddenPesel(control: FormControl): { [s: string]: boolean } {
     if (control.value) {
-      if (this.patients.filter(patient => (patient.pesel == control.value && patient.pesel !== this.editedPesel)).length) {
+      if (this.patients.filter(patient => (patient.pesel == String(control.value).replace(new RegExp("\\s+", "g"),' ').trim() && patient.pesel !== this.editedPesel)).length) {
         return {'forbiddenPesel': true};
       }
     }
