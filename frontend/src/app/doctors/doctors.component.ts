@@ -320,6 +320,7 @@ export class DoctorsComponent implements OnInit {
     this.loadDoctors();
     this.appointmentsService.loadAppointments();
     this.employeeService.loadEmployees();
+    this.hospitalWardsService.loadHospitalWards();
   }
 
   onClickHideForm(): void {
