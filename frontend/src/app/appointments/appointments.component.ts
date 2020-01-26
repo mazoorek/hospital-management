@@ -54,7 +54,7 @@ export interface SimplifiedRoom {
               <div class="form-row">
                 <label for="startDate">Data początku</label>
                 <input type="text"
-                       (change)="updateValidationForDates()"
+                       (change)="updateFormValidators()"
                        placeholder="wpisz początkową datę"
                        class="form-control"
                        formControlName="startDate"
@@ -75,7 +75,7 @@ export interface SimplifiedRoom {
               <div class="form-row">
                 <label for="endDate">Data końca</label>
                 <input type="text"
-                       (change)="updateValidationForDates()"
+                       (change)="updateFormValidators()"
                        placeholder="wpisz datę końca"
                        class="form-control"
                        formControlName="endDate"
@@ -93,7 +93,7 @@ export interface SimplifiedRoom {
                 Niepoprawna data (zajęta lub mniejsza lub równa dacie początkowej)
               </div>
               <div class="form-row">
-                <label for="pesel">Id pacjenta</label>
+                <label for="pesel">Pesel pacjenta</label>
                 <select id="pesel" class="select-field" (change)="changePesel($event)"
                         formControlName="pesel">
                   <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz pacjenta
@@ -103,7 +103,7 @@ export interface SimplifiedRoom {
                 </select>
               </div>
               <div class="form-row">
-                <label for="appointmentType">Typ wizyty</label>
+                <label for="appointmentType">Charakter wizyty</label>
                 <select id="appointmentType" class="select-field" (change)="changeAppointmentType($event)"
                         formControlName="appointmentType">
                   <option value="null" disabled [selected]="true" *ngIf="this.formRowId===-1">Wybierz typ wizyty
@@ -312,8 +312,21 @@ export class AppointmentsComponent implements OnInit {
               }
             }
           });
+        } else {
+          this.appointments.forEach(appointment => {
+            if (appointment.id!==this.editedRow.id && appointment.doctorId === this.editedRow.doctorId) {
+              let appointmentStartDate = new Date(appointment.startDate);
+              let appointmentEndDate = new Date(appointment.endDate);
+              if((appointmentStartDate.getDate() - startDate.getDate() !==0)  || (appointmentEndDate.getDate() - endDate.getDate() !== 0)) {
+                if (startDate <= appointmentEndDate) {
+                  if (startDate >= appointmentStartDate && startDate <= appointmentEndDate) free = false;
+                  else if (endDate >= appointmentStartDate && endDate <= appointmentEndDate) free = false;
+                  else if (startDate < appointmentStartDate && endDate > appointmentEndDate) free = false;
+                }
+              }
+            }
+          });
         }
-
         return free;
       });
   }
@@ -346,14 +359,23 @@ export class AppointmentsComponent implements OnInit {
               }
             }
           });
+        } else {
+          this.appointments.forEach(appointment => {
+            if (appointment.id!==this.editedRow.id && appointment.roomId === this.editedRow.roomId) {
+              let appointmentStartDate = new Date(appointment.startDate);
+              let appointmentEndDate = new Date(appointment.endDate);
+              if((appointmentStartDate.getDate() - startDate.getDate() !==0)  || (appointmentEndDate.getDate() - endDate.getDate() !== 0)) {
+                if (startDate <= appointmentEndDate) {
+                  if (startDate >= appointmentStartDate && startDate <= appointmentEndDate) free = false;
+                  else if (endDate >= appointmentStartDate && endDate <= appointmentEndDate) free = false;
+                  else if (startDate < appointmentStartDate && endDate > appointmentEndDate) free = false;
+                }
+              }
+            }
+          });
         }
         return free;
       });
-  }
-
-  updateValidationForDates(): void {
-    this.addRowForm.get('startDate').updateValueAndValidity();
-    this.addRowForm.get('endDate').updateValueAndValidity();
   }
 
   private loadAppointments() {
@@ -461,9 +483,9 @@ export class AppointmentsComponent implements OnInit {
             }
           }
           this.appointments.filter(appointment => appointment.pesel == pesel)
-            .forEach(leave => {
-              let leaveStartDate = new Date(leave.startDate);
-              let leaveEndDate = new Date(leave.endDate);
+            .forEach(appointment => {
+              let leaveStartDate = new Date(appointment.startDate);
+              let leaveEndDate = new Date(appointment.endDate);
               if (leaveStartDate <= formStartDate && formStartDate <= leaveEndDate) {
                 error = true;
               }
@@ -612,6 +634,7 @@ export class AppointmentsComponent implements OnInit {
           operationType: this.addRowForm.value['operationType'] ? String(this.addRowForm.value['operationType']).split(" ").filter(word => word.match('^[A-Za-z\\s]+$')).join(" ") : ''
         } as Appointment).subscribe(() => {
           this.showForm = false;
+          this.leavesOfAbsenceService.loadLeavesOfAbsence();
           this.loadAppointments();
         });
       } else {
@@ -628,6 +651,7 @@ export class AppointmentsComponent implements OnInit {
           this.resetEditedRow();
           this.showForm = false;
           this.formRowId = -1;
+          this.leavesOfAbsenceService.loadLeavesOfAbsence();
           this.loadAppointments();
         });
       }

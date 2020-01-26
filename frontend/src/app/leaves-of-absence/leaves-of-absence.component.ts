@@ -6,6 +6,13 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {EmployeesService} from "../employees/employees.service";
 import {Employee} from "../employees/employee.model";
 import {AppointmentsService} from "../appointments/appointments.service";
+import {Appointment} from "../appointments/appointment.model";
+import {DoctorsService} from "../doctors/doctors.service";
+
+export interface SimpleDoctor {
+  employeeId: number;
+  doctorId: number;
+}
 
 @Component({
   selector: 'leaves-of-absence',
@@ -34,7 +41,8 @@ import {AppointmentsService} from "../appointments/appointments.service";
                        formControlName="startDate"
                        id="startDate">
               </div>
-              <div class="validation-error form-row" *ngIf="formLeaveStartDate.errors?.required && formLeaveStartDate.touched">
+              <div class="validation-error form-row"
+                   *ngIf="formLeaveStartDate.errors?.required && formLeaveStartDate.touched">
                 Pole nie może być puste
               </div>
               <div class="validation-error form-row"
@@ -43,7 +51,7 @@ import {AppointmentsService} from "../appointments/appointments.service";
               </div>
               <div class="validation-error form-row"
                    *ngIf="addRowForm.get('startDate').hasError('forbiddenStartDate')">
-                Data urlopu dla tego pracownika już zajęta
+                Data urlopu dla tego pracownika już zajęta/ wizyta z pacjentem w tym terminie
               </div>
               <div class="form-row">
                 <label for="endDate">Data końca</label>
@@ -54,7 +62,8 @@ import {AppointmentsService} from "../appointments/appointments.service";
                        formControlName="endDate"
                        id="endDate">
               </div>
-              <div class="validation-error form-row" *ngIf="formLeaveEndDate.errors?.required && formLeaveEndDate.touched">
+              <div class="validation-error form-row"
+                   *ngIf="formLeaveEndDate.errors?.required && formLeaveEndDate.touched">
                 Pole nie może być puste
               </div>
               <div class="validation-error form-row" *ngIf="addRowForm.get('endDate').hasError('badDataFormat')">
@@ -62,7 +71,7 @@ import {AppointmentsService} from "../appointments/appointments.service";
               </div>
               <div class="validation-error form-row"
                    *ngIf="addRowForm.get('endDate').hasError('forbiddenEndDate')">
-                Niepoprawna data (zajęta lub mniejsza od daty początkowej)
+                Niepoprawna data (urlop wziety/wizyta z pacjentem w tym terminie lub mniejsza od daty początkowej)
               </div>
               <div class="form-row">
                 <label for="employeeId">Id pracownika</label>
@@ -108,9 +117,12 @@ export class LeavesOfAbsenceComponent implements OnInit {
   editedEndDate: string = '';
   editedEmployee: string = '';
   leavesOfAbsence: LeaveOfAbsence [];
+  appointments: Appointment [];
+  simpleDoctors: SimpleDoctor [];
 
   constructor(private leavesOfAbsenceService: LeavesOfAbsenceService,
               private appointmentsService: AppointmentsService,
+              private doctorsService: DoctorsService,
               private employeesService: EmployeesService) {
   }
 
@@ -152,7 +164,6 @@ export class LeavesOfAbsenceComponent implements OnInit {
         endDate: new Date(leave.endDate).toISOString().substring(0, 10)
       }));
       this.loadListContent();
-      this.appointmentsService.loadAppointments(); //TODO jak bedzie czas to to przeniesc
       this.loadFormData();
     })
   }
@@ -161,7 +172,20 @@ export class LeavesOfAbsenceComponent implements OnInit {
     this.loading = true;
     this.employeesService.getEmployees().subscribe(employees => {
       this.employeeIds = (employees as Employee []).map(employee => String(employee.id));
-      this.loading = false;
+      this.appointmentsService.getAppointments().subscribe(appointments => {
+        this.appointments = appointments.map(appointment => ({
+          ...appointment,
+          startDate: new Date(appointment.startDate).toISOString().substring(0, 10).replace('T', ' '),
+          endDate: new Date(appointment.endDate).toISOString().substring(0, 10).replace('T', ' ')
+        }));
+        this.doctorsService.getDoctors().subscribe(doctors => {
+          this.simpleDoctors = doctors.map(doctor => ({
+            doctorId: doctor.id,
+            employeeId: doctor.employeeId
+          }));
+          this.loading = false;
+        });
+      });
     });
   }
 
@@ -209,7 +233,7 @@ export class LeavesOfAbsenceComponent implements OnInit {
             let editedStartDate = new Date(this.editedStartDate);
             let editedEndDate = new Date(this.editedEndDate);
             if (editedStartDate <= formStartDate && formStartDate <= editedEndDate) {
-              if(employeeId === this.editedEmployee) {
+              if (employeeId === this.editedEmployee) {
                 return null;
               }
             }
@@ -222,6 +246,17 @@ export class LeavesOfAbsenceComponent implements OnInit {
                 error = true;
               }
             });
+          let doctorId: number = this.simpleDoctors.filter(doctor => doctor.employeeId === +employeeId).map(doctor => doctor.doctorId)[0];
+          this.appointments.forEach(appointment => {
+            if (+appointment.doctorId === doctorId) {
+              let appointmentStartDate = new Date(appointment.startDate);
+              let appointmentEndDate = new Date(appointment.endDate);
+              if (appointmentStartDate <= formStartDate && formStartDate <= appointmentEndDate) {
+                console.log("tutaj");
+                error = true;
+              }
+            }
+          });
         }
       }
     }
@@ -259,25 +294,38 @@ export class LeavesOfAbsenceComponent implements OnInit {
             let editedStartDate = new Date(this.editedStartDate);
             let editedEndDate = new Date(this.editedEndDate);
             if (editedStartDate <= formEndDate && formEndDate <= editedEndDate) {
-              if(!error) {
-                if(employeeId === this.editedEmployee) {
+              if (!error) {
+                if (employeeId === this.editedEmployee) {
                   return null;
                 }
               }
             }
           }
-          this.leavesOfAbsence.filter(leave => leave.employeeId == employeeId)
-            .forEach(leave => {
-              let leaveStartDate = new Date(leave.startDate);
-              let leaveEndDate = new Date(leave.endDate);
-              if (leaveStartDate <= formEndDate && formEndDate <= leaveEndDate) {
+          this.leavesOfAbsence.filter(leave => leave.employeeId == employeeId).forEach(leave => {
+            let leaveStartDate = new Date(leave.startDate);
+            let leaveEndDate = new Date(leave.endDate);
+            if (leaveStartDate <= formEndDate && formEndDate <= leaveEndDate) {
+              error = true;
+            }
+            let formStartDate = new Date(this.addRowForm.value['startDate']);
+            if (formStartDate < leaveStartDate && formEndDate >= leaveStartDate) {
+              error = true;
+            }
+          });
+          let doctorId: number = this.simpleDoctors.filter(doctor => doctor.employeeId === +employeeId).map(doctor => doctor.doctorId)[0];
+          this.appointments.forEach(appointment => {
+            if (+appointment.doctorId === doctorId) {
+              let appointmentStartDate = new Date(appointment.startDate);
+              let appointmentEndDate = new Date(appointment.endDate);
+              if (appointmentStartDate <= formEndDate && formEndDate <= appointmentEndDate) {
                 error = true;
               }
               let formStartDate = new Date(this.addRowForm.value['startDate']);
-              if(formStartDate < leaveStartDate && formEndDate >= leaveStartDate) {
+              if (formStartDate < appointmentStartDate && formEndDate >= appointmentStartDate) {
                 error = true;
               }
-            });
+            }
+          });
         }
       }
     }
@@ -347,6 +395,7 @@ export class LeavesOfAbsenceComponent implements OnInit {
           employeeId: this.addRowForm.value['employeeId'].split(" ").slice(-1)[0]
         } as LeaveOfAbsence).subscribe(() => {
           this.showForm = false;
+          this.appointmentsService.loadAppointments();
           this.loadLeavesOfAbsence();
         });
       } else {
@@ -360,6 +409,7 @@ export class LeavesOfAbsenceComponent implements OnInit {
           this.formRowId = -1;
           this.editedStartDate = '';
           this.editedEndDate = '';
+          this.appointmentsService.loadAppointments();
           this.loadLeavesOfAbsence();
         });
       }
