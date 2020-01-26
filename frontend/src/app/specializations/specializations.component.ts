@@ -6,6 +6,7 @@ import {DoctorsService} from "../doctors/doctors.service";
 import {OperationTypesService} from "../operation-types/operation-types.service";
 import {AppointmentTypesService} from "../appointment-types/appointment-types.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AppointmentsService} from "../appointments/appointments.service";
 
 @Component({
   selector: 'specializations',
@@ -126,6 +127,7 @@ export class SpecializationsComponent implements OnInit {
     private specializationsService: SpecializationsService,
     private doctorsService: DoctorsService,
     private operationTypesService: OperationTypesService,
+    private appointmentsService: AppointmentsService,
     private appointmentTypesService: AppointmentTypesService) {
   }
 
@@ -320,6 +322,7 @@ export class SpecializationsComponent implements OnInit {
     this.doctorsService.loadDoctors();
     this.operationTypesService.loadOperationTypes();
     this.appointmentTypesService.loadAppointmentTypes();
+    this.appointmentsService.loadAppointments();
   }
 
   onClickHideForm(): void {

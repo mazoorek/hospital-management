@@ -13,9 +13,12 @@ import {Doctor} from "../doctors/doctor.model";
 import {Room} from "../rooms/room.model";
 import {AppointmentType} from "../appointment-types/appointment-types.model";
 import {OperationType} from "../operation-types/operation-types.model";
+import {LeaveOfAbsence} from "../leaves-of-absence/leave-of-absence.model";
+import {LeavesOfAbsenceService} from "../leaves-of-absence/leaves-of-absence.service";
 
 export interface SimplifiedDoctor {
   doctorId: number;
+  employeeId: number;
   specializationName: string;
   wardName: string;
 }
@@ -67,7 +70,7 @@ export interface SimplifiedRoom {
               </div>
               <div class="validation-error form-row"
                    *ngIf="addRowForm.get('startDate').hasError('forbiddenStartDate')">
-                Data urlopu dla tego pracownika już zajęta
+                Data dla tego pacjenta jest juz zajeta
               </div>
               <div class="form-row">
                 <label for="endDate">Data końca</label>
@@ -156,7 +159,7 @@ export interface SimplifiedRoom {
                 class="form-button"
                 (click)="onClickAddOrUpdate()"
                 [green]="true"
-                [disabled]="addRowForm.invalid"
+                [disabled]="!canConfirmRecord()"
                 text="Zatwierdź rekord"
                 [width]="200"></action-button>
               <action-button
@@ -181,17 +184,21 @@ export class AppointmentsComponent implements OnInit {
   simplifiedDoctors: SimplifiedDoctor[];
   simplifiedRooms: SimplifiedRoom[];
   simplifiedAppointmentTypes: SimplifiedAppointmentType[];
+  leavesOfAbsence: LeaveOfAbsence [];
   operationTypes: string[];
   addRowForm: FormGroup;
   listContent: ListContent;
   editedRow: Appointment;
   appointments: Appointment [];
+  selectedDoctor: string;
+  selectedRoom: string;
 
   constructor(private appointmentsService: AppointmentsService,
               private doctorsService: DoctorsService,
               private roomsService: RoomsService,
               private appointmentTypesService: AppointmentTypesService,
               private operationTypesService: OperationTypesService,
+              private leavesOfAbsenceService: LeavesOfAbsenceService,
               private patientsService: PatientsService) {
   }
 
@@ -202,6 +209,13 @@ export class AppointmentsComponent implements OnInit {
       this.loadAppointments();
     });
     this.resetEditedRow();
+  }
+
+  canConfirmRecord(): boolean {
+    console.log(+this.selectedDoctor);
+    return this.addRowForm.valid && this.addRowForm.get('appointmentType').value && this.addRowForm.get('doctorId').value
+      && this.addRowForm.get('roomId').value && this.getFilteredDoctors().length > 0 && this.getFilteredRooms().length > 0
+      && this.getFilteredDoctors().includes(+this.selectedDoctor) && this.getFilteredRooms().includes(+this.selectedRoom);
   }
 
   resetEditedRow(): void {
@@ -234,7 +248,10 @@ export class AppointmentsComponent implements OnInit {
   }
 
   changeAppointmentType(event): void {
-
+    this.addRowForm.patchValue({
+      'appointmentType': event.target.value
+    });
+    this.updateFormValidators();
   }
 
   changeOperationType(event): void {
@@ -242,11 +259,12 @@ export class AppointmentsComponent implements OnInit {
   }
 
   changeDoctorId(event): void {
-
+    this.selectedDoctor = String(event.target.value).split(" ").slice(-1)[0];
+    console.log(this.selectedDoctor);
   }
 
   changeRoomId(event): void {
-
+    this.selectedRoom = String(event.target.value).split(" ").slice(-1)[0];
   }
 
   shouldShowDoctors(): boolean {
@@ -256,14 +274,29 @@ export class AppointmentsComponent implements OnInit {
 
   getFilteredDoctors(): number [] {
     let specialization: string = this.simplifiedAppointmentTypes
-      .filter(appointmentType => appointmentType.appointmentType == this.addRowForm.get('appointmentType').value)
+      .filter(appointmentType => appointmentType.appointmentType == String(this.addRowForm.value['appointmentType']).split(" ").filter(word => word.match('^[A-Za-z\\s]+$')).join(" "))
       .map(appointmentType => appointmentType.specializationName)[0];
     let startDate = new Date(this.addRowForm.get('startDate').value);
     let endDate = new Date(this.addRowForm.get('endDate').value);
-    console.log(this.simplifiedDoctors);
-    console.log(this.editedRow);
     return this.simplifiedDoctors
       .filter(doctor => doctor.specializationName === specialization)
+      .filter(doctor => {
+        let free = true;
+        if (doctor.doctorId !== +this.editedRow.doctorId) {
+          this.leavesOfAbsence.forEach(leaveOfAbsence => {
+            if(+leaveOfAbsence.employeeId === doctor.employeeId) {
+              let leaveStartDate = new Date(leaveOfAbsence.startDate);
+              let leaveEndDate = new Date(leaveOfAbsence.endDate);
+              if (startDate <= leaveEndDate) {
+                if (startDate >= leaveStartDate && startDate <= leaveEndDate) free = false;
+                else if (endDate >= leaveStartDate && endDate <= leaveEndDate) free = false;
+                else if (startDate < leaveStartDate && endDate > leaveEndDate) free = false;
+              }
+            }
+          })
+        }
+        return free;
+      })
       .map(doctor => doctor.doctorId)
       .filter(doctor => {
         let free = true;
@@ -280,6 +313,7 @@ export class AppointmentsComponent implements OnInit {
             }
           });
         }
+
         return free;
       });
   }
@@ -300,7 +334,7 @@ export class AppointmentsComponent implements OnInit {
       .map(room => room.roomId)
       .filter(room => {
         let free = true;
-        if(room !== +this.editedRow.roomId) {
+        if (room !== +this.editedRow.roomId) {
           this.appointments.forEach(appointment => {
             if (+appointment.roomId === room) {
               let appointmentStartDate = new Date(appointment.startDate);
@@ -335,7 +369,7 @@ export class AppointmentsComponent implements OnInit {
     })
   }
 
-  private loadFormData() {
+  private loadFormData(): void {
     this.loading = true;
     this.patientsService.getPatients().subscribe(patients => {
       this.pesels = (patients as Patient []).map(patient => String(patient.pesel));
@@ -343,7 +377,8 @@ export class AppointmentsComponent implements OnInit {
         this.simplifiedDoctors = (doctors as Doctor []).map(doctor => ({
           doctorId: doctor.id,
           specializationName: doctor.specializationName,
-          wardName: doctor.wardName
+          wardName: doctor.wardName,
+          employeeId: doctor.employeeId
         }));
         this.roomsService.getRooms().subscribe(rooms => {
           this.simplifiedRooms = (rooms as Room []).map(room => ({
@@ -357,7 +392,10 @@ export class AppointmentsComponent implements OnInit {
             }));
             this.operationTypesService.getOperationTypes().subscribe(operationTypes => {
               this.operationTypes = (operationTypes as OperationType []).map(operationType => operationType.type);
-              this.loading = false;
+              this.leavesOfAbsenceService.getLeavesOfAbsence().subscribe(leaves => {
+                this.leavesOfAbsence = leaves;
+                this.loading = false;
+              })
             })
           })
         })
@@ -394,7 +432,7 @@ export class AppointmentsComponent implements OnInit {
     let hour = dateString.substring(11, 13);
     let minute = dateString.substring(14, 16);
     if (isNaN(+hour) || isNaN(+minute)) return false;
-    if (+hour < 0 || +hour > 23 || +minute < 0 || +minute > 23) return false;
+    if (+hour < 0 || +hour > 23 || +minute < 0 || +minute > 59) return false;
     return d.toISOString().slice(0, 10) === dateString.substring(0, 10); // lata przestępne
   }
 
@@ -528,6 +566,16 @@ export class AppointmentsComponent implements OnInit {
     });
   }
 
+  updateFormValidators(): void {
+    this.addRowForm.get('startDate').updateValueAndValidity();
+    this.addRowForm.get('endDate').updateValueAndValidity();
+    this.addRowForm.get('pesel').updateValueAndValidity();
+    this.addRowForm.get('doctorId').updateValueAndValidity();
+    this.addRowForm.get('roomId').updateValueAndValidity();
+    this.addRowForm.get('appointmentType').updateValueAndValidity();
+    this.addRowForm.get('operationType').updateValueAndValidity();
+  }
+
   loadForm(id: number): void {
     this.formRowId = id;
     if (this.formRowId >= 0) {
@@ -541,6 +589,9 @@ export class AppointmentsComponent implements OnInit {
         'appointmentType': this.editedRow.appointmentType,
         'operationType': this.editedRow.operationType,
       });
+      this.updateFormValidators();
+      this.selectedDoctor = this.editedRow.doctorId;
+      this.selectedRoom = this.editedRow.roomId;
     } else {
       this.addRowForm.reset();
     }
@@ -548,7 +599,7 @@ export class AppointmentsComponent implements OnInit {
   }
 
   onClickAddOrUpdate(): void {
-    if (this.addRowForm.valid) {
+    if (this.canConfirmRecord()) {
       this.loading = true;
       if (this.formRowId === -1) {
         this.appointmentsService.insertAppointment({
@@ -557,8 +608,8 @@ export class AppointmentsComponent implements OnInit {
           pesel: this.addRowForm.value['pesel'].split(" ").slice(-1)[0],
           doctorId: String(this.addRowForm.value['doctorId']).split(" ").slice(-1)[0],
           roomId: String(this.addRowForm.value['roomId']).split(" ").slice(-1)[0],
-          appointmentType: this.addRowForm.value['appointmentType'].split(" ").slice(-1)[0],
-          operationType: this.addRowForm.value['operationType'] ? this.addRowForm.value['operationType'].split(" ").slice(-1)[0] : ''
+          appointmentType: String(this.addRowForm.value['appointmentType']).split(" ").filter(word => word.match('^[A-Za-z\\s]+$')).join(" "),
+          operationType: this.addRowForm.value['operationType'] ? String(this.addRowForm.value['operationType']).split(" ").filter(word => word.match('^[A-Za-z\\s]+$')).join(" ") : ''
         } as Appointment).subscribe(() => {
           this.showForm = false;
           this.loadAppointments();
@@ -570,8 +621,8 @@ export class AppointmentsComponent implements OnInit {
           pesel: this.addRowForm.value['pesel'].split(" ").slice(-1)[0],
           doctorId: String(this.addRowForm.value['doctorId']).split(" ").slice(-1)[0],
           roomId: String(this.addRowForm.value['roomId']).split(" ").slice(-1)[0],
-          appointmentType: this.addRowForm.value['appointmentType'].split(" ").slice(-1)[0],
-          operationType: this.addRowForm.value['operationType'] ? this.addRowForm.value['operationType'].split(" ").slice(-1)[0] : '',
+          appointmentType: String(this.addRowForm.value['appointmentType']).split(" ").filter(word => word.match('^[A-Za-z\\s]+$')).join(" "),
+          operationType: this.addRowForm.value['operationType'] ? String(this.addRowForm.value['operationType']).split(" ").filter(word => word.match('^[A-Za-z\\s]+$')).join(" ") : '',
           id: this.formRowId
         } as Appointment).subscribe(() => {
           this.resetEditedRow();

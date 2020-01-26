@@ -5,6 +5,7 @@ import {HospitalWard} from "./hospital-ward.model";
 import {RoomsService} from "../rooms/rooms.service";
 import {DoctorsService} from "../doctors/doctors.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AppointmentsService} from "../appointments/appointments.service";
 
 
 @Component({
@@ -124,6 +125,7 @@ export class HospitalWardsComponent implements OnInit {
 
   constructor(private hospitalWardsService: HospitalWardsService,
               private roomsService: RoomsService,
+              private appointmentsService: AppointmentsService,
               private doctorsService: DoctorsService) {
   }
 
@@ -329,6 +331,7 @@ export class HospitalWardsComponent implements OnInit {
     this.loadHospitalWards();
     this.roomsService.loadRooms();
     this.doctorsService.loadDoctors();
+    this.appointmentsService.loadAppointments();
   }
 
   onClickHideForm(): void {
