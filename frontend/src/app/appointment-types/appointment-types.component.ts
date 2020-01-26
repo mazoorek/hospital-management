@@ -197,7 +197,7 @@ export class AppointmentTypesComponent implements OnInit {
     if (control.value) {
       if(this.formRowId === -1 || this.editedAppointmentType!== controlValue) {
         if (this.appointmentTypes.filter(appointmentType => (appointmentType.type == controlValue)).length) {
-          return {'forbiddenName': true};
+          return {'forbiddenAppointmentType': true};
         }
       }
     }

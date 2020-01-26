@@ -195,6 +195,12 @@ export class AppointmentsComponent implements OnInit {
               private patientsService: PatientsService) {
   }
 
+  canConfirmRecord(): boolean {
+    // && !this.addRowForm.get('appointmentType').value && !this.addRowForm.get('doctorId').value
+    return this.addRowForm.valid && this.addRowForm.get('appointmentType').value && this.addRowForm.get('doctorId').value
+      && this.addRowForm.get('roomId').value;
+  }
+
   ngOnInit(): void {
     this.setupForm();
     this.loadAppointments();
@@ -234,7 +240,6 @@ export class AppointmentsComponent implements OnInit {
   }
 
   changeAppointmentType(event): void {
-
   }
 
   changeOperationType(event): void {
@@ -260,8 +265,6 @@ export class AppointmentsComponent implements OnInit {
       .map(appointmentType => appointmentType.specializationName)[0];
     let startDate = new Date(this.addRowForm.get('startDate').value);
     let endDate = new Date(this.addRowForm.get('endDate').value);
-    console.log(this.simplifiedDoctors);
-    console.log(this.editedRow);
     return this.simplifiedDoctors
       .filter(doctor => doctor.specializationName === specialization)
       .map(doctor => doctor.doctorId)
@@ -300,7 +303,7 @@ export class AppointmentsComponent implements OnInit {
       .map(room => room.roomId)
       .filter(room => {
         let free = true;
-        if(room !== +this.editedRow.roomId) {
+        if (room !== +this.editedRow.roomId) {
           this.appointments.forEach(appointment => {
             if (+appointment.roomId === room) {
               let appointmentStartDate = new Date(appointment.startDate);
@@ -394,7 +397,7 @@ export class AppointmentsComponent implements OnInit {
     let hour = dateString.substring(11, 13);
     let minute = dateString.substring(14, 16);
     if (isNaN(+hour) || isNaN(+minute)) return false;
-    if (+hour < 0 || +hour > 23 || +minute < 0 || +minute > 23) return false;
+    if (+hour < 0 || +hour > 23 || +minute < 0 || +minute > 59) return false;
     return d.toISOString().slice(0, 10) === dateString.substring(0, 10); // lata przestępne
   }
 
@@ -557,8 +560,8 @@ export class AppointmentsComponent implements OnInit {
           pesel: this.addRowForm.value['pesel'].split(" ").slice(-1)[0],
           doctorId: String(this.addRowForm.value['doctorId']).split(" ").slice(-1)[0],
           roomId: String(this.addRowForm.value['roomId']).split(" ").slice(-1)[0],
-          appointmentType: this.addRowForm.value['appointmentType'].split(" ").slice(-1)[0],
-          operationType: this.addRowForm.value['operationType'] ? this.addRowForm.value['operationType'].split(" ").slice(-1)[0] : ''
+          appointmentType: String(this.addRowForm.value['appointmentType']).split(" ").join(" "),
+          operationType: this.addRowForm.value['operationType'] ? String(this.addRowForm.value['operationType']).split(" ").join(" ") : ''
         } as Appointment).subscribe(() => {
           this.showForm = false;
           this.loadAppointments();
@@ -570,8 +573,8 @@ export class AppointmentsComponent implements OnInit {
           pesel: this.addRowForm.value['pesel'].split(" ").slice(-1)[0],
           doctorId: String(this.addRowForm.value['doctorId']).split(" ").slice(-1)[0],
           roomId: String(this.addRowForm.value['roomId']).split(" ").slice(-1)[0],
-          appointmentType: this.addRowForm.value['appointmentType'].split(" ").slice(-1)[0],
-          operationType: this.addRowForm.value['operationType'] ? this.addRowForm.value['operationType'].split(" ").slice(-1)[0] : '',
+          appointmentType: String(this.addRowForm.value['appointmentType']).split(" ").join(" "),
+          operationType: this.addRowForm.value['operationType'] ? String(this.addRowForm.value['operationType']).split(" ").join(" ") : '',
           id: this.formRowId
         } as Appointment).subscribe(() => {
           this.resetEditedRow();

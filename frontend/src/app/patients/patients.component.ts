@@ -267,7 +267,7 @@ export class PatientsComponent implements OnInit {
     if (control.value) {
       if(this.formRowId === -1 || this.editedPesel!== controlValue) {
         if (this.patients.filter(patient => (patient.pesel == controlValue)).length) {
-          return {'forbiddenName': true};
+          return {'forbiddenPesel': true};
         }
       }
     }
