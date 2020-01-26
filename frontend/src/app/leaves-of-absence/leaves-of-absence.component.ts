@@ -5,6 +5,7 @@ import {LeaveOfAbsence} from "./leave-of-absence.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {EmployeesService} from "../employees/employees.service";
 import {Employee} from "../employees/employee.model";
+import {AppointmentsService} from "../appointments/appointments.service";
 
 @Component({
   selector: 'leaves-of-absence',
@@ -109,6 +110,7 @@ export class LeavesOfAbsenceComponent implements OnInit {
   leavesOfAbsence: LeaveOfAbsence [];
 
   constructor(private leavesOfAbsenceService: LeavesOfAbsenceService,
+              private appointmentsService: AppointmentsService,
               private employeesService: EmployeesService) {
   }
 
@@ -150,6 +152,7 @@ export class LeavesOfAbsenceComponent implements OnInit {
         endDate: new Date(leave.endDate).toISOString().substring(0, 10)
       }));
       this.loadListContent();
+      this.appointmentsService.loadAppointments(); //TODO jak bedzie czas to to przeniesc
       this.loadFormData();
     })
   }
@@ -326,6 +329,8 @@ export class LeavesOfAbsenceComponent implements OnInit {
         'endDate': this.editedEndDate,
         'employeeId': this.editedEmployee
       });
+      this.addRowForm.get('startDate').updateValueAndValidity();
+      this.addRowForm.get('endDate').updateValueAndValidity();
     } else {
       this.addRowForm.reset();
     }
