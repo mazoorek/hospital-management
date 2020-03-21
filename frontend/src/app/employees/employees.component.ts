@@ -7,6 +7,7 @@ import {StaffService} from "../staff/staff.service";
 import {LeavesOfAbsenceService} from "../leaves-of-absence/leaves-of-absence.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavbarService} from "../header/navbar/navbar.service";
+import {AppointmentsService} from "../appointments/appointments.service";
 
 @Component({
   selector: 'employees',
@@ -120,6 +121,7 @@ export class EmployeesComponent implements OnInit {
               private doctorsService: DoctorsService,
               private staffService: StaffService,
               private navbarService: NavbarService,
+              private appointmentsService: AppointmentsService,
               private leavesOfAbsenceService: LeavesOfAbsenceService) {
   }
 
@@ -235,6 +237,7 @@ export class EmployeesComponent implements OnInit {
       this.doctorsService.loadDoctors();
       this.staffService.loadStaff();
       this.leavesOfAbsenceService.loadLeavesOfAbsence();
+      this.appointmentsService.loadAppointments();
     });
   }
 
@@ -286,6 +289,8 @@ export class EmployeesComponent implements OnInit {
         } as Employee).subscribe(() => {
           this.showForm = false;
           this.formRowId = -1;
+          this.doctorsService.loadDoctors();
+          this.staffService.loadStaff();
           this.loadEmployees();
         });
       }
